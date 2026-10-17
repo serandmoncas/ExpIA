@@ -1,0 +1,49 @@
+---
+id: a2a
+title: "Protocolo A2A"
+kind: protocol
+category: [protocols, agents]
+released: 2025-04
+origin: "Google, luego donado a la Linux Foundation"
+audience: [technical]
+level: advanced
+requires: [agents, mcp]
+related: [mcp, multi-agent]
+status: emerging
+license: open-source
+pricing: free
+summary: "Protocolo abierto para que agentes de IA de distintas empresas y plataformas se descubran, se deleguen tareas y colaboren entre sí."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+MCP conecta un agente con herramientas; A2A (Agent2Agent) conecta agentes con otros agentes. Un agente de viajes de una empresa puede pedirle a un agente de reservas de otra que gestione un hotel, sin conocer su implementación interna ni compartir su memoria. Cada agente publica una "tarjeta" con sus capacidades y los demás le envían tareas por HTTP.
+
+Google lo presentó en abril de 2025 con apoyo de numerosos socios y más tarde lo cedió a la Linux Foundation. Es un estándar joven: la especificación y su adopción siguen evolucionando.
+
+## Cómo se usa
+
+1. Cada agente publica una **Agent Card** (un JSON en una URL conocida) con su nombre, descripción, habilidades y forma de autenticación.
+2. El agente cliente lee la tarjeta y decide si ese agente remoto sirve para la tarea.
+3. Le envía un mensaje o tarea mediante JSON-RPC sobre HTTP; las tareas largas pueden informar progreso por streaming o notificaciones.
+4. Recibe el resultado como mensajes y artefactos (textos, archivos, datos estructurados).
+
+Ejemplo ilustrativo de Agent Card (campos simplificados; consulta la especificación para la lista completa):
+
+```json
+{
+  "name": "Agente de reservas",
+  "description": "Reserva hoteles y vuelos para viajes corporativos.",
+  "url": "https://agentes.ejemplo.com/a2a",
+  "skills": [
+    { "id": "reservar-hotel", "name": "Reservar hotel",
+      "description": "Busca y reserva habitaciones según fechas y presupuesto." }
+  ]
+}
+```
+
+## Para no técnicos
+
+Si cada agente de IA es un empleado digital, A2A es el idioma común y el directorio de contactos que les permite trabajar con empleados digitales de otras empresas. Un área de compras podría tener su agente negociando y coordinando pedidos directamente con los agentes de sus proveedores, siempre que ambos hablen A2A.

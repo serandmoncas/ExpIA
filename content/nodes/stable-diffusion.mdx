@@ -1,0 +1,51 @@
+---
+id: stable-diffusion
+title: "Stable Diffusion"
+kind: model
+category: [generative-media]
+released: 2022-08
+origin: "Stability AI, CompVis (LMU Múnich) y Runway"
+audience: [technical, business]
+level: fundamentals
+requires: [diffusion-models]
+related: [diffusion-models, hugging-face]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  paper: "https://arxiv.org/abs/2112.10752"
+  repo: "https://github.com/CompVis/stable-diffusion"
+summary: "Generador de imágenes a partir de texto con pesos descargables, que puso la generación de imágenes al alcance de cualquier ordenador con GPU."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Stable Diffusion genera imágenes a partir de una descripción en texto, edita zonas concretas de una imagen (inpainting), la amplía más allá de sus bordes o transforma una imagen en otra con distinto estilo. Su gran diferencia con otros generadores es que los pesos se pueden descargar y ejecutar en una GPU de consumo.
+
+Eso creó un enorme ecosistema: interfaces gráficas, modelos ajustados a estilos concretos, extensiones para controlar la pose o la composición y adaptaciones con LoRA. Se basa en la difusión latente: trabaja sobre una versión comprimida de la imagen, lo que la hace mucho más eficiente.
+
+## Cómo se usa
+
+1. Instala la librería Diffusers de Hugging Face y PyTorch con soporte de GPU.
+2. Descarga un checkpoint (revisa su licencia: varía entre versiones).
+3. Escribe un prompt descriptivo y genera; ajusta pasos y semilla para variar el resultado.
+
+```python
+import torch
+from diffusers import AutoPipelineForText2Image
+
+pipe = AutoPipelineForText2Image.from_pretrained(
+    "stabilityai/stable-diffusion-xl-base-1.0", torch_dtype=torch.float16
+).to("cuda")
+
+imagen = pipe("una taza de café sobre una mesa de madera, luz de mañana").images[0]
+imagen.save("cafe.png")
+```
+
+## Para no técnicos
+
+Es como tener un ilustrador incansable instalado en tu propio ordenador: le describes la escena y te devuelve una imagen en segundos, sin depender de un servicio externo ni pagar por cada dibujo.
+
+Caso de negocio: un estudio de videojuegos genera cientos de bocetos de ambientes y personajes para las primeras fases de diseño. Los artistas eligen las ideas prometedoras y las desarrollan a mano.

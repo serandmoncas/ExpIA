@@ -1,0 +1,44 @@
+---
+id: chain-of-thought
+title: "Chain-of-thought"
+kind: technique
+category: [llm-apps]
+released: 2022-01
+origin: "Wei et al. (Google Research)"
+audience: [technical]
+level: intermediate
+requires: [prompting]
+related: [reasoning-models, prompting]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2201.11903"
+summary: "Pedir al modelo que razone paso a paso antes de responder, lo que mejora mucho su desempeño en problemas de lógica y matemáticas."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+En problemas de varios pasos (aritmética, lógica, planificación, análisis de casos) los modelos fallan si saltan directo a la respuesta. Si se les pide escribir el razonamiento intermedio, aciertan con mucha más frecuencia. El paper original mostró mejoras grandes en benchmarks de matemáticas con solo incluir ejemplos razonados en el prompt.
+
+Además, el razonamiento escrito hace más fácil revisar por qué el modelo llegó a una conclusión. Esta idea es la base de los modelos de razonamiento actuales, que generan ese "pensamiento" de forma nativa.
+
+## Cómo se usa
+
+1. Incluye en el prompt ejemplos donde la respuesta muestra los pasos (*few-shot CoT*), o simplemente pide "piensa paso a paso" (*zero-shot CoT*).
+2. Separa el razonamiento de la respuesta final con etiquetas, para poder extraer solo la conclusión.
+3. Si el modelo ya es de razonamiento, no hace falta forzarlo: basta con darle el problema completo.
+
+```python
+prompt = """Resuelve el problema. Primero razona dentro de <razonamiento>,
+luego da solo el número final dentro de <respuesta>.
+
+Problema: Una tienda vende cajas de 12 huevos a 3 USD. ¿Cuánto cuestan 60 huevos?"""
+
+texto = llamar_modelo(prompt)  # tu cliente de LLM
+respuesta = texto.split("<respuesta>")[1].split("</respuesta>")[0]
+```
+
+## Para no técnicos
+
+Es como pedirle a un estudiante que muestre el procedimiento en el examen y no solo el resultado: al obligarse a escribir cada paso, comete menos errores y tú puedes ver dónde se equivocó. Un equipo financiero que usa IA para revisar cálculos de comisiones obtiene resultados más fiables y auditables si le pide que explique cada operación.

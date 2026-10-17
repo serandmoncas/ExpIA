@@ -1,0 +1,54 @@
+---
+id: pinecone
+title: "Pinecone"
+kind: tool
+category: [retrieval, infra]
+released: 2021-01
+origin: "Pinecone Systems"
+audience: [technical]
+level: intermediate
+requires: [vector-db]
+related: [pgvector, chroma, rag]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  site: "https://www.pinecone.io"
+  docs: "https://docs.pinecone.io"
+summary: "Base de datos vectorial en la nube, totalmente gestionada, para guardar embeddings y buscar por similitud a gran escala."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Es un servicio gestionado: no instalas ni mantienes servidores. Guardas vectores con metadatos y haces búsquedas de los más parecidos con baja latencia, aunque tengas cientos de millones de registros. Permite filtrar por metadatos y separar datos por espacios de nombres (por ejemplo, uno por cliente).
+
+Se usa como memoria de sistemas RAG, en buscadores semánticos, recomendaciones y detección de duplicados.
+
+## Cómo se usa
+
+1. Crea una cuenta y una clave de API en Pinecone.
+2. Crea un índice con la dimensión de tus embeddings.
+3. Instala el SDK (`pip install pinecone`), inserta vectores y consulta.
+
+```python
+from pinecone import Pinecone
+
+pc = Pinecone(api_key="TU_API_KEY")
+index = pc.Index("articulos")
+
+index.upsert(vectors=[
+    {"id": "a1", "values": embedding_a1, "metadata": {"tema": "envios"}},
+])
+
+resultado = index.query(vector=embedding_pregunta, top_k=3, include_metadata=True)
+for match in resultado.matches:
+    print(match.id, match.score)
+```
+
+## Para no técnicos
+
+Es como alquilar un almacén inteligente en lugar de construir uno: tú solo dejas las cajas y pides "tráeme las más parecidas a esta", y el proveedor se ocupa del edificio, la seguridad y el crecimiento.
+
+Un caso de negocio: un comercio electrónico recomienda productos similares a los que mira cada cliente sin que su equipo tenga que gestionar infraestructura especializada.

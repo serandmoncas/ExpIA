@@ -1,0 +1,48 @@
+---
+id: gans
+title: "GANs"
+kind: concept
+category: [generative-media]
+released: 2014-06
+origin: "Ian Goodfellow y colaboradores (Université de Montréal)"
+audience: [technical]
+level: intermediate
+requires: [deep-learning]
+status: declining
+summary: "Dos redes que compiten: una genera imágenes falsas y otra intenta detectarlas. Así aprenden a crear contenido realista."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1406.2661"
+related: [cnn]
+---
+
+## Para qué sirve
+
+Las redes generativas antagónicas (GAN) fueron la primera técnica que generó rostros e imágenes fotorrealistas. Se usaron para crear caras de personas inexistentes (StyleGAN), aumentar la resolución de imágenes, transferir estilos y generar datos sintéticos para entrenar otros modelos.
+
+Desde alrededor de 2021 los modelos de difusión las desplazaron en generación de imágenes porque son más estables de entrenar y más diversos. Las GAN siguen vigentes en tareas donde importa la velocidad de generación, como superresolución en tiempo real.
+
+## Cómo se usa
+
+1. El **generador** recibe ruido aleatorio y produce una muestra (por ejemplo, una imagen).
+2. El **discriminador** recibe muestras reales y generadas e intenta distinguirlas.
+3. Se entrenan por turnos: el discriminador para detectar mejor, el generador para engañarlo.
+4. Al final se descarta el discriminador y se usa el generador.
+
+```python
+# un paso de entrenamiento simplificado
+fake = G(torch.randn(batch, latent_dim))
+
+d_loss = bce(D(real), ones) + bce(D(fake.detach()), zeros)
+d_opt.zero_grad(); d_loss.backward(); d_opt.step()
+
+g_loss = bce(D(fake), ones)      # el generador quiere que D diga "real"
+g_opt.zero_grad(); g_loss.backward(); g_opt.step()
+```
+
+## Para no técnicos
+
+Es como un falsificador de billetes y un detective que se entrenan mutuamente: cada vez que el detective aprende a detectar un truco, el falsificador mejora su técnica, hasta que sus billetes son casi indistinguibles de los reales.
+
+Caso de negocio: un hospital puede generar imágenes médicas sintéticas para ampliar sus datos de entrenamiento sin exponer datos de pacientes reales.

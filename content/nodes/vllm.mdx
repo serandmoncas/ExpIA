@@ -1,0 +1,48 @@
+---
+id: vllm
+title: "vLLM"
+kind: tool
+category: [infra]
+released: 2023-06
+origin: "UC Berkeley (Sky Computing Lab)"
+audience: [technical]
+level: advanced
+requires: [llm]
+related: [ollama, hugging-face, quantization]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  docs: "https://docs.vllm.ai"
+  repo: "https://github.com/vllm-project/vllm"
+summary: "Motor de código abierto para servir modelos de lenguaje en GPU con alto rendimiento y muchos usuarios a la vez."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Es un servidor de inferencia pensado para producción: atiende muchas peticiones simultáneas aprovechando al máximo la GPU. Su técnica central, PagedAttention, gestiona la memoria de la caché de atención como páginas, lo que reduce desperdicio y permite agrupar más peticiones (continuous batching).
+
+Se usa para alojar modelos abiertos en infraestructura propia o en la nube con un coste por consulta mucho menor que una implementación ingenua, y expone una API compatible con la de OpenAI.
+
+## Cómo se usa
+
+1. En una máquina con GPU compatible, instala: `pip install vllm`.
+2. Lanza el servidor con un modelo del Hub de Hugging Face.
+3. Consúmelo con cualquier cliente compatible con la API de OpenAI.
+
+```bash
+# Arranca un servidor compatible con OpenAI (puerto 8000 por defecto)
+vllm serve <usuario>/<modelo>
+
+curl http://localhost:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model": "<usuario>/<modelo>", "messages": [{"role": "user", "content": "Hola"}]}'
+```
+
+## Para no técnicos
+
+Si Ollama es la cafetera de casa, vLLM es la máquina industrial de una cafetería con cola: está diseñada para servir a cientos de clientes a la vez sin que nadie espere demasiado.
+
+Un caso de negocio: una empresa con mucho tráfico migra parte de sus consultas a un modelo abierto servido con vLLM en sus servidores y reduce la factura mensual de API.

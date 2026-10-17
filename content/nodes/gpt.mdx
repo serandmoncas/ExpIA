@@ -1,0 +1,50 @@
+---
+id: gpt
+title: "GPT (OpenAI)"
+kind: model
+category: [llm]
+released: 2018-06
+origin: "OpenAI"
+audience: [technical, business]
+level: fundamentals
+requires: [llm]
+related: [openai-api, claude, gemini]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  docs: "https://platform.openai.com/docs"
+  paper: "https://arxiv.org/abs/2005.14165"
+summary: "La familia de modelos de lenguaje de OpenAI, base de ChatGPT, que popularizó los LLM entre el gran público."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+GPT (Generative Pre-trained Transformer) es la familia de modelos de OpenAI. Empezó en 2018 con GPT-1, que demostró que preentrenar un Transformer con mucho texto y luego ajustarlo funcionaba muy bien. GPT-3 mostró que, a gran escala, el modelo podía hacer tareas nuevas solo con instrucciones y unos pocos ejemplos.
+
+Hoy se usa a través de ChatGPT (para personas y empresas) y de la API de OpenAI (para desarrolladores): redacción, análisis de documentos, programación, atención al cliente, análisis de imágenes y voz, entre otros.
+
+## Cómo se usa
+
+1. Para uso personal o de equipo: ChatGPT en web, escritorio o móvil.
+2. Para integrarlo en un producto: crea una clave en la plataforma de OpenAI y llama a la API con su SDK.
+3. Elige el modelo de la familia según el equilibrio entre calidad, velocidad y costo (la lista cambia con frecuencia).
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+resp = client.chat.completions.create(
+    model="nombre-del-modelo",  # elige uno vigente en la documentación
+    messages=[{"role": "user", "content": "Escribe un eslogan para una cafetería."}],
+)
+print(resp.choices[0].message.content)
+```
+
+## Para no técnicos
+
+GPT es el "motor" que hay detrás de ChatGPT, igual que un motor concreto puede ir en distintos coches. Cuando alguien dice "lo hice con ChatGPT", el trabajo lo hizo un modelo de la familia GPT.
+
+Caso de negocio: un equipo de marketing usa ChatGPT para generar variantes de textos para anuncios y luego elige y pule las mejores. Pasa de escribir desde cero a editar, y prueba más ideas en menos tiempo.

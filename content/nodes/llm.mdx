@@ -1,0 +1,49 @@
+---
+id: llm
+title: "Modelos de lenguaje grandes (LLM)"
+kind: concept
+category: [llm]
+released: 2018-06
+origin: "OpenAI (GPT-1) y, en general, la comunidad de investigación en Transformers"
+audience: [technical, business]
+level: fundamentals
+requires: [transformer, tokenization]
+related: [gpt, claude, fine-tuning]
+status: mainstream
+summary: "Modelos entrenados con enormes cantidades de texto que predicen la siguiente palabra y, con ello, pueden redactar, resumir, traducir y razonar."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un LLM es un Transformer entrenado con cantidades masivas de texto para predecir el siguiente token. De esa tarea tan simple emergen capacidades muy útiles: redactar correos, resumir contratos, traducir, responder preguntas sobre documentos, generar y revisar código o clasificar tickets de soporte.
+
+Hoy son la base de asistentes conversacionales, copilotos de programación, buscadores con respuestas generadas y agentes que ejecutan tareas. Se usan tal cual (con un buen prompt), combinados con datos propios (RAG) o ajustados a un dominio concreto (fine-tuning).
+
+## Cómo se usa
+
+1. Elige un modelo: comercial vía API (GPT, Claude, Gemini) o abierto para ejecutar en tu infraestructura (Llama, Mistral).
+2. Escribe un prompt con instrucciones claras, contexto y, si ayuda, ejemplos.
+3. Envía el texto al modelo y procesa la respuesta.
+4. Mide la calidad con casos de prueba antes de llevarlo a producción.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()  # lee OPENAI_API_KEY del entorno
+resp = client.chat.completions.create(
+    model="nombre-del-modelo",  # consulta los modelos vigentes en la documentación
+    messages=[
+        {"role": "system", "content": "Eres un asistente que resume en 3 viñetas."},
+        {"role": "user", "content": "Resume este contrato: ..."},
+    ],
+)
+print(resp.choices[0].message.content)
+```
+
+## Para no técnicos
+
+Piensa en un LLM como alguien que ha leído una biblioteca entera y aprendió a continuar cualquier texto de forma muy convincente. No "sabe" las cosas como una base de datos: genera la respuesta más probable, por eso a veces se equivoca con seguridad.
+
+Caso de negocio: un equipo de atención al cliente usa un LLM para redactar borradores de respuesta a partir del historial del caso. Los agentes humanos revisan y envían, y el tiempo por ticket baja de forma notable.

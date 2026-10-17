@@ -1,0 +1,55 @@
+---
+id: openai-api
+title: "OpenAI API"
+kind: tool
+category: [llm]
+released: 2020-06
+origin: "OpenAI"
+audience: [technical]
+level: fundamentals
+requires: [gpt]
+related: [anthropic-api, vercel-ai-sdk]
+status: mainstream
+license: proprietary
+pricing: paid
+links:
+  docs: "https://platform.openai.com/docs"
+  site: "https://openai.com/api/"
+summary: "Servicio de pago para usar los modelos de OpenAI (GPT y otros) desde tu propio código mediante peticiones por internet."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Da acceso programático a los modelos de OpenAI para generar y resumir texto, clasificar correos, extraer datos de documentos, crear embeddings, transcribir audio o generar imágenes. Es la forma más común de añadir un LLM a una aplicación sin entrenar ni alojar nada.
+
+Se paga por uso (por tokens procesados), por lo que sirve tanto para un prototipo de una tarde como para un producto en producción con miles de usuarios.
+
+## Cómo se usa
+
+1. Crea una cuenta en la plataforma de OpenAI y genera una clave de API.
+2. Guarda la clave en la variable de entorno `OPENAI_API_KEY`.
+3. Instala el SDK oficial: `pip install openai` (o `npm install openai`).
+4. Envía mensajes al modelo y lee la respuesta.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()  # lee OPENAI_API_KEY del entorno
+
+response = client.chat.completions.create(
+    model="<modelo>",  # p. ej. un modelo GPT vigente; consulta la documentación
+    messages=[
+        {"role": "system", "content": "Eres un asistente conciso."},
+        {"role": "user", "content": "Resume este correo en una frase: ..."},
+    ],
+)
+print(response.choices[0].message.content)
+```
+
+## Para no técnicos
+
+Es como contratar a un redactor muy rápido por horas a través de una ventanilla: tu aplicación le pasa una nota con lo que necesita y recibe la respuesta en segundos, pagando solo por lo que usa.
+
+Un caso típico: una tienda en línea conecta su sistema de atención al cliente para que redacte borradores de respuesta a las consultas; el equipo humano solo revisa y envía.

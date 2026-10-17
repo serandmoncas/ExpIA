@@ -1,0 +1,46 @@
+---
+id: multi-agent
+title: "Sistemas multiagente"
+kind: concept
+category: [agents]
+released: 2023-08
+origin: "Microsoft Research (AutoGen), entre otros"
+audience: [technical, business]
+level: advanced
+requires: [agents]
+related: [agents, a2a, context-engineering]
+status: rising
+links:
+  paper: "https://arxiv.org/abs/2308.08155"
+summary: "Varios agentes de IA con roles distintos que colaboran, se reparten el trabajo o se revisan entre sí para resolver tareas grandes."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Algunas tareas son demasiado grandes o variadas para un solo agente con un solo contexto. En un sistema multiagente, un orquestador divide el trabajo y lo reparte entre subagentes especializados (uno investiga, otro escribe código, otro revisa), cada uno con sus propias instrucciones y herramientas. Esto permite trabajar en paralelo, mantener contextos más limpios y añadir revisiones cruzadas.
+
+Frameworks como AutoGen (2023) popularizaron el patrón de agentes que conversan entre sí. El costo es mayor consumo de tokens y más complejidad para depurar, así que conviene usarlo solo cuando un agente único no basta.
+
+## Cómo se usa
+
+1. Empieza con un solo agente y separa solo cuando haya una razón clara (paralelismo, especialización, contexto saturado).
+2. Define un orquestador que planifica y delega, y subagentes con tareas acotadas.
+3. Especifica qué recibe y qué devuelve cada subagente (idealmente un resumen corto, no todo su historial).
+4. Registra cada interacción para poder depurar y evaluar.
+
+```python
+# Patrón orquestador-subagentes (pseudocódigo)
+plan = orquestador.planificar(objetivo)          # lista de subtareas
+resultados = await asyncio.gather(*[
+    crear_subagente(rol=t.rol, herramientas=t.herramientas).ejecutar(t.descripcion)
+    for t in plan.subtareas
+])
+borrador = orquestador.sintetizar(objetivo, resultados)
+informe = revisor.revisar(borrador)               # otro agente valida
+```
+
+## Para no técnicos
+
+Es como un equipo de proyecto: un jefe reparte tareas entre especialistas, cada uno trabaja en lo suyo y luego alguien revisa el resultado conjunto. Una consultora podría usar un agente que investiga el mercado, otro que analiza números y otro que redacta, para entregar un primer borrador de informe en horas en lugar de días.

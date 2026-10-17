@@ -1,0 +1,49 @@
+---
+id: ollama
+title: "Ollama"
+kind: tool
+category: [infra]
+released: 2023-07
+audience: [technical]
+level: intermediate
+requires: [llm, quantization]
+related: [vllm, hugging-face, llama]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  site: "https://ollama.com"
+  repo: "https://github.com/ollama/ollama"
+summary: "Herramienta para descargar y ejecutar modelos de lenguaje abiertos en tu propio ordenador con un solo comando."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Simplifica correr LLM abiertos (Llama, Mistral, Gemma, Qwen y otros) en local: gestiona la descarga, usa versiones cuantizadas que caben en un portátil y expone una API HTTP en tu máquina. Funciona en macOS, Linux y Windows.
+
+Es ideal para prototipar sin coste por uso, trabajar sin conexión o con datos que no deben salir del equipo, y probar modelos antes de llevarlos a un servidor.
+
+## Cómo se usa
+
+1. Instala Ollama desde su web (o con tu gestor de paquetes).
+2. Descarga y ejecuta un modelo desde la terminal.
+3. Opcionalmente, llama a la API local desde tu código.
+
+```bash
+# Descarga (si hace falta) y abre un chat con el modelo
+ollama run llama3.2
+
+# La API local escucha en el puerto 11434
+curl http://localhost:11434/api/generate -d '{
+  "model": "llama3.2",
+  "prompt": "Explica qué es un embedding en una frase"
+}'
+```
+
+## Para no técnicos
+
+Es como tener una cafetera en casa en lugar de ir siempre a la cafetería: el resultado es algo menos sofisticado que el de los mejores modelos en la nube, pero es tuyo, no pagas cada taza y nadie ve lo que preparas.
+
+Un caso de negocio: una clínica prueba un asistente para resumir notas internas ejecutando el modelo en un ordenador propio, sin enviar datos de pacientes a terceros.

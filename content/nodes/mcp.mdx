@@ -1,0 +1,52 @@
+---
+id: mcp
+title: "Model Context Protocol (MCP)"
+kind: protocol
+category: [protocols, agents]
+released: 2024-11
+origin: "Anthropic"
+audience: [technical, business]
+level: intermediate
+requires: [tool-use]
+related: [tool-use, a2a, agents]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  site: "https://modelcontextprotocol.io"
+  repo: "https://github.com/modelcontextprotocol"
+summary: "Estándar abierto para conectar asistentes de IA con herramientas y datos externos, de modo que una integración sirva para muchas aplicaciones."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Antes de MCP, cada aplicación de IA tenía que programar su propia integración con GitHub, Slack, una base de datos o el sistema de archivos. MCP define un protocolo común: un **servidor MCP** expone herramientas, recursos (datos de solo lectura) y prompts, y cualquier **cliente MCP** (un asistente de escritorio, un editor de código, un agente propio) puede usarlos sin código adicional.
+
+Anthropic lo publicó como estándar abierto en noviembre de 2024 y fue adoptado rápidamente por otros proveedores y herramientas. Hoy existen servidores MCP para la mayoría de servicios populares.
+
+## Cómo se usa
+
+1. Instala el SDK oficial (hay versiones para Python, TypeScript y otros lenguajes).
+2. Declara herramientas como funciones con tipos y docstring; el SDK genera el esquema.
+3. Ejecuta el servidor (por stdio para uso local o por HTTP para uso remoto).
+4. Regístralo en el cliente (por ejemplo, en la configuración de tu asistente o editor).
+
+```python
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("inventario")
+
+@mcp.tool()
+def stock(sku: str) -> int:
+    """Devuelve las unidades disponibles de un producto."""
+    return consultar_inventario(sku)  # tu lógica real
+
+if __name__ == "__main__":
+    mcp.run()  # por defecto se comunica por stdio
+```
+
+## Para no técnicos
+
+MCP es como el USB-C de la IA: en lugar de un cable distinto para cada aparato, un solo conector estándar. Si una empresa crea un servidor MCP para su CRM una sola vez, sus empleados pueden consultarlo desde distintos asistentes de IA sin que TI tenga que construir una integración para cada uno.

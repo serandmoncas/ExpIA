@@ -1,0 +1,50 @@
+---
+id: gemini
+title: "Gemini (Google)"
+kind: model
+category: [llm]
+released: 2023-12
+origin: "Google DeepMind"
+audience: [technical, business]
+level: fundamentals
+requires: [llm]
+related: [multimodal-models, gpt, claude]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  docs: "https://ai.google.dev"
+  paper: "https://arxiv.org/abs/2312.11805"
+summary: "La familia de modelos de Google DeepMind, multimodal desde su origen, integrada en los productos de Google y disponible por API."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Gemini es la familia de modelos de Google DeepMind, diseñada desde el principio para trabajar con texto, imágenes, audio, vídeo y código. Destaca por ventanas de contexto muy grandes, que permiten analizar documentos extensos o vídeos completos de una vez.
+
+Se usa en la app Gemini, integrado en Google Workspace (Gmail, Docs, Sheets), en Android y en la búsqueda, y para desarrolladores a través de la Gemini API (Google AI Studio) y de Vertex AI en Google Cloud.
+
+## Cómo se usa
+
+1. Para uso personal o de equipo: la app Gemini o las funciones de IA dentro de Google Workspace.
+2. Para desarrolladores: obtén una clave en Google AI Studio y usa el SDK de Google Gen AI.
+3. Para empresas en Google Cloud: úsalo desde Vertex AI con los controles de seguridad de la nube.
+
+```python
+from google import genai
+
+client = genai.Client()  # lee GEMINI_API_KEY del entorno
+resp = client.models.generate_content(
+    model="nombre-del-modelo",  # consulta los modelos vigentes en la documentación
+    contents="Dame tres ideas de nombre para una app de recetas.",
+)
+print(resp.text)
+```
+
+## Para no técnicos
+
+Gemini es el asistente de IA de Google. Si tu empresa ya vive en Gmail, Drive y Docs, es como tener un ayudante que ya está sentado dentro de tus herramientas de trabajo diarias.
+
+Caso de negocio: un equipo comercial pide a Gemini dentro de Gmail que resuma un hilo largo con un cliente y proponga una respuesta, ahorrando minutos en cada correo.

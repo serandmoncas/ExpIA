@@ -1,0 +1,51 @@
+---
+id: mistral
+title: "Mistral"
+kind: model
+category: [llm]
+released: 2023-09
+origin: "Mistral AI (París)"
+audience: [technical]
+level: intermediate
+requires: [llm]
+related: [llama, ollama]
+status: mainstream
+license: open-source
+pricing: freemium
+links:
+  docs: "https://docs.mistral.ai"
+  paper: "https://arxiv.org/abs/2310.06825"
+summary: "Modelos de la empresa francesa Mistral AI: algunos con pesos abiertos y eficientes, otros comerciales vía API."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Mistral AI se dio a conocer en 2023 con Mistral 7B, un modelo pequeño con pesos abiertos (licencia Apache 2.0) que rendía como modelos mucho más grandes. Después llegó Mixtral, que popularizó la arquitectura "mezcla de expertos" en modelos abiertos.
+
+Hoy la empresa combina modelos con pesos abiertos, que puedes ejecutar en tu infraestructura, con modelos comerciales accesibles por su API y su asistente Le Chat. Es una opción frecuente en Europa por su origen y por el interés en soberanía de datos.
+
+## Cómo se usa
+
+1. Para modelos abiertos: descarga los pesos (por ejemplo desde Hugging Face) y ejecútalos con Transformers, vLLM u Ollama.
+2. Para la API: crea una clave en la plataforma de Mistral y usa su SDK.
+3. Revisa la licencia de cada modelo concreto: no todos tienen pesos abiertos.
+
+```python
+import os
+from mistralai import Mistral
+
+client = Mistral(api_key=os.environ["MISTRAL_API_KEY"])
+resp = client.chat.complete(
+    model="nombre-del-modelo",  # consulta los modelos vigentes en la documentación
+    messages=[{"role": "user", "content": "Traduce al inglés: buenos días"}],
+)
+print(resp.choices[0].message.content)
+```
+
+## Para no técnicos
+
+Mistral es como un fabricante europeo que vende tanto motores que puedes instalar en tu propio taller como un servicio de alquiler listo para usar. Tú eliges cuánto control quieres.
+
+Caso de negocio: una empresa europea con requisitos estrictos de protección de datos usa un modelo abierto de Mistral alojado en su propia nube para clasificar correos de clientes sin que salgan de su infraestructura.

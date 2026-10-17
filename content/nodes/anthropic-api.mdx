@@ -1,0 +1,52 @@
+---
+id: anthropic-api
+title: "Anthropic API"
+kind: tool
+category: [llm]
+released: 2023-03
+origin: "Anthropic"
+audience: [technical]
+level: fundamentals
+requires: [claude]
+related: [openai-api, claude-agent-sdk]
+status: mainstream
+license: proprietary
+pricing: paid
+links:
+  docs: "https://docs.anthropic.com"
+  site: "https://www.anthropic.com/api"
+summary: "Servicio de pago para usar los modelos Claude de Anthropic desde tu propio código, con soporte para herramientas, imágenes y documentos."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Permite integrar Claude en aplicaciones propias: asistentes de soporte, análisis de contratos largos, extracción de datos de PDFs, revisión de código o agentes que usan herramientas. Destaca por manejar contextos muy largos y por funciones como tool use, prompt caching y procesamiento por lotes.
+
+## Cómo se usa
+
+1. Crea una cuenta en la consola de Anthropic y genera una clave de API.
+2. Guarda la clave en la variable de entorno `ANTHROPIC_API_KEY`.
+3. Instala el SDK oficial: `pip install anthropic` (o `npm install @anthropic-ai/sdk`).
+4. Llama a la Messages API con tu prompt.
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()  # lee ANTHROPIC_API_KEY del entorno
+
+message = client.messages.create(
+    model="<modelo>",  # un modelo Claude vigente; consulta la documentación
+    max_tokens=1024,
+    system="Eres un asistente legal conciso.",
+    messages=[{"role": "user", "content": "¿Qué riesgos tiene esta cláusula? ..."}],
+)
+print(message.content[0].text)
+```
+
+## Para no técnicos
+
+Es como tener una línea directa con un analista muy leído: tu sistema le envía un texto (incluso un documento de cientos de páginas) con una pregunta, y recibe una respuesta redactada. Se paga según cuánto texto se envía y se recibe.
+
+Un caso de negocio: un despacho jurídico conecta su gestor documental para que cada contrato nuevo llegue con un resumen de cláusulas sensibles antes de que lo lea un abogado.

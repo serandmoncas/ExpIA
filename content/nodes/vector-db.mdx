@@ -1,0 +1,46 @@
+---
+id: vector-db
+title: "Bases de datos vectoriales"
+kind: concept
+category: [retrieval, infra]
+released: 2019-10
+audience: [technical]
+level: intermediate
+requires: [embeddings]
+related: [rag, semantic-search, pgvector]
+status: mainstream
+summary: "Bases de datos diseñadas para guardar embeddings y encontrar rápidamente los más parecidos entre millones de registros."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Cuando conviertes documentos, imágenes o productos en embeddings, necesitas buscar "los vectores más cercanos a este" entre millones, en milisegundos. Una base de datos relacional normal no está hecha para eso. Las bases vectoriales usan índices de vecinos más cercanos aproximados (como HNSW o IVF) que hacen esa búsqueda muy rápida a cambio de una precisión ligeramente menor.
+
+Son la pieza de almacenamiento de casi todo sistema RAG, de los motores de recomendación y de la búsqueda semántica. Hay opciones dedicadas (Pinecone, Chroma, Milvus, Weaviate, Qdrant) y extensiones para bases existentes, como pgvector para PostgreSQL.
+
+## Cómo se usa
+
+1. Crea una colección o índice indicando la dimensión de tus embeddings y la métrica (coseno, producto punto, euclidiana).
+2. Inserta cada vector con un id y metadatos (texto original, fuente, fecha).
+3. Consulta con un vector y, opcionalmente, filtros por metadatos.
+4. Ajusta los parámetros del índice si necesitas más velocidad o más precisión.
+
+```python
+import chromadb
+
+client = chromadb.Client()
+col = client.create_collection("manuales")
+col.add(
+    ids=["m1", "m2"],
+    documents=["Cómo reiniciar el router", "Política de devoluciones"],
+    metadatas=[{"area": "soporte"}, {"area": "ventas"}],
+)
+res = col.query(query_texts=["mi internet no funciona"], n_results=1)
+print(res["documents"])
+```
+
+## Para no técnicos
+
+Imagina una biblioteca donde los libros no se ordenan por título sino por tema, de modo que los parecidos quedan uno junto a otro: si te gusta uno, basta mirar los vecinos del estante. Una empresa de streaming usa esta idea para recomendar contenido similar al que acabas de ver, y un banco para encontrar transacciones parecidas a un fraude conocido.

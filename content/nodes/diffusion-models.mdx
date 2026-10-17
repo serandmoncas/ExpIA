@@ -1,0 +1,45 @@
+---
+id: diffusion-models
+title: "Modelos de difusión"
+kind: concept
+category: [generative-media]
+released: 2020-06
+origin: "Ho, Jain y Abbeel (DDPM), sobre trabajos previos de Sohl-Dickstein y colaboradores"
+audience: [technical, business]
+level: intermediate
+requires: [deep-learning]
+related: [stable-diffusion, gans]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2006.11239"
+summary: "Modelos que generan imágenes, audio o vídeo partiendo de ruido aleatorio y eliminándolo paso a paso hasta obtener un resultado nítido."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Los modelos de difusión son la técnica detrás de la mayoría de generadores de imágenes actuales (Stable Diffusion, DALL·E, Midjourney, Imagen) y de muchos generadores de vídeo y audio. Crean contenido nuevo a partir de una descripción en texto, editan partes de una imagen, amplían fotos o cambian su estilo.
+
+Desplazaron a las GANs porque entrenan de forma más estable y producen resultados más variados y de mayor calidad.
+
+## Cómo se usa
+
+1. Entrenamiento: se toman imágenes reales, se les añade ruido en muchos pasos y la red aprende a predecir ese ruido para poder quitarlo.
+2. Generación: se parte de ruido puro y, paso a paso, el modelo lo va limpiando hasta formar una imagen.
+3. Condicionamiento: un texto (convertido en embeddings) guía cada paso para que la imagen corresponda a la descripción.
+
+```python
+# Esquema del muestreo (simplificado)
+x = torch.randn(1, 3, 64, 64)              # ruido puro
+for t in reversed(range(num_pasos)):
+    ruido_predicho = modelo(x, t, texto_embedding)
+    x = scheduler.step(ruido_predicho, t, x).prev_sample  # un poco menos de ruido
+imagen = x
+```
+
+## Para no técnicos
+
+Imagina un escultor que empieza con un bloque de mármol informe y, golpe a golpe, va revelando una figura. El modelo empieza con "estática de televisor" y en cada paso la limpia un poco, guiado por tu descripción, hasta que aparece la imagen.
+
+Caso de negocio: una marca de ropa genera decenas de fondos y escenarios para fotos de producto en minutos, en lugar de organizar una sesión fotográfica para cada campaña.

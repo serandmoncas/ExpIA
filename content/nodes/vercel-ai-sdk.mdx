@@ -1,0 +1,50 @@
+---
+id: vercel-ai-sdk
+title: "Vercel AI SDK"
+kind: tool
+category: [frameworks]
+released: 2023-06
+origin: "Vercel"
+audience: [technical]
+level: intermediate
+requires: [llm, tool-use]
+related: [langchain, openai-api, anthropic-api]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  docs: "https://ai-sdk.dev"
+  repo: "https://github.com/vercel/ai"
+summary: "Librería de TypeScript para añadir IA a apps web con una sola interfaz para muchos proveedores, streaming y herramientas."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Unifica en TypeScript la forma de hablar con distintos proveedores de modelos (OpenAI, Anthropic, Google y otros): cambias de proveedor cambiando una línea. Incluye funciones para generar texto, transmitir respuestas en tiempo real (streaming), obtener objetos estructurados validados y llamar herramientas.
+
+También trae hooks de interfaz para React y otros frameworks (por ejemplo, `useChat`) que facilitan construir chats en Next.js. No requiere desplegar en Vercel.
+
+## Cómo se usa
+
+1. Instala el núcleo y el proveedor: `npm install ai @ai-sdk/openai`.
+2. Configura la clave del proveedor en variables de entorno.
+3. Llama a `generateText` (o `streamText` para respuestas en streaming).
+
+```ts
+import { generateText } from 'ai'
+import { openai } from '@ai-sdk/openai'
+
+const { text } = await generateText({
+  model: openai('<modelo>'), // cambia de proveedor cambiando esta línea
+  prompt: 'Escribe un eslogan para una cafetería de barrio.',
+})
+console.log(text)
+```
+
+## Para no técnicos
+
+Es como un adaptador de enchufes universal: la aplicación se conecta siempre igual y el adaptador se encarga de que funcione con el modelo de cualquier proveedor.
+
+Un caso de negocio: una startup lanza su chat con un proveedor y, cuando otro baja precios, cambia en una tarde sin rehacer la aplicación.

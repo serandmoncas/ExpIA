@@ -1,0 +1,52 @@
+---
+id: lora
+title: "LoRA"
+kind: technique
+category: [llm]
+released: 2021-06
+origin: "Hu et al. (Microsoft)"
+audience: [technical]
+level: advanced
+requires: [fine-tuning]
+related: [fine-tuning, quantization]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2106.09685"
+summary: "Forma barata de ajustar un modelo grande: en vez de modificar todos sus pesos, entrena unas pocas matrices pequeñas que se suman al original."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Hacer fine-tuning completo de un modelo de miles de millones de parámetros exige mucha memoria de GPU y genera una copia entera del modelo por cada ajuste. LoRA (*Low-Rank Adaptation*) congela los pesos originales y entrena solo matrices de bajo rango insertadas en ciertas capas, lo que reduce los parámetros entrenables en órdenes de magnitud.
+
+El resultado es un "adaptador" de pocos megabytes que se puede cargar o quitar sobre el modelo base. Así se ajustan modelos abiertos a un estilo, un dominio o un formato con una sola GPU, y se pueden servir muchos adaptadores sobre el mismo modelo base. Combinado con cuantización (QLoRA) el costo baja aún más.
+
+## Cómo se usa
+
+1. Elige un modelo base y prepara un conjunto de ejemplos de entrada y salida.
+2. Configura LoRA: el rango `r`, el factor de escala y en qué módulos insertarlo (típicamente las proyecciones de atención).
+3. Entrena normalmente; solo se actualizan los parámetros del adaptador.
+4. Guarda el adaptador y cárgalo sobre el modelo base, o fusiónalo con él para servirlo.
+
+```python
+from transformers import AutoModelForCausalLM
+from peft import LoraConfig, get_peft_model
+
+model = AutoModelForCausalLM.from_pretrained("mistralai/Mistral-7B-v0.1")
+config = LoraConfig(
+    r=8,
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.05,
+    task_type="CAUSAL_LM",
+)
+model = get_peft_model(model, config)
+model.print_trainable_parameters()  # una fracción mínima del total
+# ...entrenar con Trainer o tu bucle habitual, luego model.save_pretrained("mi-adaptador")
+```
+
+## Para no técnicos
+
+En vez de reescribir un libro entero para adaptarlo a otro público, le pegas unas notas adhesivas en los lugares clave: el libro original no cambia y las notas se pueden quitar o reemplazar. Una empresa puede así tener un mismo modelo base con adaptadores distintos para legal, ventas y soporte, a una fracción del costo de entrenar modelos separados.

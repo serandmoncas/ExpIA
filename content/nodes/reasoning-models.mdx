@@ -1,0 +1,46 @@
+---
+id: reasoning-models
+title: "Modelos de razonamiento"
+kind: concept
+category: [llm]
+released: 2024-09
+origin: "OpenAI (serie o1), seguida por otros laboratorios"
+audience: [technical, business]
+level: intermediate
+requires: [llm, chain-of-thought]
+related: [chain-of-thought, agents, evals]
+status: rising
+summary: "LLM entrenados para pensar paso a paso antes de responder, lo que mejora mucho en matemáticas, código y problemas complejos."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un modelo de razonamiento genera internamente una cadena de pensamiento antes de dar la respuesta final: plantea el problema, prueba caminos, detecta errores y corrige. Se entrena para ello con aprendizaje por refuerzo, en lugar de depender solo de que el usuario le pida "piensa paso a paso".
+
+Destaca en tareas donde un error intermedio arruina el resultado: problemas matemáticos, depuración de código, planificación de varios pasos, análisis legales o financieros con muchas condiciones. A cambio, tarda más y consume más tokens, así que no compensa para preguntas sencillas.
+
+## Cómo se usa
+
+1. Reserva estos modelos (o el modo de razonamiento extendido) para tareas difíciles; usa modelos rápidos para lo trivial.
+2. Da el objetivo y las restricciones con claridad; no hace falta pedirle que piense paso a paso.
+3. Ajusta el "esfuerzo" o presupuesto de razonamiento si el proveedor lo permite, equilibrando calidad, latencia y costo.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+resp = client.chat.completions.create(
+    model="nombre-del-modelo-de-razonamiento",
+    reasoning_effort="high",  # más esfuerzo: mejor respuesta, más lenta y cara
+    messages=[{"role": "user", "content": "Encuentra el error en esta función: ..."}],
+)
+print(resp.choices[0].message.content)
+```
+
+## Para no técnicos
+
+Es la diferencia entre alguien que responde lo primero que se le ocurre y alguien que coge papel y lápiz, hace cuentas y revisa antes de contestar. El segundo tarda más, pero se equivoca mucho menos en problemas difíciles.
+
+Caso de negocio: un equipo financiero usa un modelo de razonamiento para revisar modelos de proyección con decenas de supuestos encadenados; detecta incoherencias que un modelo rápido pasaba por alto.

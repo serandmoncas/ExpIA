@@ -1,0 +1,56 @@
+import { z } from 'zod'
+import { KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS } from './enums'
+import { parseReleased } from '@/lib/dates'
+
+const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'debe ser kebab-case')
+// js-yaml con JSON_SCHEMA deja 2020-05-22 como texto, pero `2020` llega como número
+const yamlString = z.union([z.string(), z.number()]).transform(String)
+
+const released = yamlString.refine((s) => {
+  try {
+    parseReleased(s)
+    return true
+  } catch {
+    return false
+  }
+}, 'debe ser YYYY, YYYY-MM o YYYY-MM-DD válido')
+
+export const nodeFrontmatterSchema = z
+  .object({
+    id,
+    title: z.string().min(1),
+    kind: z.enum(KINDS),
+    category: z.array(z.string()).min(1),
+    released,
+    origin: z.string().optional(),
+    audience: z.array(z.enum(AUDIENCES)).min(1),
+    level: z.enum(LEVELS),
+    requires: z.array(id).default([]),
+    related: z.array(id).default([]),
+    status: z.enum(STATUSES),
+    license: z.enum(LICENSES).optional(),
+    pricing: z.enum(PRICINGS).optional(),
+    links: z
+      .object({
+        docs: z.string().url().optional(),
+        paper: z.string().url().optional(),
+        repo: z.string().url().optional(),
+        site: z.string().url().optional(),
+      })
+      .strict()
+      .default({}),
+    summary: z.string().min(1).max(160),
+    verified: z.boolean(),
+    added: yamlString.refine((s) => /^\d{4}-\d{2}-\d{2}$/.test(s), 'debe ser YYYY-MM-DD'),
+    voices: z.array(id).default([]),
+  })
+  .strict()
+
+export const taxonomySchema = z.object({
+  categories: z
+    .array(z.object({ id, label: z.string().min(1), color: z.string().regex(/^#[0-9a-fA-F]{6}$/) }))
+    .min(1),
+})
+
+export type NodeFrontmatter = z.infer<typeof nodeFrontmatterSchema>
+export type Category = z.infer<typeof taxonomySchema>['categories'][number]

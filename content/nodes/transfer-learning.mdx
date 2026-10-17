@@ -1,0 +1,47 @@
+---
+id: transfer-learning
+title: "Transfer learning"
+kind: technique
+category: [foundations]
+released: 2018-01
+origin: "Jeremy Howard y Sebastian Ruder (ULMFiT, en lenguaje)"
+audience: [technical]
+level: intermediate
+requires: [deep-learning]
+status: mainstream
+summary: "Reutilizar un modelo ya entrenado con muchos datos y adaptarlo a una tarea nueva con pocos datos y poco cómputo."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1801.06146"
+related: [cnn, transformer]
+---
+
+## Para qué sirve
+
+Entrenar un modelo desde cero exige enormes volúmenes de datos y cómputo. Con transfer learning se parte de un modelo preentrenado (por ejemplo, una CNN entrenada con ImageNet o un modelo de lenguaje) y se ajusta con unos cientos o miles de ejemplos propios.
+
+En visión ya era práctica común; en 2018 trabajos como ULMFiT mostraron que también funcionaba muy bien en lenguaje, abriendo el camino a BERT, GPT y al fine-tuning de modelos de lenguaje que se usa hoy.
+
+## Cómo se usa
+
+1. Se elige un modelo preentrenado adecuado a la tarea.
+2. Se reemplaza la capa final por una que corresponda a las clases propias.
+3. Se congelan las capas iniciales (o se entrenan con una tasa de aprendizaje baja).
+4. Se entrena con los datos propios y se evalúa.
+
+```python
+import torch.nn as nn
+from torchvision.models import resnet18, ResNet18_Weights
+
+model = resnet18(weights=ResNet18_Weights.DEFAULT)
+for p in model.parameters():
+    p.requires_grad = False                  # congela lo aprendido
+model.fc = nn.Linear(model.fc.in_features, 3)  # nueva cabeza: 3 clases propias
+```
+
+## Para no técnicos
+
+Un chef con años de experiencia aprende una cocina nueva en semanas, no en años, porque ya sabe cortar, sazonar y manejar el fuego. Transfer learning es lo mismo: aprovechar lo que un modelo ya sabe para enseñarle algo nuevo rápido.
+
+Caso de negocio: una aseguradora con solo unas mil fotos de daños en vehículos puede construir un clasificador útil partiendo de un modelo de visión preentrenado, en lugar de reunir millones de imágenes.

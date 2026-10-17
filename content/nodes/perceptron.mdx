@@ -1,0 +1,48 @@
+---
+id: perceptron
+title: "Perceptrón"
+kind: concept
+category: [foundations]
+released: 1958
+origin: "Frank Rosenblatt (Cornell Aeronautical Laboratory)"
+audience: [technical]
+level: fundamentals
+requires: [neural-network]
+status: declining
+summary: "La neurona artificial más simple: suma entradas con pesos y decide sí o no. Es el antepasado directo de las redes neuronales modernas."
+verified: false
+added: 2026-10-17
+related: [backpropagation]
+---
+
+## Para qué sirve
+
+El perceptrón clasifica datos en dos grupos trazando una frontera lineal: por ejemplo, separar correos "spam" de "no spam" a partir de unas pocas señales numéricas. Hoy casi no se usa solo, pero es la pieza conceptual de la que salen todas las redes neuronales.
+
+Su límite más famoso, señalado por Minsky y Papert en 1969, es que no puede resolver problemas que no se separan con una línea recta (como el XOR). Esa limitación motivó, años después, las redes de varias capas entrenadas con backpropagation.
+
+## Cómo se usa
+
+1. Cada entrada se multiplica por un peso y se suman los resultados junto con un sesgo.
+2. Si la suma supera cero, la salida es 1; si no, 0.
+3. Cuando se equivoca, se ajustan los pesos en la dirección del error (regla de aprendizaje del perceptrón).
+4. Se repite sobre los datos hasta que deja de equivocarse o se alcanza un número de vueltas.
+
+```python
+import numpy as np
+
+w, b, lr = np.zeros(2), 0.0, 0.1
+for _ in range(20):
+    for x, y in zip(X, Y):            # X: (n, 2), Y: 0 o 1
+        pred = int(w @ x + b > 0)
+        w += lr * (y - pred) * x
+        b += lr * (y - pred)
+```
+
+En la práctica se usa como ejercicio didáctico o mediante `sklearn.linear_model.Perceptron`.
+
+## Para no técnicos
+
+Imagina a un portero de discoteca con una regla fija: suma puntos por vestimenta, edad y lista de invitados, y si pasa de cierto número, deja entrar. Cuando se equivoca, ajusta cuánto vale cada criterio. Eso es un perceptrón.
+
+Caso de negocio: un banco podría aprobar o rechazar solicitudes simples con una regla así. Hoy se usan modelos mucho más capaces, pero entender el perceptrón ayuda a ver que la IA, en el fondo, aprende a pesar señales.

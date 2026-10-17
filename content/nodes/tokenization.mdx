@@ -1,0 +1,45 @@
+---
+id: tokenization
+title: "Tokens y tokenización"
+kind: concept
+category: [foundations, llm]
+released: 2015-08
+origin: "Sennrich, Haddow y Birch (BPE para traducción neuronal)"
+audience: [technical, business]
+level: fundamentals
+requires: []
+status: mainstream
+summary: "Los modelos de lenguaje no leen letras ni palabras sino tokens: trozos de texto. Determinan costo, límites y comportamiento."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1508.07909"
+related: [embeddings, transformer]
+---
+
+## Para qué sirve
+
+Antes de que un modelo procese texto, un tokenizador lo parte en tokens: palabras frecuentes enteras, y fragmentos para las raras. Técnicas como BPE (*byte pair encoding*) logran un vocabulario manejable que aun así puede representar cualquier palabra nueva.
+
+Entender los tokens es práctico: las APIs de modelos de lenguaje cobran por token, la ventana de contexto se mide en tokens y algunas rarezas (contar letras, aritmética, idiomas distintos al inglés que "gastan" más tokens) se explican por cómo se parte el texto.
+
+## Cómo se usa
+
+1. Se elige el tokenizador del modelo que se va a usar (cada familia tiene el suyo).
+2. Se cuenta cuántos tokens ocupa el texto para estimar costo y verificar que cabe en el contexto.
+3. Si no cabe, se resume, se recorta o se divide el texto en fragmentos.
+
+```python
+import tiktoken
+
+enc = tiktoken.get_encoding("cl100k_base")
+tokens = enc.encode("La tokenización parte el texto en trozos.")
+print(len(tokens))               # cuántos tokens ocupa
+print([enc.decode([t]) for t in tokens])
+```
+
+## Para no técnicos
+
+Piensa en un juego de bloques: en lugar de tener una pieza para cada palabra del diccionario, tienes piezas para sílabas y palabras comunes, y con ellas armas cualquier cosa. Los modelos de IA leen y escriben con esas piezas, llamadas tokens.
+
+Caso de negocio: una empresa que usa un chatbot paga según los tokens procesados. Saber que un documento largo equivale a muchos miles de tokens ayuda a estimar el presupuesto y a decidir si conviene resumir antes de enviarlo.

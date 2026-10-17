@@ -1,0 +1,51 @@
+---
+id: evals
+title: "Evals"
+kind: technique
+category: [evaluation]
+released: 2023-03
+origin: "Práctica de la industria; OpenAI publicó el framework OpenAI Evals"
+audience: [technical, business]
+level: intermediate
+requires: [llm, prompting]
+related: [guardrails, prompting, agents]
+status: rising
+links:
+  repo: "https://github.com/openai/evals"
+summary: "Pruebas sistemáticas que miden qué tan bien responde un sistema de IA en casos reales, para mejorar con datos y no por intuición."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Cambiar un prompt, un modelo o la forma de recuperar documentos puede mejorar unos casos y empeorar otros sin que nadie lo note. Las evals son el equivalente a los tests de software para aplicaciones con LLM: un conjunto de entradas representativas con criterios de éxito, que se corre cada vez que algo cambia. Permiten comparar modelos, detectar regresiones y decidir con datos si algo está listo para producción.
+
+OpenAI publicó su framework OpenAI Evals junto con GPT-4 en marzo de 2023, y desde entonces evaluar se volvió una práctica central del desarrollo con IA.
+
+## Cómo se usa
+
+1. Reúne casos reales (preguntas de usuarios, documentos, tareas), incluyendo los difíciles y los que ya fallaron.
+2. Define cómo calificar cada uno: comparación exacta, reglas en código, o un modelo que actúa como juez con una rúbrica.
+3. Corre el conjunto con la versión actual y guarda los resultados como línea base.
+4. Repite tras cada cambio y revisa a mano una muestra de los fallos.
+
+```python
+casos = [
+    {"entrada": "¿Puedo devolver un producto después de 40 días?", "debe_mencionar": "30 días"},
+    {"entrada": "¿Hacen envíos a Chile?", "debe_mencionar": "Chile"},
+]
+
+def evaluar(sistema):
+    aciertos = 0
+    for c in casos:
+        salida = sistema(c["entrada"])
+        aciertos += c["debe_mencionar"].lower() in salida.lower()
+    return aciertos / len(casos)
+
+print(f"Precisión: {evaluar(mi_asistente):.0%}")
+```
+
+## Para no técnicos
+
+Es como el examen de control de calidad de una fábrica: antes de cambiar una máquina, verificas que las piezas sigan saliendo bien con una muestra estándar. Una empresa que va a cambiar de proveedor de IA puede correr sus evals con ambos y elegir con números (precisión, costo, velocidad) en lugar de con la impresión de una demo.

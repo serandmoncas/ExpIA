@@ -1,0 +1,45 @@
+---
+id: computer-use
+title: "Computer use"
+kind: technique
+category: [agents]
+released: 2024-10
+origin: "Anthropic (beta con Claude 3.5 Sonnet)"
+audience: [technical, business]
+level: advanced
+requires: [agents, multimodal-models]
+related: [agents, tool-use]
+status: rising
+summary: "Agentes que usan una computadora como una persona: miran la pantalla, mueven el ratón y escriben para operar cualquier aplicación."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Muchos sistemas no tienen API: software de escritorio antiguo, portales web de proveedores, formularios de gobierno. Con computer use, el modelo recibe capturas de pantalla, decide dónde hacer clic o qué escribir, y repite hasta completar la tarea. Sirve para automatizar procesos administrativos, probar interfaces o llenar formularios en sistemas heredados.
+
+Anthropic lo presentó en beta en octubre de 2024; después aparecieron capacidades similares de otros proveedores. Todavía es más lento y menos fiable que una integración por API, así que se usa donde no hay alternativa.
+
+## Cómo se usa
+
+1. Prepara un entorno aislado (máquina virtual o contenedor con escritorio) sin acceso a datos sensibles innecesarios.
+2. Habilita la herramienta de computadora del proveedor, indicando la resolución de pantalla.
+3. Ejecuta el bucle de agente: el modelo pide acciones (captura, clic, teclear), tu código las ejecuta en el entorno y devuelve una nueva captura.
+4. Limita pasos y pide confirmación humana antes de acciones sensibles (pagos, envíos, borrados).
+
+```python
+# Pseudocódigo: el nombre exacto de la herramienta y del header beta
+# depende de la versión de la API; consulta la documentación del proveedor.
+while True:
+    resp = llm(messages, tools=[herramienta_computadora(ancho=1280, alto=800)])
+    accion = resp.accion_solicitada()        # p. ej. {"action": "left_click", "coordinate": [640, 400]}
+    if accion is None:
+        break
+    ejecutar_en_vm(accion)                   # xdotool, Playwright, etc.
+    messages.append(resultado(captura_de_pantalla()))
+```
+
+## Para no técnicos
+
+Es como tener un practicante que se sienta frente a tu computadora y hace las tareas repetitivas mirando la pantalla, igual que lo harías tú, aunque más despacio y necesitando supervisión. Una empresa de logística puede usarlo para descargar cada mañana reportes de portales de transportistas que no ofrecen integración, ahorrando horas de trabajo manual.

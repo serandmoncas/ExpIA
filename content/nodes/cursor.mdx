@@ -1,0 +1,45 @@
+---
+id: cursor
+title: "Cursor"
+kind: tool
+category: [dev-tools]
+released: 2023-03
+origin: "Anysphere"
+audience: [technical]
+level: fundamentals
+requires: [llm]
+related: [github-copilot, claude-code]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  site: "https://cursor.com"
+summary: "Editor de código basado en VS Code con IA integrada para autocompletar, editar varios archivos y chatear con tu proyecto."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Es un editor de código (una bifurcación de VS Code) en el que la IA está en el centro: sugiere las siguientes líneas mientras escribes, permite pedir cambios en lenguaje natural sobre uno o varios archivos y tiene un modo agente que ejecuta tareas más largas dentro del proyecto.
+
+Entiende el contexto del repositorio, de modo que puedes preguntar "¿dónde se valida el login?" o pedir "añade paginación a este listado" y revisar el cambio propuesto antes de aceptarlo.
+
+## Cómo se usa
+
+1. Descarga e instala Cursor desde su web; puede importar extensiones y ajustes de VS Code.
+2. Abre tu proyecto y deja que lo indexe.
+3. Usa el autocompletado con Tab, el chat lateral o el modo agente para pedir cambios.
+4. Revisa el diff propuesto y acepta o rechaza cada cambio.
+
+```text
+Ejemplo de petición en el chat del agente:
+"Añade validación de email al formulario de registro en src/forms/signup.tsx
+ y escribe un test para el caso de email inválido."
+```
+
+## Para no técnicos
+
+Es como un procesador de textos con un coautor sentado al lado que conoce todo el documento: puedes pedirle que reescriba un capítulo y te muestra los cambios marcados para que decidas.
+
+Un caso de negocio: un equipo pequeño de desarrollo acelera tareas repetitivas (formularios, tests, migraciones) y dedica más tiempo a decisiones de producto.

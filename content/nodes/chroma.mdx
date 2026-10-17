@@ -1,0 +1,53 @@
+---
+id: chroma
+title: "Chroma"
+kind: tool
+category: [retrieval]
+released: 2022-10
+origin: "Chroma"
+audience: [technical]
+level: intermediate
+requires: [vector-db]
+related: [pgvector, pinecone, llamaindex]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  site: "https://www.trychroma.com"
+  repo: "https://github.com/chroma-core/chroma"
+summary: "Base de datos vectorial de código abierto, fácil de arrancar, pensada para prototipos y apps de RAG."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Permite guardar textos con sus embeddings y buscar los más parecidos con muy poca configuración: puede correr dentro de tu propio proceso de Python, sin servidor aparte, y genera los embeddings automáticamente si no le das los tuyos.
+
+Es una opción habitual para prototipos, cursos y aplicaciones pequeñas o medianas de RAG, y se integra con LangChain y LlamaIndex. También puede ejecutarse como servidor.
+
+## Cómo se usa
+
+1. Instala la librería: `pip install chromadb`.
+2. Crea un cliente y una colección.
+3. Añade documentos y consulta por texto.
+
+```python
+import chromadb
+
+client = chromadb.Client()  # en memoria; usa PersistentClient para guardar en disco
+coleccion = client.create_collection("faq")
+
+coleccion.add(
+    ids=["1", "2"],
+    documents=["Los envíos tardan 48 horas.", "Aceptamos devoluciones durante 30 días."],
+)
+
+print(coleccion.query(query_texts=["¿Puedo devolver un producto?"], n_results=1))
+```
+
+## Para no técnicos
+
+Es como una libreta de notas que entiende de qué trata cada nota: le preguntas con tus palabras y te devuelve la nota más relacionada, aunque no use las mismas palabras.
+
+Un caso de negocio: un equipo valida en pocos días si un asistente sobre sus preguntas frecuentes es útil antes de invertir en infraestructura mayor.

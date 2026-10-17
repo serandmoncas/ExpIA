@@ -1,0 +1,54 @@
+---
+id: claude-agent-sdk
+title: "Claude Agent SDK"
+kind: tool
+category: [frameworks, agents]
+released: 2025-09
+origin: "Anthropic"
+audience: [technical]
+level: intermediate
+requires: [agents, tool-use, anthropic-api]
+related: [claude-code, anthropic-api, mcp]
+status: rising
+license: open-source
+pricing: free
+links:
+  repo: "https://github.com/anthropics/claude-agent-sdk-python"
+summary: "Librería de Anthropic para crear agentes propios con el mismo motor que Claude Code: herramientas, archivos, comandos y MCP."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Expone como librería (Python y TypeScript) el bucle de agente que impulsa Claude Code: el modelo planifica, usa herramientas (leer y editar archivos, ejecutar comandos, buscar en la web, servidores MCP) y repite hasta terminar la tarea. Antes se llamaba Claude Code SDK.
+
+Sirve para construir agentes a medida sin reimplementar la gestión de contexto, los permisos o la ejecución de herramientas: un agente que revisa pull requests, uno que investiga y redacta informes, o uno de soporte que consulta sistemas internos.
+
+## Cómo se usa
+
+1. Instala el paquete: `pip install claude-agent-sdk` (o `npm install @anthropic-ai/claude-agent-sdk`).
+2. Configura tu clave en `ANTHROPIC_API_KEY`.
+3. Llama a `query` con el encargo y las opciones (herramientas permitidas, prompt de sistema, servidores MCP).
+4. Recorre los mensajes que el agente va emitiendo.
+
+```python
+import asyncio
+from claude_agent_sdk import query, ClaudeAgentOptions
+
+async def main():
+    opciones = ClaudeAgentOptions(
+        system_prompt="Eres un revisor de código cuidadoso.",
+        allowed_tools=["Read", "Grep"],  # solo lectura
+    )
+    async for mensaje in query(prompt="Revisa src/ y lista posibles bugs", options=opciones):
+        print(mensaje)
+
+asyncio.run(main())
+```
+
+## Para no técnicos
+
+Si Claude Code es un empleado ya formado que trabaja en el código, este SDK es la escuela que permite formar a otros empleados con las mismas habilidades pero para tareas distintas de tu empresa.
+
+Un caso de negocio: un equipo de finanzas crea un agente que cada mes lee los extractos, cruza datos con la hoja de presupuesto y deja un borrador de informe para revisión.

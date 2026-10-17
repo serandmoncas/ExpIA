@@ -1,0 +1,44 @@
+---
+id: rnn-lstm
+title: "RNN y LSTM"
+kind: concept
+category: [foundations]
+released: 1997
+origin: "Sepp Hochreiter y Jürgen Schmidhuber (LSTM)"
+audience: [technical]
+level: intermediate
+requires: [deep-learning, backpropagation]
+status: declining
+summary: "Redes que procesan secuencias paso a paso y recuerdan lo anterior. Dominaron texto y voz antes de la llegada del Transformer."
+verified: false
+added: 2026-10-17
+related: [attention, transformer]
+---
+
+## Para qué sirve
+
+Las redes recurrentes (RNN) leen datos en orden, uno tras otro, y mantienen un estado interno que resume lo visto. Las LSTM añaden "compuertas" que deciden qué recordar y qué olvidar, lo que les permite manejar dependencias más largas sin que el aprendizaje se degrade.
+
+Durante la década de 2010 impulsaron traducción automática, reconocimiento de voz, teclados predictivos y pronóstico de series temporales. Hoy el Transformer las reemplazó en lenguaje, aunque siguen apareciendo en series temporales y sistemas embebidos con pocos recursos.
+
+## Cómo se usa
+
+1. Se convierte la secuencia (palabras, lecturas de un sensor) en vectores.
+2. La LSTM recorre la secuencia y actualiza su estado en cada paso.
+3. Se usa el último estado (o todos) para predecir: la siguiente palabra, una etiqueta o un valor futuro.
+
+```python
+import torch.nn as nn
+
+lstm = nn.LSTM(input_size=8, hidden_size=64, batch_first=True)
+head = nn.Linear(64, 1)
+
+out, (h, c) = lstm(x)        # x: (batch, pasos, 8)
+pred = head(out[:, -1])      # predicción a partir del último paso
+```
+
+## Para no técnicos
+
+Es como leer una novela con una libreta al lado: vas anotando lo importante y tachando lo que ya no importa, para entender cada capítulo según lo anterior. El problema es que hay que leer en orden, página por página, y eso es lento.
+
+Caso de negocio: una empresa de energía usa una LSTM para predecir el consumo de la próxima hora a partir de los datos de las últimas semanas y así ajustar la generación.

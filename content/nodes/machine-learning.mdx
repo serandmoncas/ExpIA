@@ -1,0 +1,38 @@
+---
+id: machine-learning
+title: "Machine Learning"
+kind: concept
+category: [foundations]
+released: 1959
+origin: "Arthur Samuel (IBM)"
+audience: [technical, business]
+level: fundamentals
+requires: []
+status: mainstream
+summary: "Programas que aprenden patrones a partir de datos en lugar de seguir reglas escritas a mano."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Permite resolver problemas en los que escribir reglas explícitas es imposible o muy costoso: clasificar correos como spam, predecir demanda, recomendar productos o detectar fraude. El sistema ajusta un modelo a partir de ejemplos y luego generaliza a casos nuevos.
+
+## Cómo se usa
+
+1. Reúnes datos de ejemplo (entradas y, si es aprendizaje supervisado, la respuesta correcta).
+2. Eliges un tipo de modelo (regresión, árbol de decisión, red neuronal…).
+3. Entrenas: el algoritmo ajusta los parámetros del modelo para reducir el error.
+4. Evalúas con datos que el modelo no vio durante el entrenamiento.
+
+```python
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+model.fit(X_train, y_train)          # aprende de ejemplos
+print(model.score(X_test, y_test))   # mide qué tan bien generaliza
+```
+
+## Para no técnicos
+
+Es como enseñarle a alguien a reconocer frutas mostrándole muchas fotos, en vez de darle un manual con reglas. Después de ver suficientes ejemplos, reconoce frutas nuevas por sí mismo. En una empresa se usa para predecir ventas, detectar clientes que van a irse o automatizar decisiones repetitivas basadas en datos históricos.

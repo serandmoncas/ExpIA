@@ -1,0 +1,50 @@
+---
+id: agents
+title: "Agentes de IA"
+kind: concept
+category: [agents]
+released: 2022-10
+origin: "Yao et al. (ReAct), Princeton y Google"
+audience: [technical, business]
+level: intermediate
+requires: [llm, tool-use, prompting]
+related: [multi-agent, tool-use, mcp]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2210.03629"
+summary: "Sistemas donde un modelo de lenguaje decide qué pasos dar y usa herramientas en bucle hasta completar una tarea, no solo responder una pregunta."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un chatbot responde una pregunta; un agente recibe un objetivo ("investiga a estos cinco competidores y arma una tabla", "arregla este test que falla") y trabaja por su cuenta: planifica, llama herramientas, mira los resultados, corrige y continúa hasta terminar. Se usan para programar, investigar, operar sistemas internos o atender casos de soporte de principio a fin.
+
+El paper ReAct (2022) formalizó el patrón de alternar razonamiento y acciones con herramientas. Con modelos más capaces y el tool use nativo, los agentes pasaron de demos a productos reales como asistentes de código.
+
+## Cómo se usa
+
+1. Define el objetivo y las reglas en el prompt de sistema.
+2. Dale herramientas concretas (buscar, leer archivos, ejecutar código, llamar APIs).
+3. Ejecuta un bucle: el modelo pide una herramienta, tu código la ejecuta y le devuelve el resultado, hasta que el modelo indica que terminó.
+4. Pon límites: número máximo de pasos, permisos, confirmación humana para acciones irreversibles.
+5. Mide con evals sobre tareas reales.
+
+```python
+# Bucle de agente (esquema genérico; llm() y las herramientas son tuyas)
+messages = [{"role": "user", "content": objetivo}]
+for paso in range(20):                      # límite de seguridad
+    resp = llm(messages, tools=herramientas)
+    messages.append(resp.mensaje)
+    if not resp.llamadas_a_herramientas:
+        break                               # el agente terminó
+    for llamada in resp.llamadas_a_herramientas:
+        resultado = ejecutar(llamada.nombre, llamada.argumentos)
+        messages.append(resultado_de_herramienta(llamada.id, resultado))
+print(resp.texto)
+```
+
+## Para no técnicos
+
+Si un chatbot es como preguntarle algo a un experto por teléfono, un agente es como contratar a un asistente que hace el trabajo: abre las carpetas, busca, llena formularios y te avisa cuando termina. Un equipo de operaciones puede delegar en un agente la conciliación de pagos del mes, revisando solo las excepciones que el agente marca como dudosas.

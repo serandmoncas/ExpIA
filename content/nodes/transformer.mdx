@@ -1,0 +1,44 @@
+---
+id: transformer
+title: "Transformer"
+kind: concept
+category: [foundations, llm]
+released: 2017-06
+origin: "Vaswani y colaboradores (Google Brain y Google Research)"
+audience: [technical, business]
+level: intermediate
+requires: [attention, embeddings, tokenization]
+status: mainstream
+summary: "La arquitectura detrás de ChatGPT, Claude y casi toda la IA moderna: procesa todo el texto a la vez usando atención."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1706.03762"
+related: [attention, rnn-lstm, transfer-learning]
+---
+
+## Para qué sirve
+
+El Transformer, presentado en el artículo "Attention Is All You Need", eliminó la recurrencia y se basa solo en atención. Eso permite procesar todos los tokens en paralelo, aprovechar al máximo las GPU y entrenar modelos con muchísimos más datos.
+
+Es la base de los modelos de lenguaje grandes (GPT, Claude, Llama, Gemini), de BERT, de modelos de voz como Whisper y de los Transformers de visión. Pasó de la traducción automática a ser la arquitectura dominante en casi toda la IA.
+
+## Cómo se usa
+
+1. El texto se tokeniza y cada token se convierte en un embedding, al que se suma información de posición.
+2. Una pila de bloques aplica autoatención (cada token mira a los demás) y una red densa.
+3. Según la variante, se usa un codificador (comprensión, como BERT), un decodificador (generación, como GPT) o ambos (traducción).
+4. En la práctica casi nadie lo entrena desde cero: se usa un modelo preentrenado.
+
+```python
+from transformers import pipeline
+
+generator = pipeline("text-generation", model="gpt2")
+print(generator("La inteligencia artificial", max_new_tokens=20)[0]["generated_text"])
+```
+
+## Para no técnicos
+
+Los modelos anteriores leían como quien sigue un texto con el dedo, palabra por palabra. El Transformer lee la página completa de un vistazo y relaciona cada palabra con todas las demás al mismo tiempo. Eso lo hace más rápido de entrenar y mucho mejor entendiendo contexto.
+
+Caso de negocio: cuando una empresa integra un asistente que redacta correos, resume reuniones o responde preguntas sobre sus documentos, casi con seguridad está usando un modelo construido sobre esta arquitectura.

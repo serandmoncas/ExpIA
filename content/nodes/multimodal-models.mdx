@@ -1,0 +1,53 @@
+---
+id: multimodal-models
+title: "Modelos multimodales"
+kind: concept
+category: [llm, vision]
+released: 2021-01
+origin: "OpenAI (CLIP y DALL·E, enero de 2021), entre otros"
+audience: [technical, business]
+level: intermediate
+requires: [llm, embeddings]
+related: [gemini, computer-use, whisper]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2103.00020"
+summary: "Modelos que entienden y generan más de un tipo de dato a la vez: texto, imágenes, audio o vídeo."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un modelo multimodal puede recibir una foto y una pregunta sobre ella, leer un PDF escaneado con tablas y gráficos, transcribir y entender audio o describir lo que pasa en un vídeo. Algunos también generan imágenes o voz además de texto.
+
+Casos típicos: extraer datos de facturas y recibos fotografiados, revisar capturas de pantalla de errores, inspección visual en fábricas, accesibilidad (describir imágenes a personas con discapacidad visual) y agentes que "ven" la pantalla para operar un ordenador.
+
+## Cómo se usa
+
+1. Elige un modelo que acepte el tipo de entrada que necesitas (la mayoría de los LLM comerciales actuales aceptan imágenes).
+2. Envía la imagen (como URL o en base64) junto con el texto en el mismo mensaje.
+3. Pide una salida estructurada si vas a procesar el resultado automáticamente.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+resp = client.chat.completions.create(
+    model="nombre-del-modelo",  # un modelo con soporte de visión
+    messages=[{
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "¿Cuál es el total de esta factura?"},
+            {"type": "image_url", "image_url": {"url": "https://ejemplo.com/factura.png"}},
+        ],
+    }],
+)
+print(resp.choices[0].message.content)
+```
+
+## Para no técnicos
+
+Los primeros asistentes de IA solo sabían leer y escribir. Un modelo multimodal además puede "ver" y "oír": le enseñas una foto y te dice qué hay, igual que se la enseñarías a un compañero.
+
+Caso de negocio: una empresa de logística pide a los repartidores fotografiar los albaranes firmados. Un modelo multimodal lee cada foto, extrae el número de pedido y la firma, y actualiza el sistema sin que nadie teclee nada.

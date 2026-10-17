@@ -1,0 +1,55 @@
+---
+id: structured-outputs
+title: "Salidas estructuradas"
+kind: technique
+category: [llm-apps]
+released: 2024-08
+origin: "OpenAI (Structured Outputs en su API)"
+audience: [technical]
+level: intermediate
+requires: [tool-use]
+related: [tool-use, evals]
+status: mainstream
+summary: "Obligar al modelo a responder con un formato fijo, como un JSON que cumple un esquema, para que tu programa lo pueda procesar sin errores."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Cuando la respuesta del modelo alimenta otro programa (guardar en una base de datos, llenar un formulario, disparar un flujo), un texto libre o un JSON mal formado rompe todo. Las salidas estructuradas garantizan que la respuesta cumple un esquema: campos obligatorios, tipos correctos y valores permitidos. Se usa para extraer datos de facturas, clasificar correos en categorías cerradas o convertir notas en registros de CRM.
+
+Antes se lograba "pidiéndolo amablemente" en el prompt o forzando una llamada a herramienta. En agosto de 2024 OpenAI lanzó Structured Outputs, que restringe la generación para cumplir el esquema; otros proveedores ofrecen mecanismos similares.
+
+## Cómo se usa
+
+1. Define el esquema, idealmente con una librería de tipos (Pydantic en Python, Zod en TypeScript).
+2. Pásalo a la API como formato de respuesta (o como herramienta obligatoria).
+3. Recibe el objeto ya validado y úsalo directamente.
+4. Maneja los casos en que el modelo se niega o falta información (campos opcionales, valores "desconocido").
+
+```python
+from pydantic import BaseModel
+from openai import OpenAI
+
+class Factura(BaseModel):
+    proveedor: str
+    total: float
+    moneda: str
+    fecha: str
+
+client = OpenAI()
+completion = client.beta.chat.completions.parse(
+    model="gpt-4o-2024-08-06",
+    messages=[
+        {"role": "system", "content": "Extrae los datos de la factura."},
+        {"role": "user", "content": texto_factura},
+    ],
+    response_format=Factura,
+)
+factura = completion.choices[0].message.parsed  # instancia de Factura
+```
+
+## Para no técnicos
+
+Es la diferencia entre pedirle a alguien "cuéntame qué dice la factura" y darle un formulario con casillas que debe llenar: con el formulario, cada respuesta llega igual y se puede cargar al sistema sin que nadie la reescriba. Un área de cuentas por pagar puede procesar cientos de facturas al día y pasarlas directo a su contabilidad.

@@ -1,0 +1,35 @@
+---
+id: deep-learning
+title: "Deep Learning"
+kind: concept
+category: [foundations]
+released: 2006
+origin: "Hinton, Osindero y Teh (deep belief nets)"
+audience: [technical, business]
+level: fundamentals
+requires: [neural-network]
+status: mainstream
+summary: "Redes neuronales con muchas capas que aprenden representaciones cada vez más abstractas de los datos."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Permite trabajar directamente con datos crudos (imágenes, audio, texto) sin diseñar características a mano. Gracias a más datos y GPUs, desde 2012 superó a casi todos los métodos anteriores en visión, voz y lenguaje.
+
+## Cómo se usa
+
+Se apilan muchas capas, se entrena con grandes volúmenes de datos usando backpropagation y descenso de gradiente, normalmente en GPU. Frameworks como PyTorch o JAX hacen la parte pesada.
+
+```python
+for x, y in loader:
+    loss = loss_fn(model(x), y)
+    loss.backward()      # calcula gradientes
+    optimizer.step()     # ajusta los pesos
+    optimizer.zero_grad()
+```
+
+## Para no técnicos
+
+Es una red neuronal "profunda": cada capa aprende algo un poco más abstracto que la anterior. En una foto, las primeras capas detectan bordes, las siguientes formas y las últimas objetos completos. Es la razón por la que la IA dio un salto enorme en la última década.

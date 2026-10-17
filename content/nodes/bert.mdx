@@ -1,0 +1,47 @@
+---
+id: bert
+title: "BERT"
+kind: model
+category: [llm]
+released: 2018-10
+origin: "Google AI Language (Devlin, Chang, Lee y Toutanova)"
+audience: [technical]
+level: intermediate
+requires: [transformer]
+related: [embeddings, semantic-search, transfer-learning]
+status: declining
+license: open-source
+pricing: free
+links:
+  paper: "https://arxiv.org/abs/1810.04805"
+  repo: "https://github.com/google-research/bert"
+summary: "Modelo de Google que lee el texto en ambas direcciones a la vez; revolucionó la clasificación y la búsqueda de texto en 2018."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+BERT (Bidirectional Encoder Representations from Transformers) usa solo el codificador del Transformer y se preentrena adivinando palabras ocultas en una frase, mirando el contexto a ambos lados. No genera texto largo; su fuerte es entender: clasificar sentimiento, detectar entidades (personas, empresas, fechas), responder preguntas extrayendo un fragmento o comparar frases.
+
+Fue el estándar para tareas de comprensión entre 2018 y 2020, y Google lo incorporó a su buscador. Hoy los LLM generativos lo han desplazado en muchos casos, pero sus variantes (RoBERTa, DistilBERT y otras) siguen siendo útiles cuando se necesita un modelo pequeño, rápido y barato para clasificar o generar embeddings.
+
+## Cómo se usa
+
+1. Elige un checkpoint preentrenado desde Hugging Face.
+2. Úsalo tal cual para tareas como rellenar huecos, o ajústalo (fine-tuning) con tus datos etiquetados para clasificación.
+3. Despliégalo en CPU o GPU modesta: es mucho más ligero que un LLM moderno.
+
+```python
+from transformers import pipeline
+
+fill = pipeline("fill-mask", model="bert-base-uncased")
+for pred in fill("The capital of France is [MASK]."):
+    print(pred["token_str"], round(pred["score"], 3))
+```
+
+## Para no técnicos
+
+Si un LLM es un escritor, BERT es un lector muy atento: no redacta, pero entiende muy bien de qué trata un texto porque mira cada palabra junto con todo lo que la rodea.
+
+Caso de negocio: una tienda en línea ajusta un modelo tipo BERT para clasificar miles de reseñas al día como positivas, negativas o con un problema de envío. Corre en servidores baratos y alimenta un tablero de calidad.
