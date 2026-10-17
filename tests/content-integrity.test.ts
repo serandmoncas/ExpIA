@@ -12,4 +12,17 @@ describe('content/ real', () => {
     const { nodes, people } = loadCatalog()
     expect(findUncoveredFundamentals(nodes, people)).toEqual([])
   })
+
+  it('el radar tiene fuentes y un informe con ítems de relevancia alta', () => {
+    const { sources, reports } = loadCatalog()
+    expect(sources.length).toBeGreaterThan(0)
+    expect(reports.length).toBeGreaterThan(0)
+    expect(reports[0].items.length).toBeGreaterThanOrEqual(3)
+    expect(reports[0].items.some((i) => i.relevance === 'high')).toBe(true)
+  })
+
+  it('ninguna URL se repite entre informes', () => {
+    const urls = loadCatalog().reports.flatMap((r) => r.items.map((i) => i.url))
+    expect(new Set(urls).size).toBe(urls.length)
+  })
 })

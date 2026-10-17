@@ -1,0 +1,32 @@
+# Fuentes curadas del radar. El blog de un referente va en su feeds.rss, no aquí.
+sources:
+  - id: openai-news
+    name: OpenAI News
+    kind: rss
+    url: https://openai.com/news/rss.xml
+  - id: google-deepmind-blog
+    name: Blog de Google DeepMind
+    kind: rss
+    url: https://deepmind.google/blog/rss.xml
+  - id: google-ai-blog
+    name: Blog de Google AI
+    kind: rss
+    url: https://blog.google/technology/ai/rss/
+  - id: microsoft-research-blog
+    name: Microsoft Research
+    kind: rss
+    url: https://www.microsoft.com/en-us/research/feed/
+  - id: aws-ml-blog
+    name: Blog de Machine Learning de AWS
+    kind: rss
+    url: https://aws.amazon.com/blogs/machine-learning/feed/
+  - id: hackernews-ai
+    name: Hacker News
+    kind: hackernews
+    minPoints: 200
+    keywords: [LLM, GPT, Claude, Gemini, "AI agent", RAG, "open source model", diffusion]
+  - id: github-ai
+    name: GitHub
+    kind: github
+    minStars: 300
+    topics: [llm, ai-agents, rag, generative-ai, mcp]
