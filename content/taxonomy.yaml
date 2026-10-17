@@ -1,0 +1,15 @@
+categories:
+  - { id: foundations, label: "Fundamentos", color: "#64748b" }
+  - { id: llm, label: "LLMs", color: "#6366f1" }
+  - { id: llm-apps, label: "Apps con LLM", color: "#8b5cf6" }
+  - { id: agents, label: "Agentes", color: "#ec4899" }
+  - { id: retrieval, label: "Recuperación", color: "#14b8a6" }
+  - { id: vision, label: "Visión", color: "#f59e0b" }
+  - { id: audio, label: "Audio", color: "#f97316" }
+  - { id: generative-media, label: "Medios generativos", color: "#e11d48" }
+  - { id: infra, label: "Infraestructura", color: "#0ea5e9" }
+  - { id: protocols, label: "Protocolos", color: "#22c55e" }
+  - { id: frameworks, label: "Frameworks", color: "#a855f7" }
+  - { id: dev-tools, label: "Herramientas de desarrollo", color: "#3b82f6" }
+  - { id: evaluation, label: "Evaluación", color: "#84cc16" }
+  - { id: safety, label: "Seguridad", color: "#ef4444" }

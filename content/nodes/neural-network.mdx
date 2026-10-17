@@ -1,0 +1,36 @@
+---
+id: neural-network
+title: "Redes neuronales"
+kind: concept
+category: [foundations]
+released: 1943
+origin: "McCulloch y Pitts"
+audience: [technical, business]
+level: fundamentals
+requires: [machine-learning]
+status: mainstream
+summary: "Modelos formados por capas de 'neuronas' artificiales conectadas que aprenden ajustando el peso de cada conexión."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Son la base de casi toda la IA moderna: reconocimiento de imágenes, voz, traducción y modelos de lenguaje. Pueden aprender relaciones muy complejas y no lineales entre entradas y salidas.
+
+## Cómo se usa
+
+Una red recibe números (píxeles, palabras convertidas en vectores, etc.), los pasa por capas de neuronas que multiplican por pesos y aplican una función de activación, y produce una salida. Durante el entrenamiento, los pesos se ajustan para reducir el error.
+
+```python
+import torch.nn as nn
+
+model = nn.Sequential(
+    nn.Linear(784, 128), nn.ReLU(),
+    nn.Linear(128, 10),
+)
+```
+
+## Para no técnicos
+
+Imagina una red de miles de pequeños interruptores que se activan más o menos según lo que reciben. Al entrenarla, se ajusta la sensibilidad de cada interruptor hasta que la red, en conjunto, da la respuesta correcta. Es la "maquinaria" que hay dentro de ChatGPT, Claude o el reconocimiento facial del teléfono.
