@@ -13,10 +13,15 @@ export function getHighlightsForTopic(people: Person[], nodeId: string): TopicHi
   )
 }
 
-// La lista completa puede ser larga en temas populares (LLM); la ficha muestra solo unos pocos
+// La lista completa puede ser larga en temas populares (LLM); la ficha muestra pocos y variados:
+// como máximo uno por persona, en español primero (el público es hispanohablante)
 export function selectTopicHighlights(highlights: TopicHighlight[], pref: AudiencePref = 'all', limit = 5): TopicHighlight[] {
-  const score = (h: TopicHighlight) => (pref === 'business' && h.person.audience.includes('business') ? 1 : 0)
-  return highlights
+  const seen = new Set<string>()
+  const onePerPerson = highlights.filter((h) => !seen.has(h.person.id) && seen.add(h.person.id))
+  const score = (h: TopicHighlight) =>
+    (pref === 'business' && h.person.audience.includes('business') ? 2 : 0) +
+    (highlightLanguage(h.person, h.highlight) === 'es' ? 1 : 0)
+  return onePerPerson
     .map((h, i) => ({ h, i, s: score(h) }))
     .sort((a, b) => b.s - a.s || a.i - b.i)
     .slice(0, limit)
@@ -55,4 +60,14 @@ export function resolveTopic(topics: { id: string; title: string }[], text: stri
   const needle = text.trim().toLowerCase()
   if (!needle) return undefined
   return topics.find((t) => t.title.toLowerCase() === needle)?.id
+}
+
+// Para Enter en el selector: título exacto, id, o una única coincidencia parcial del título
+export function resolveTopicLoose(topics: { id: string; title: string }[], text: string): string | undefined {
+  const needle = text.trim().toLowerCase()
+  if (needle.length < 2) return undefined
+  const exact = resolveTopic(topics, needle) ?? topics.find((t) => t.id === needle)?.id
+  if (exact) return exact
+  const partial = topics.filter((t) => t.title.toLowerCase().includes(needle))
+  return partial.length === 1 ? partial[0].id : undefined
 }

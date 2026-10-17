@@ -100,3 +100,16 @@ test('la ficha muestra quién habla de esto', async ({ page }) => {
   await expect(voices).toBeVisible()
   await expect(voices).toContainText('3Blue1Brown')
 })
+
+test('el selector de temas acepta el id o un nombre parcial con Enter', async ({ page }) => {
+  await page.goto('/people')
+  await expect(page.getByTestId('person-card').first()).toBeVisible()
+  const input = page.getByLabel('Agregar tema')
+  await input.fill('llm')
+  await input.press('Enter')
+  await expect(page.getByRole('button', { name: 'Quitar Modelos de lenguaje grandes (LLM)' })).toBeVisible()
+  await expect(page).toHaveURL(/topic=llm/)
+  await input.fill('zzzz')
+  await input.press('Enter')
+  await expect(page.getByText('Sin coincidencias')).toBeVisible()
+})
