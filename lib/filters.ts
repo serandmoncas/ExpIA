@@ -1,6 +1,7 @@
 import {
-  KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS,
+  KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS, LANGUAGES, PLATFORMS, PERSON_KINDS,
   type Kind, type Audience, type Level, type Status, type License, type Pricing,
+  type Language, type Platform, type PersonKind,
 } from '@/lib/content/enums'
 
 export interface Filters {
@@ -64,25 +65,26 @@ export function parseFilters(params: URLSearchParams, knownCategories?: readonly
   }
 }
 
+function encodeList(key: string, values: readonly string[]): string[] {
+  return values.length ? [`${key}=${values.map(encodeURIComponent).join(',')}`] : []
+}
+
 export function serializeFilters(f: Filters): string {
   const parts: string[] = []
   if (f.q) parts.push(`q=${encodeURIComponent(f.q)}`)
-  for (const key of LIST_KEYS) {
-    const values = f[key] as string[]
-    if (values.length) parts.push(`${key}=${values.map(encodeURIComponent).join(',')}`)
-  }
+  for (const key of LIST_KEYS) parts.push(...encodeList(key, f[key] as string[]))
   if (f.from !== undefined) parts.push(`from=${f.from}`)
   if (f.to !== undefined) parts.push(`to=${f.to}`)
   return parts.join('&')
 }
 
 // OR dentro de un grupo; un grupo vacío no filtra
-function matchAny<T>(selected: T[], values: T[]): boolean {
+export function matchAny<T>(selected: T[], values: T[]): boolean {
   return selected.length === 0 || values.some((v) => selected.includes(v))
 }
 
 // Para campos opcionales: si se filtra por ellos, el nodo sin valor queda fuera
-function matchOptional<T>(selected: T[], value: T | undefined): boolean {
+export function matchOptional<T>(selected: T[], value: T | undefined): boolean {
   return selected.length === 0 || (value !== undefined && selected.includes(value))
 }
 
@@ -103,4 +105,56 @@ export function applyFilters<T extends FilterableNode>(nodes: T[], f: Filters): 
 
 export function toggleValue<T>(list: T[], value: T): T[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value]
+}
+
+export interface PeopleFilters {
+  q: string
+  topic: string[]
+  lang: Language[]
+  platform: Platform[]
+  aud: Audience[]
+  level: Level[]
+  kind: PersonKind[]
+}
+
+export const EMPTY_PEOPLE_FILTERS: PeopleFilters = { q: '', topic: [], lang: [], platform: [], aud: [], level: [], kind: [] }
+
+export interface FilterablePerson {
+  topics: string[]
+  languages: Language[]
+  platforms: Partial<Record<Platform, string>>
+  audience: Audience[]
+  level: Level
+  kind: PersonKind
+}
+
+const PEOPLE_LIST_KEYS = ['topic', 'lang', 'platform', 'aud', 'level', 'kind'] as const
+
+export function parsePeopleFilters(params: URLSearchParams, knownTopics?: readonly string[]): PeopleFilters {
+  return {
+    q: params.get('q') ?? '',
+    topic: parseList(params, 'topic', knownTopics),
+    lang: parseList(params, 'lang', LANGUAGES),
+    platform: parseList(params, 'platform', PLATFORMS),
+    aud: parseList(params, 'aud', AUDIENCES),
+    level: parseList(params, 'level', LEVELS),
+    kind: parseList(params, 'kind', PERSON_KINDS),
+  }
+}
+
+export function serializePeopleFilters(f: PeopleFilters): string {
+  const parts = f.q ? [`q=${encodeURIComponent(f.q)}`] : []
+  for (const key of PEOPLE_LIST_KEYS) parts.push(...encodeList(key, f[key]))
+  return parts.join('&')
+}
+
+export function applyPeopleFilters<T extends FilterablePerson>(people: T[], f: PeopleFilters): T[] {
+  return people.filter((p) =>
+    matchAny(f.topic, p.topics) &&
+    matchAny(f.lang, p.languages) &&
+    matchAny(f.platform, (Object.keys(p.platforms) as Platform[]).filter((k) => p.platforms[k])) &&
+    matchAny(f.aud, p.audience) &&
+    matchAny(f.level, [p.level]) &&
+    matchAny(f.kind, [p.kind]),
+  )
 }
