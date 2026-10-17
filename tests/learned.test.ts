@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { LEARNED_KEY, parseLearned, readLearned, writeLearned, toggleLearned } from '@/lib/learned'
+import { LEARNED_KEY, parseLearned, readLearned, writeLearned, toggleLearned, toggleStored } from '@/lib/learned'
 
 const known = new Set(['a', 'b', 'c'])
 
@@ -39,5 +39,24 @@ describe('toggleLearned', () => {
     expect(toggleLearned(ids, 'b')).toEqual(['a', 'b'])
     expect(toggleLearned(ids, 'a')).toEqual([])
     expect(ids).toEqual(['a'])
+  })
+})
+
+describe('toggleStored', () => {
+  const storageWith = (raw: string | null) => {
+    const store: Record<string, string> = raw === null ? {} : { [LEARNED_KEY]: raw }
+    return { store, storage: { getItem: (k: string) => store[k] ?? null, setItem: (k: string, v: string) => { store[k] = v } } }
+  }
+  it('parte de lo guardado aunque el estado en memoria esté desfasado', () => {
+    const { store, storage } = storageWith('["a","b"]')
+    expect(toggleStored(storage, known, [], 'c')).toEqual(['a', 'b', 'c'])
+    expect(store[LEARNED_KEY]).toBe('["a","b","c"]')
+  })
+  it('sin almacenamiento usa el estado en memoria', () => {
+    expect(toggleStored(undefined, known, ['a'], 'b')).toEqual(['a', 'b'])
+  })
+  it('si leer falla usa el estado en memoria', () => {
+    const storage = { getItem: () => { throw new Error('SecurityError') }, setItem: () => {} }
+    expect(toggleStored(storage, known, ['a'], 'a')).toEqual([])
   })
 })

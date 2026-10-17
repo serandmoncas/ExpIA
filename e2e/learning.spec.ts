@@ -92,11 +92,27 @@ test('marcar en una pestaña se refleja en otra', async ({ context }) => {
 })
 
 test('la ruta no produce errores de hidratación', async ({ page }) => {
+  // En producción React lanza errores minificados (#418, #423, #425) que Next envía a reportError:
+  // Playwright los recibe como pageerror, no como mensajes de consola
   const errors: string[] = []
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+  page.on('pageerror', (e) => errors.push(e.message))
   await page.goto('/paths/fundamentos')
   await expect(page.getByTestId('learned-toggle').first()).toHaveAttribute('data-ready', 'true')
-  expect(errors.filter((e) => /hydrat/i.test(e))).toEqual([])
+  expect(errors.filter((e) => /hydrat|#418|#423|#425/i.test(e))).toEqual([])
+})
+
+test('el botón está deshabilitado en el HTML estático hasta que la página hidrata', async ({ request }) => {
+  const html = await (await request.get('/node/rag')).text()
+  const button = /<button[^>]*data-testid="learned-toggle"[^>]*>/.exec(html)?.[0] ?? ''
+  expect(button).toMatch(/\sdisabled/)
+})
+
+test('cada botón dice qué nodo marca', async ({ page }) => {
+  await page.goto('/paths/fundamentos')
+  await expect(page.getByRole('button', { name: 'Lo aprendí: Redes neuronales' })).toBeVisible()
+  await page.goto('/node/rag')
+  await expect(page.getByRole('button', { name: /^Lo aprendí: RAG/ })).toBeVisible()
 })
 
 test('la portada sugiere rutas y luego el siguiente paso de la empezada', async ({ page }) => {

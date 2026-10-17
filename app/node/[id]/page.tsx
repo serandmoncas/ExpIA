@@ -54,7 +54,7 @@ export default async function NodePage({ params }: Props) {
         <header className="space-y-3">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <h1 className="text-3xl font-bold">{node.title}</h1>
-            <LearnedToggle nodeId={id} />
+            <LearnedToggle nodeId={id} title={node.title} />
           </div>
           <p className="text-lg text-muted-foreground">{node.summary}</p>
           <div className="flex flex-wrap items-center gap-2 text-sm">

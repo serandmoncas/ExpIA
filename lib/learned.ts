@@ -32,3 +32,24 @@ export function writeLearned(storage: Pick<Storage, 'setItem'> | undefined, ids:
 export function toggleLearned(ids: readonly string[], id: string): string[] {
   return ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]
 }
+
+// Parte de lo guardado y no del estado en memoria: un clic justo al hidratar, antes de leer
+// el almacenamiento, no debe sobrescribir el progreso con una lista vacía
+export function toggleStored(
+  storage: Pick<Storage, 'getItem' | 'setItem'> | undefined,
+  known: ReadonlySet<string>,
+  current: readonly string[],
+  id: string,
+): string[] {
+  let base = current
+  if (storage) {
+    try {
+      base = parseLearned(storage.getItem(LEARNED_KEY), known)
+    } catch {
+      // lectura bloqueada: se usa el estado en memoria
+    }
+  }
+  const next = toggleLearned(base, id)
+  writeLearned(storage, next)
+  return next
+}

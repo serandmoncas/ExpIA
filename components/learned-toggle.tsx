@@ -2,7 +2,7 @@
 import { cn } from '@/lib/utils'
 import { useLearned } from './learned-provider'
 
-export function LearnedToggle({ nodeId }: { nodeId: string }) {
+export function LearnedToggle({ nodeId, title }: { nodeId: string; title: string }) {
   const { learned, ready, toggle } = useLearned()
   const done = learned.has(nodeId)
   return (
@@ -11,9 +11,11 @@ export function LearnedToggle({ nodeId }: { nodeId: string }) {
       data-testid="learned-toggle"
       data-ready={ready}
       aria-pressed={done}
+      aria-label={`Lo aprendí: ${title}`}
+      disabled={!ready}
       onClick={() => toggle(nodeId)}
       className={cn(
-        'shrink-0 rounded-full border px-3 py-1 text-sm',
+        'shrink-0 rounded-full border px-3 py-1 text-sm disabled:opacity-60',
         done ? 'border-emerald-600 bg-emerald-600 text-white' : 'hover:border-foreground/40',
       )}
     >

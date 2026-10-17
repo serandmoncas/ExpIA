@@ -36,7 +36,7 @@ export function PathSteps({ steps }: { steps: StepView[] }) {
                 </h2>
                 <p className="text-sm text-muted-foreground">{s.node.summary}</p>
               </div>
-              <LearnedToggle nodeId={s.node.id} />
+              <LearnedToggle nodeId={s.node.id} title={s.node.title} />
             </div>
             {s.note && <p className="rounded-md bg-muted px-3 py-2 text-sm">{s.note}</p>}
             <ReviewQuestions review={s.node.review} />

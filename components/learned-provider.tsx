@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
-import { LEARNED_KEY, readLearned, writeLearned, toggleLearned } from '@/lib/learned'
+import { LEARNED_KEY, readLearned, toggleStored } from '@/lib/learned'
 import { safeLocalStorage } from '@/lib/audience'
 
 type LearnedState = { learned: ReadonlySet<string>; ready: boolean; toggle: (id: string) => void }
@@ -23,13 +23,14 @@ export function LearnedProvider({ knownIds, children }: { knownIds: string[]; ch
     return () => window.removeEventListener('storage', onStorage)
   }, [known])
 
-  const toggle = useCallback((id: string) => {
-    setIds((prev) => {
-      const next = toggleLearned(prev, id)
-      writeLearned(safeLocalStorage(), next)
-      return next
-    })
-  }, [])
+  // Hasta leer el almacenamiento no se acepta ningún cambio; la escritura va fuera del updater
+  const toggle = useCallback(
+    (id: string) => {
+      if (!ready) return
+      setIds(toggleStored(safeLocalStorage(), known, ids, id))
+    },
+    [ready, known, ids],
+  )
 
   const learned = useMemo(() => new Set(ids), [ids])
   return <LearnedContext.Provider value={{ learned, ready, toggle }}>{children}</LearnedContext.Provider>
