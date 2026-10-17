@@ -1,0 +1,49 @@
+---
+id: llamaindex
+title: "LlamaIndex"
+kind: tool
+category: [frameworks, retrieval]
+released: 2022-11
+origin: "Jerry Liu / LlamaIndex"
+audience: [technical]
+level: intermediate
+requires: [rag]
+related: [langchain, chroma, vector-db]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  docs: "https://docs.llamaindex.ai"
+  repo: "https://github.com/run-llama/llama_index"
+summary: "Framework de código abierto especializado en conectar tus documentos y datos a un LLM para hacer preguntas sobre ellos (RAG)."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Se centra en la parte de datos de una app con LLM: ingerir documentos (PDF, Word, páginas web, bases de datos), dividirlos, generar embeddings, indexarlos y recuperar los fragmentos relevantes para cada pregunta. Nació con el nombre GPT Index.
+
+Es útil para buscadores internos, asistentes sobre bases de conocimiento, análisis de informes financieros o cualquier caso en el que el modelo deba responder a partir de información propia y no solo de lo que aprendió en su entrenamiento.
+
+## Cómo se usa
+
+1. Instala el paquete: `pip install llama-index` (usa OpenAI por defecto, así que configura `OPENAI_API_KEY`, o cambia el proveedor).
+2. Carga una carpeta de documentos y construye un índice.
+3. Crea un motor de consultas y pregunta.
+
+```python
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
+
+documentos = SimpleDirectoryReader("./manuales").load_data()
+indice = VectorStoreIndex.from_documents(documentos)
+
+motor = indice.as_query_engine()
+print(motor.query("¿Cuál es la política de devoluciones?"))
+```
+
+## Para no técnicos
+
+Es como un bibliotecario que primero cataloga todos los documentos de la empresa y, cuando alguien pregunta algo, trae las páginas exactas para que el asistente responda con base en ellas y no de memoria.
+
+Un caso de negocio: un equipo de ventas pregunta en lenguaje natural por condiciones de contratos antiguos y obtiene la respuesta con la referencia al documento original.

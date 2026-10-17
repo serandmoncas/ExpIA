@@ -1,0 +1,45 @@
+---
+id: n8n
+title: "n8n"
+kind: tool
+category: [agents, dev-tools]
+released: 2019-10
+origin: "Jan Oberhauser / n8n GmbH"
+audience: [technical, business]
+level: fundamentals
+requires: [llm]
+related: [agents, langchain]
+status: rising
+pricing: freemium
+links:
+  site: "https://n8n.io"
+  docs: "https://docs.n8n.io"
+  repo: "https://github.com/n8n-io/n8n"
+summary: "Plataforma visual para automatizar flujos entre aplicaciones conectando bloques, con nodos de IA para crear agentes."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Permite automatizar procesos conectando cientos de aplicaciones (correo, CRM, hojas de cálculo, Slack, bases de datos) mediante un editor visual de nodos. Incluye nodos de IA para llamar a modelos de lenguaje, crear agentes con herramientas y montar flujos de RAG.
+
+Se puede usar en su nube de pago o autoalojar. Su código es visible y se distribuye con una licencia de "fair-code" que permite el autoalojamiento con ciertas restricciones comerciales, por lo que no es open source en sentido estricto.
+
+## Cómo se usa
+
+1. Prueba la versión en la nube o arráncala en local con Docker o `npx n8n`.
+2. Abre el editor en el navegador y crea un flujo con un disparador (un correo nuevo, un formulario, una hora fija).
+3. Añade nodos: por ejemplo, un modelo de lenguaje que clasifica el mensaje y un nodo que lo registra en tu CRM.
+4. Activa el flujo.
+
+```bash
+# Arranque local rápido; el editor queda en http://localhost:5678
+npx n8n
+```
+
+## Para no técnicos
+
+Es como montar una cadena de fichas de dominó entre tus aplicaciones: cuando cae la primera (llega un correo), las demás se activan solas (la IA lo lee, se crea la tarea, se avisa al equipo).
+
+Un caso de negocio: un equipo comercial automatiza que cada formulario de contacto se resuma con IA, se puntúe según su potencial y llegue al vendedor adecuado en minutos, sin escribir código.

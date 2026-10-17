@@ -1,0 +1,55 @@
+---
+id: pgvector
+title: "pgvector"
+kind: tool
+category: [retrieval, infra]
+released: 2021-04
+origin: "Andrew Kane"
+audience: [technical]
+level: intermediate
+requires: [vector-db]
+related: [pinecone, chroma, rag]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  repo: "https://github.com/pgvector/pgvector"
+summary: "Extensión de PostgreSQL que permite guardar embeddings y buscar los más parecidos dentro de tu base de datos de siempre."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Añade a PostgreSQL un tipo de columna `vector` y operadores de distancia (euclidiana, coseno, producto interno), además de índices aproximados (HNSW e IVFFlat) para buscar rápido entre millones de vectores.
+
+Su gran ventaja es no necesitar otra base de datos: los embeddings viven junto a tus tablas, así que puedes combinar búsqueda semántica con filtros SQL normales (por cliente, fecha o permisos) en una sola consulta. Lo ofrecen muchos servicios gestionados de Postgres.
+
+## Cómo se usa
+
+1. Instala la extensión en tu servidor (o actívala en tu proveedor gestionado).
+2. Crea una tabla con una columna `vector` del tamaño de tus embeddings.
+3. Inserta los embeddings y consulta ordenando por distancia.
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+
+CREATE TABLE documentos (
+  id bigserial PRIMARY KEY,
+  contenido text,
+  embedding vector(1536)  -- dimensión del modelo de embeddings
+);
+
+CREATE INDEX ON documentos USING hnsw (embedding vector_cosine_ops);
+
+-- Los 5 documentos más parecidos (<=> es distancia coseno)
+SELECT contenido FROM documentos
+ORDER BY embedding <=> $1
+LIMIT 5;
+```
+
+## Para no técnicos
+
+Es como añadir a tu archivador de siempre un cajón nuevo que ordena los papeles por "de qué tratan" en lugar de por orden alfabético, sin tener que comprar otro mueble.
+
+Un caso de negocio: una plataforma de soporte que ya usa PostgreSQL añade búsqueda de artículos de ayuda por significado sin contratar ni mantener un servicio adicional.

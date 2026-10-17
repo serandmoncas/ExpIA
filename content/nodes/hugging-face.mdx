@@ -1,0 +1,50 @@
+---
+id: hugging-face
+title: "Hugging Face"
+kind: tool
+category: [infra, frameworks]
+released: 2018-11
+origin: "Hugging Face"
+audience: [technical]
+level: intermediate
+requires: [llm]
+related: [ollama, vllm, fine-tuning]
+status: mainstream
+license: open-source
+pricing: freemium
+links:
+  site: "https://huggingface.co"
+  docs: "https://huggingface.co/docs"
+  repo: "https://github.com/huggingface/transformers"
+summary: "Plataforma y librerías abiertas para descargar, compartir y ejecutar miles de modelos y datasets de IA."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+El Hub de Hugging Face es el gran repositorio público de modelos abiertos (Llama, Mistral, Whisper, Stable Diffusion y cientos de miles más), datasets y demos (Spaces). Sus librerías, sobre todo `transformers`, permiten cargar y usar esos modelos con pocas líneas.
+
+Se usa para probar modelos abiertos sin depender de un proveedor, hacer fine-tuning con datos propios, publicar modelos de la empresa o desplegarlos con sus servicios de inferencia de pago.
+
+## Cómo se usa
+
+1. Instala la librería: `pip install transformers torch`.
+2. Elige un modelo en el Hub por su identificador.
+3. Usa un `pipeline` para la tarea que necesites.
+
+```python
+from transformers import pipeline
+
+clasificador = pipeline("sentiment-analysis")  # descarga un modelo por defecto
+print(clasificador("El envío llegó tarde, pero el producto es excelente."))
+
+# Con un modelo concreto del Hub:
+# generador = pipeline("text-generation", model="<usuario>/<modelo>")
+```
+
+## Para no técnicos
+
+Es como una mezcla de biblioteca pública y tienda de aplicaciones para la IA: cualquiera puede publicar un modelo, y cualquiera puede descargarlo y usarlo, muchas veces gratis.
+
+Un caso de negocio: una empresa que no puede enviar datos sensibles fuera descarga un modelo abierto del Hub y lo ejecuta en sus propios servidores.

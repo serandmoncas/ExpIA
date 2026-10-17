@@ -1,0 +1,47 @@
+---
+id: github-copilot
+title: "GitHub Copilot"
+kind: tool
+category: [dev-tools]
+released: 2021-06
+origin: "GitHub (Microsoft) con OpenAI"
+audience: [technical]
+level: fundamentals
+requires: [llm]
+related: [cursor, claude-code]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  site: "https://github.com/features/copilot"
+  docs: "https://docs.github.com/copilot"
+summary: "Asistente de programación de GitHub que sugiere código mientras escribes y responde preguntas dentro de tu editor."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Fue el primer asistente de código con IA de uso masivo: completa líneas y funciones enteras a partir del contexto y de comentarios en lenguaje natural. Hoy incluye chat en el editor, revisión de pull requests y un agente que puede trabajar en issues.
+
+Funciona como extensión en VS Code, JetBrains, Visual Studio y otros editores, y se integra con GitHub para equipos y empresas.
+
+## Cómo se usa
+
+1. Activa Copilot en tu cuenta de GitHub (plan individual o de empresa).
+2. Instala la extensión de GitHub Copilot en tu editor e inicia sesión.
+3. Escribe un comentario o el inicio de una función y acepta la sugerencia con Tab.
+4. Usa el chat para preguntas como "explica este archivo" o "genera tests".
+
+```python
+# Devuelve los clientes que no compran desde hace más de 90 días
+def clientes_inactivos(clientes, hoy):
+    # Copilot propone el cuerpo de la función a partir del comentario
+    ...
+```
+
+## Para no técnicos
+
+Es como el autocompletado del móvil, pero para programadores y mucho más listo: en lugar de sugerir la siguiente palabra, sugiere el siguiente bloque de código.
+
+Un caso de negocio: una empresa lo ofrece a todo su equipo técnico para reducir el tiempo dedicado a código repetitivo y facilitar que los nuevos se orienten en proyectos grandes.

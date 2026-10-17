@@ -1,0 +1,46 @@
+---
+id: claude-code
+title: "Claude Code"
+kind: tool
+category: [dev-tools, agents]
+released: 2025-02
+origin: "Anthropic"
+audience: [technical]
+level: fundamentals
+requires: [agents]
+related: [claude-agent-sdk, cursor, github-copilot]
+status: rising
+license: proprietary
+pricing: paid
+links:
+  repo: "https://github.com/anthropics/claude-code"
+summary: "Agente de programación de Anthropic que trabaja en tu terminal: lee el proyecto, edita archivos, ejecuta comandos y hace commits."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Es un agente que vive en la terminal (y se integra con editores y GitHub). En lugar de solo sugerir líneas, recibe un encargo completo, explora el repositorio, planifica, edita varios archivos, corre tests y comandos, y repite hasta terminar, pidiendo permiso para las acciones sensibles.
+
+Sirve para implementar funcionalidades, corregir bugs a partir de un error, refactorizar, entender código ajeno o automatizar tareas del repositorio. Se puede ampliar con servidores MCP, skills, hooks y subagentes.
+
+## Cómo se usa
+
+1. Instálalo (por ejemplo, con npm) y entra en la carpeta de tu proyecto.
+2. Ejecuta `claude` e inicia sesión con tu cuenta de Claude o una clave de API.
+3. Describe la tarea en lenguaje natural y aprueba las acciones que proponga.
+4. Opcionalmente, crea un `CLAUDE.md` con las convenciones del proyecto.
+
+```bash
+npm install -g @anthropic-ai/claude-code
+cd mi-proyecto
+claude
+# > Los tests de facturación fallan desde ayer; encuentra la causa y corrígela.
+```
+
+## Para no técnicos
+
+Es como pasar de un corrector ortográfico a un colaborador al que le delegas una tarea entera: le explicas qué necesitas, él investiga, hace el trabajo y te pide confirmación antes de los pasos importantes.
+
+Un caso de negocio: un equipo deja que el agente prepare las correcciones de errores menores reportados por clientes, y los desarrolladores solo revisan y aprueban los cambios.
