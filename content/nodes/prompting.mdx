@@ -1,0 +1,52 @@
+---
+id: prompting
+title: "Prompt engineering"
+kind: technique
+category: [llm-apps]
+released: 2020-05
+origin: "OpenAI (paper de GPT-3, few-shot prompting)"
+audience: [technical, business]
+level: fundamentals
+requires: [llm]
+related: [chain-of-thought, context-engineering, evals]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2005.14165"
+summary: "El arte de escribir instrucciones claras para que un modelo de lenguaje entienda la tarea y responda lo que necesitas."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un mismo modelo puede dar una respuesta mediocre o excelente según cómo se le pida. Con buenas instrucciones se logra que resuma contratos con el formato de la empresa, clasifique tickets de soporte con etiquetas fijas o redacte correos con el tono de la marca, sin entrenar nada.
+
+El paper de GPT-3 (2020) mostró que bastaba con poner unos pocos ejemplos en el texto de entrada (*few-shot*) para que el modelo aprendiera la tarea "al vuelo". Desde entonces, escribir prompts es la primera herramienta para construir cualquier aplicación con LLM.
+
+## Cómo se usa
+
+1. Define el rol y el objetivo en un *system prompt*.
+2. Da contexto: quién es el usuario, qué datos hay, qué restricciones aplican.
+3. Muestra 1 a 3 ejemplos del resultado esperado.
+4. Pide un formato de salida explícito (lista, JSON, secciones).
+5. Prueba con casos reales y ajusta; idealmente mide con un conjunto de evals.
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()
+resp = client.messages.create(
+    model="claude-sonnet-4-5",
+    max_tokens=500,
+    system="Eres un analista de soporte. Clasifica cada ticket en: facturación, técnico u otro.",
+    messages=[{
+        "role": "user",
+        "content": "Ejemplo: 'No puedo iniciar sesión' -> técnico\n\nTicket: 'Me cobraron dos veces este mes'",
+    }],
+)
+print(resp.content[0].text)
+```
+
+## Para no técnicos
+
+Es como delegar a un asistente nuevo muy capaz pero sin contexto: si le dices "haz un informe", recibirás cualquier cosa; si le explicas para quién es, qué debe incluir y le muestras uno anterior, el resultado mejora muchísimo. Un equipo de atención al cliente puede, solo cambiando las instrucciones, pasar de respuestas genéricas a respuestas alineadas con sus políticas y su tono.

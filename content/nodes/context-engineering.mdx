@@ -1,0 +1,46 @@
+---
+id: context-engineering
+title: "Context engineering"
+kind: technique
+category: [llm-apps, agents]
+released: 2025-06
+origin: "Término popularizado por Tobi Lütke y Andrej Karpathy"
+audience: [technical, business]
+level: intermediate
+requires: [prompting, rag, tool-use]
+related: [prompting, rag, agent-skills]
+status: rising
+summary: "Diseñar toda la información que recibe el modelo en cada paso (instrucciones, datos, historial, herramientas) para que tenga justo lo que necesita."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+En aplicaciones simples basta un buen prompt. En agentes que trabajan durante muchos pasos, la calidad depende de todo lo que hay en la ventana de contexto: instrucciones de sistema, documentos recuperados, resultados de herramientas, historial y memoria. Si falta algo, el modelo improvisa; si sobra, se distrae, se vuelve más lento y más caro.
+
+Context engineering es la disciplina de decidir qué entra, en qué orden y en qué formato, y qué se resume, se descarta o se guarda fuera para recuperarlo después. El término se popularizó a mediados de 2025 como evolución natural del prompt engineering.
+
+## Cómo se usa
+
+1. Mantén un prompt de sistema estable y claro; ponlo al inicio para aprovechar el caché de prompts.
+2. Recupera información bajo demanda (RAG, herramientas de búsqueda) en lugar de cargarlo todo de entrada.
+3. Compacta el historial: resume pasos antiguos y elimina resultados de herramientas que ya no se necesitan.
+4. Usa memoria externa (archivos de notas, bases de datos) para lo que debe persistir entre sesiones.
+5. Mide el efecto de cada cambio con evals.
+
+```python
+def construir_contexto(tarea, historial, memoria):
+    partes = [
+        SYSTEM_PROMPT,                                   # estable, cacheable
+        f"<memoria>\n{memoria.relevante_para(tarea)}\n</memoria>",
+        f"<documentos>\n{buscar(tarea, top_k=5)}\n</documentos>",
+    ]
+    if tokens(historial) > 50_000:
+        historial = resumir(historial[:-10]) + historial[-10:]  # compacta lo antiguo
+    return partes, historial
+```
+
+## Para no técnicos
+
+Es como preparar la carpeta de un caso antes de pasárselo a un abogado: si le das 2.000 páginas sin orden, perderá tiempo y puede pasar por alto lo importante; si le das un resumen, los documentos clave y las preguntas concretas, trabajará mejor y más rápido. Una empresa que aplica esta disciplina a sus agentes obtiene respuestas más precisas y facturas de IA más bajas.

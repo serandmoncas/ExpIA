@@ -1,0 +1,46 @@
+---
+id: agent-skills
+title: "Agent Skills"
+kind: concept
+category: [agents]
+released: 2025-10
+origin: "Anthropic"
+audience: [technical, business]
+level: intermediate
+requires: [agents, context-engineering]
+related: [context-engineering, mcp, agents]
+status: emerging
+summary: "Carpetas con instrucciones, scripts y recursos que un agente carga solo cuando los necesita, para aprender tareas especializadas."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un agente generalista no sabe cómo tu empresa arma sus presentaciones, qué pasos sigue para un cierre contable o cómo se llena cierto formulario. Una *skill* empaqueta ese conocimiento: un archivo `SKILL.md` con instrucciones y, si hace falta, scripts y plantillas. El agente solo ve al inicio el nombre y la descripción de cada skill, y carga el contenido completo cuando la tarea lo requiere (*progressive disclosure*), así puede tener muchas skills sin saturar su contexto.
+
+Anthropic las presentó en octubre de 2025 para sus productos y su API. Complementan a MCP: MCP da acceso a herramientas y datos; las skills enseñan procedimientos.
+
+## Cómo se usa
+
+1. Crea una carpeta con un `SKILL.md` que empiece con frontmatter YAML (`name` y `description`).
+2. Escribe en el cuerpo las instrucciones paso a paso; referencia archivos adicionales o scripts si son largos.
+3. Escribe una descripción precisa: es lo que el agente usa para decidir cuándo activarla.
+4. Instálala donde tu agente la busque y prueba con tareas reales.
+
+```markdown
+---
+name: informe-semanal
+description: Genera el informe semanal de ventas con el formato corporativo. Úsala cuando pidan el reporte de ventas de la semana.
+---
+
+# Informe semanal de ventas
+
+1. Ejecuta `scripts/extraer_ventas.py` para obtener los datos de la semana.
+2. Usa la plantilla `plantilla.md` y completa cada sección.
+3. Destaca las tres regiones con mayor variación frente a la semana anterior.
+```
+
+## Para no técnicos
+
+Es como el manual de procedimientos de una empresa: un empleado nuevo no se lo aprende de memoria, pero sabe que existe y lo abre en la página correcta cuando le toca hacer esa tarea. Un equipo puede convertir sus procesos (reportes, revisiones de contratos, onboarding) en skills para que cualquier agente los ejecute siempre de la misma forma.

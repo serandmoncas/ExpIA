@@ -1,0 +1,49 @@
+---
+id: rag
+title: "RAG (Retrieval-Augmented Generation)"
+kind: technique
+category: [retrieval, llm-apps]
+released: 2020-05
+origin: "Lewis et al. (Facebook AI Research)"
+audience: [technical, business]
+level: intermediate
+requires: [llm, embeddings, vector-db]
+related: [semantic-search, vector-db, context-engineering]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/2005.11401"
+summary: "Buscar primero la información relevante en tus documentos y dársela al modelo para que responda con datos actualizados y verificables."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un LLM solo sabe lo que vio en su entrenamiento: no conoce tus manuales internos, tus contratos ni lo que pasó ayer. RAG resuelve esto buscando los fragmentos relevantes en tu base de conocimiento y pegándolos en el prompt antes de preguntar. Así se construyen asistentes de soporte que responden con la documentación oficial, buscadores internos que citan la fuente o chatbots legales sobre un corpus de normas.
+
+También reduce las "alucinaciones", porque el modelo se apoya en texto concreto, y permite actualizar el conocimiento sin reentrenar: basta con reindexar los documentos.
+
+## Cómo se usa
+
+1. **Indexar**: trocea los documentos (*chunks*), calcula un embedding de cada trozo y guárdalo en una base vectorial.
+2. **Recuperar**: convierte la pregunta en embedding y busca los trozos más parecidos.
+3. **Generar**: arma un prompt con esos trozos como contexto y pide al modelo que responda solo con base en ellos, citando la fuente.
+
+```python
+# Pseudocódigo: embed(), vector_db y llm representan tus proveedores concretos
+def indexar(documentos):
+    for doc in documentos:
+        for i, chunk in enumerate(trocear(doc.texto, tamano=800)):
+            vector_db.upsert(id=f"{doc.id}-{i}", vector=embed(chunk),
+                             metadata={"texto": chunk, "fuente": doc.url})
+
+def responder(pregunta):
+    hits = vector_db.query(vector=embed(pregunta), top_k=5)
+    contexto = "\n\n".join(f"[{h.metadata['fuente']}]\n{h.metadata['texto']}" for h in hits)
+    prompt = f"Responde usando SOLO este contexto y cita la fuente.\n\n{contexto}\n\nPregunta: {pregunta}"
+    return llm(prompt)
+```
+
+## Para no técnicos
+
+Es como un examen a libro abierto: en vez de contestar de memoria, el asistente primero busca las páginas correctas en el manual y luego responde con ellas delante. Una aseguradora puede poner un asistente sobre sus pólizas para que los agentes respondan dudas de clientes en segundos, con la cláusula exacta citada, en lugar de buscar a mano en cientos de PDFs.

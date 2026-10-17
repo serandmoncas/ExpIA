@@ -1,0 +1,47 @@
+---
+id: semantic-search
+title: "Búsqueda semántica"
+kind: technique
+category: [retrieval]
+released: 2019-08
+origin: "Reimers y Gurevych (Sentence-BERT)"
+audience: [technical, business]
+level: intermediate
+requires: [embeddings]
+related: [rag, vector-db]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/1908.10084"
+summary: "Buscar por significado y no por palabras exactas: encuentra resultados relevantes aunque usen términos distintos a los de tu consulta."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+La búsqueda tradicional por palabras clave falla cuando el usuario escribe "no me llega la plata" y el documento dice "retraso en el pago". La búsqueda semántica compara el significado de los textos, así que encuentra ese documento. Se usa en buscadores de ayuda, catálogos de productos, detección de tickets duplicados y como paso de recuperación en sistemas RAG.
+
+Sentence-BERT (2019) popularizó una forma eficiente de convertir frases completas en vectores comparables, lo que hizo práctica esta técnica a gran escala.
+
+## Cómo se usa
+
+1. Calcula un embedding para cada documento con un modelo de embeddings.
+2. Al llegar una consulta, calcula su embedding con el mismo modelo.
+3. Ordena los documentos por similitud (normalmente similitud coseno) y devuelve los primeros.
+4. Para colecciones grandes, guarda los vectores en una base de datos vectorial; a menudo se combina con búsqueda por palabras (búsqueda híbrida).
+
+```python
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+docs = ["Retraso en el pago de nómina", "Cambiar contraseña", "Horario de oficinas"]
+doc_emb = model.encode(docs, convert_to_tensor=True)
+
+query_emb = model.encode("no me llega la plata", convert_to_tensor=True)
+scores = util.cos_sim(query_emb, doc_emb)[0]
+print(docs[int(scores.argmax())])  # "Retraso en el pago de nómina"
+```
+
+## Para no técnicos
+
+Es la diferencia entre un archivista que solo busca la palabra exacta en las etiquetas y uno que entiende de qué le hablas. Una tienda en línea con búsqueda semántica muestra "zapatillas para correr" cuando el cliente escribe "tenis para trotar", y eso se traduce directamente en menos búsquedas sin resultados y más ventas.

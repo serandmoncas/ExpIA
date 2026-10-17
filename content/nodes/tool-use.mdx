@@ -1,0 +1,63 @@
+---
+id: tool-use
+title: "Function calling / Tool use"
+kind: technique
+category: [llm-apps, agents]
+released: 2023-06
+origin: "OpenAI (function calling en su API), luego adoptado por otros proveedores"
+audience: [technical]
+level: intermediate
+requires: [llm, prompting]
+related: [agents, mcp, structured-outputs]
+status: mainstream
+summary: "Permite que el modelo pida ejecutar funciones de tu código, como consultar una base de datos o una API, y use el resultado para responder."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un LLM por sí solo solo produce texto. Con tool use, le describes un conjunto de herramientas (nombre, descripción y esquema JSON de parámetros) y el modelo decide cuándo llamarlas y con qué argumentos. Tu código ejecuta la función real y le devuelve el resultado. Así un asistente puede consultar el estado de un pedido, crear un evento en el calendario o buscar en la web.
+
+Es el mecanismo básico sobre el que se construyen los agentes y protocolos como MCP. OpenAI lo lanzó como *function calling* en junio de 2023 y hoy todos los grandes proveedores ofrecen algo equivalente.
+
+## Cómo se usa
+
+1. Define cada herramienta con un nombre, una descripción clara y un JSON Schema de entrada.
+2. Envía las herramientas junto con el mensaje del usuario.
+3. Si el modelo responde con una llamada a herramienta, ejecútala en tu código.
+4. Devuelve el resultado al modelo y deja que redacte la respuesta final (o pida otra herramienta).
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()
+tools = [{
+    "name": "estado_pedido",
+    "description": "Devuelve el estado de envío de un pedido por su id.",
+    "input_schema": {
+        "type": "object",
+        "properties": {"pedido_id": {"type": "string"}},
+        "required": ["pedido_id"],
+    },
+}]
+messages = [{"role": "user", "content": "¿Dónde está mi pedido A-1024?"}]
+resp = client.messages.create(model="claude-sonnet-4-5", max_tokens=1024,
+                              tools=tools, messages=messages)
+
+if resp.stop_reason == "tool_use":
+    call = next(b for b in resp.content if b.type == "tool_use")
+    resultado = consultar_pedido(**call.input)  # tu función real
+    messages += [
+        {"role": "assistant", "content": resp.content},
+        {"role": "user", "content": [{"type": "tool_result",
+                                      "tool_use_id": call.id, "content": resultado}]},
+    ]
+    final = client.messages.create(model="claude-sonnet-4-5", max_tokens=1024,
+                                   tools=tools, messages=messages)
+    print(final.content[0].text)
+```
+
+## Para no técnicos
+
+Es como darle a un asistente muy listo un teléfono con una lista de extensiones: él no sabe dónde está tu pedido, pero sabe a qué departamento llamar, qué preguntar y cómo explicarte la respuesta. Un comercio electrónico puede así tener un chat que consulta en tiempo real inventario, envíos y devoluciones, en lugar de dar respuestas genéricas.

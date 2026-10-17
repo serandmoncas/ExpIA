@@ -1,0 +1,48 @@
+---
+id: guardrails
+title: "Guardrails"
+kind: technique
+category: [safety]
+released: 2023
+audience: [technical, business]
+level: intermediate
+requires: [llm, evals]
+related: [evals, structured-outputs]
+status: rising
+summary: "Controles que revisan lo que entra y sale de un sistema de IA para bloquear contenido dañino, fugas de datos o respuestas fuera de tema."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Un modelo puede recibir intentos de manipulación (*prompt injection*), filtrar datos personales, inventar políticas o salirse del tema de negocio. Los guardrails son capas de control alrededor del modelo: validan la entrada antes de enviarla y la salida antes de mostrarla o ejecutarla. Se usan para cumplir normas de privacidad, proteger la marca y limitar lo que un agente puede hacer.
+
+Durante 2023 aparecieron librerías especializadas (como NeMo Guardrails de NVIDIA o Guardrails AI) y los proveedores añadieron filtros de moderación. Ningún guardrail es infalible, por eso se combinan varias capas y se miden con evals.
+
+## Cómo se usa
+
+1. Identifica los riesgos concretos de tu caso: datos personales, temas prohibidos, acciones peligrosas, formato inválido.
+2. Aplica controles de entrada: detección de inyección, filtrado de datos sensibles, límites de longitud.
+3. Aplica controles de salida: moderación, validación de esquema, verificación de que la respuesta se apoya en las fuentes.
+4. Para agentes, restringe permisos de herramientas y exige confirmación humana en acciones irreversibles.
+5. Registra los bloqueos y revísalos para ajustar.
+
+```python
+import re
+
+PATRON_TARJETA = re.compile(r"\b(?:\d[ -]?){13,16}\b")
+
+def responder_seguro(pregunta):
+    if clasificador_fuera_de_tema(pregunta):          # p. ej. un modelo pequeño
+        return "Solo puedo ayudarte con temas de tu cuenta."
+    pregunta = PATRON_TARJETA.sub("[TARJETA]", pregunta)  # no enviar datos sensibles
+    respuesta = llm(pregunta)
+    if moderacion(respuesta).marcada:                  # filtro de salida
+        return "No puedo responder eso."
+    return respuesta
+```
+
+## Para no técnicos
+
+Son como las barandas de una carretera de montaña: no manejan el auto, pero evitan que una distracción termine en el barranco. Un banco que lanza un asistente de IA usa guardrails para que nunca revele datos de otro cliente, no dé asesoría de inversión no autorizada y derive a un humano los casos delicados.
