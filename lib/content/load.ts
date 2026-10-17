@@ -3,11 +3,12 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import { load, JSON_SCHEMA } from 'js-yaml'
 import type { ZodIssue } from 'zod'
-import { nodeFrontmatterSchema, personFrontmatterSchema, taxonomySchema, sourcesSchema, radarFrontmatterSchema, type Source } from './schema'
+import { nodeFrontmatterSchema, personFrontmatterSchema, taxonomySchema, sourcesSchema, radarFrontmatterSchema, pathFrontmatterSchema, type Source } from './schema'
 import { splitSections, splitSectionsBy, PERSON_SECTION_HEADINGS, RADAR_SECTION_HEADINGS, type NodeSections } from './sections'
-import type { Catalog, CatalogNode, Person, Report } from './types'
+import type { Catalog, CatalogNode, Person, Report, LearningPath } from './types'
 import { parseReleased, compareDates } from '@/lib/dates'
 import { detectCycle } from '@/lib/graph'
+import { resolveAfterChain, checkPathOrder, sortPaths, stepIds } from '@/lib/paths'
 
 export class ContentError extends Error {
   constructor(public errors: string[]) {
@@ -147,6 +148,41 @@ export function loadCatalog(contentDir = path.join(process.cwd(), 'content')): C
     reports.push({ ...front, summary: split.sections.summary ?? '' })
   }
 
+  const paths: LearningPath[] = []
+  for (const { fileName, data, content } of readMdx(path.join(contentDir, 'paths'))) {
+    const rel = `paths/${fileName}`
+    const parsed = pathFrontmatterSchema.safeParse(data)
+    if (!parsed.success) {
+      errors.push(...schemaErrors(rel, parsed.error.issues))
+      continue
+    }
+    const front = parsed.data
+    errors.push(...idMismatch(rel, fileName, front.id))
+    const seenSteps = new Set<string>()
+    front.steps.forEach((s, i) => {
+      const where = `${rel} › steps.${i}.node`
+      const node = byId.get(s.node)
+      if (!node) errors.push(`${where}: "${s.node}" no existe`)
+      else if (seenSteps.has(s.node)) errors.push(`${where}: "${s.node}" está repetido`)
+      else if ((node.review?.length ?? 0) < 2) errors.push(`${where}: "${s.node}" necesita al menos 2 preguntas de repaso`)
+      seenSteps.add(s.node)
+    })
+    const headings = splitSectionsBy(content, {} as Record<never, string>).unknown
+    if (headings.length) errors.push(`${rel} › cuerpo: la introducción no lleva títulos ## (${headings.map((h) => `"${h}"`).join(', ')})`)
+    paths.push({ ...front, intro: content.trim() })
+  }
+  const pathsById = new Map(paths.map((p) => [p.id, p]))
+  for (const p of paths) {
+    const rel = `paths/${p.id}.mdx`
+    const { chain, error } = resolveAfterChain(paths, p.id)
+    if (error) {
+      errors.push(`${rel} › ${error}`)
+      continue
+    }
+    const covered = new Set(chain.flatMap((id) => stepIds(pathsById.get(id)!)))
+    for (const e of checkPathOrder(stepIds(p), (id) => byId.get(id)?.requires, covered, p.after)) errors.push(`${rel} › steps: ${e}`)
+  }
+
   if (errors.length) throw new ContentError(errors)
   nodes.sort((a, b) => compareDates(a.date, b.date) || a.id.localeCompare(b.id))
   people.sort((a, b) => a.name.localeCompare(b.name, 'es'))
@@ -159,6 +195,7 @@ export function loadCatalog(contentDir = path.join(process.cwd(), 'content')): C
     peopleById: new Map(people.map((p) => [p.id, p])),
     reports,
     sources,
+    paths: sortPaths(paths),
   }
 }
 

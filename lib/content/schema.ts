@@ -112,6 +112,19 @@ export type Category = z.infer<typeof taxonomySchema>['categories'][number]
 export type PersonFrontmatter = z.infer<typeof personFrontmatterSchema>
 export type ReviewItem = NonNullable<NodeFrontmatter['review']>[number]
 
+export const pathFrontmatterSchema = z
+  .object({
+    id,
+    title: z.string().min(1),
+    audience: z.array(z.enum(AUDIENCES)).min(1),
+    goal: z.string().min(1).max(160),
+    after: id.optional(),
+    steps: z.array(z.object({ node: id, note: z.string().min(1).max(280).optional() }).strict()).min(3).max(12),
+  })
+  .strict()
+
+export type PathFrontmatter = z.infer<typeof pathFrontmatterSchema>
+
 const name = z.string().min(1)
 
 export const sourceSchema = z.discriminatedUnion('kind', [
