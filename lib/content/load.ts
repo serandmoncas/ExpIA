@@ -3,9 +3,9 @@ import path from 'node:path'
 import matter from 'gray-matter'
 import { load, JSON_SCHEMA } from 'js-yaml'
 import type { ZodIssue } from 'zod'
-import { nodeFrontmatterSchema, personFrontmatterSchema, taxonomySchema } from './schema'
-import { splitSections, splitSectionsBy, PERSON_SECTION_HEADINGS, type NodeSections } from './sections'
-import type { Catalog, CatalogNode, Person } from './types'
+import { nodeFrontmatterSchema, personFrontmatterSchema, taxonomySchema, sourcesSchema, radarFrontmatterSchema, type Source } from './schema'
+import { splitSections, splitSectionsBy, PERSON_SECTION_HEADINGS, RADAR_SECTION_HEADINGS, type NodeSections } from './sections'
+import type { Catalog, CatalogNode, Person, Report } from './types'
 import { parseReleased, compareDates } from '@/lib/dates'
 import { detectCycle } from '@/lib/graph'
 
@@ -105,16 +105,60 @@ export function loadCatalog(contentDir = path.join(process.cwd(), 'content')): C
     errors.push(...sectionErrors(rel, split))
     people.push({ ...front, why: split.sections.why ?? '' })
   }
+  const peopleIds = new Set(people.map((p) => p.id))
+
+  let sources: Source[] = []
+  const sourcesPath = path.join(contentDir, 'sources.yaml')
+  if (fs.existsSync(sourcesPath)) {
+    const parsed = sourcesSchema.safeParse(loadYaml(fs.readFileSync(sourcesPath, 'utf8')))
+    if (!parsed.success) errors.push(...schemaErrors('sources.yaml', parsed.error.issues))
+    else {
+      sources = parsed.data.sources
+      const seen = new Set<string>()
+      sources.forEach((s, i) => {
+        if (seen.has(s.id)) errors.push(`sources.yaml › sources.${i}.id: "${s.id}" está duplicado`)
+        if (peopleIds.has(s.id)) errors.push(`sources.yaml › sources.${i}.id: "${s.id}" coincide con un referente`)
+        seen.add(s.id)
+      })
+    }
+  }
+  const sourceIds = new Set([...sources.map((s) => s.id), ...peopleIds])
+
+  const reports: Report[] = []
+  for (const { fileName, data, content } of readMdx(path.join(contentDir, 'radar'))) {
+    const rel = `radar/${fileName}`
+    const parsed = radarFrontmatterSchema.safeParse(data)
+    if (!parsed.success) {
+      errors.push(...schemaErrors(rel, parsed.error.issues))
+      continue
+    }
+    const front = parsed.data
+    if (front.week !== fileName.replace(/\.mdx$/, '')) errors.push(`${rel} › week: "${front.week}" no coincide con el nombre del archivo`)
+    front.items.forEach((it, i) => {
+      if (!sourceIds.has(it.source)) errors.push(`${rel} › items.${i}.source: "${it.source}" no es una fuente ni un referente`)
+      for (const t of it.topics) if (!byId.has(t)) errors.push(`${rel} › items.${i}.topics: "${t}" no existe`)
+    })
+    front.proposals.forEach((p, i) => {
+      const onNode = p.type === 'status' || p.type === 'new-node'
+      if (onNode ? !byId.has(p.target) : !peopleIds.has(p.target)) errors.push(`${rel} › proposals.${i}.target: "${p.target}" no existe`)
+    })
+    const split = splitSectionsBy(content, RADAR_SECTION_HEADINGS)
+    errors.push(...sectionErrors(rel, split))
+    reports.push({ ...front, summary: split.sections.summary ?? '' })
+  }
 
   if (errors.length) throw new ContentError(errors)
   nodes.sort((a, b) => compareDates(a.date, b.date) || a.id.localeCompare(b.id))
   people.sort((a, b) => a.name.localeCompare(b.name, 'es'))
+  reports.sort((a, b) => b.week.localeCompare(a.week))
   return {
     nodes,
     byId,
     categories: tax.data.categories,
     people,
     peopleById: new Map(people.map((p) => [p.id, p])),
+    reports,
+    sources,
   }
 }
 

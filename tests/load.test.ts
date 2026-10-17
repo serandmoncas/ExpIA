@@ -16,7 +16,12 @@ function fm(id: string, extra: Record<string, string> = {}): Record<string, stri
 function file(front: Record<string, string>, body = BODY): string {
   return `---\n${Object.entries(front).map(([k, v]) => `${k}: ${v}`).join('\n')}\n---\n${body}`
 }
-function makeContent(nodes: Record<string, string>, taxonomy = TAXONOMY, people: Record<string, string> = {}): string {
+function makeContent(
+  nodes: Record<string, string>,
+  taxonomy = TAXONOMY,
+  people: Record<string, string> = {},
+  extra: { radar?: Record<string, string>; sources?: string } = {},
+): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'expia-'))
   fs.mkdirSync(path.join(dir, 'nodes'))
   fs.writeFileSync(path.join(dir, 'taxonomy.yaml'), taxonomy)
@@ -24,6 +29,11 @@ function makeContent(nodes: Record<string, string>, taxonomy = TAXONOMY, people:
   if (Object.keys(people).length) {
     fs.mkdirSync(path.join(dir, 'people'))
     for (const [name, text] of Object.entries(people)) fs.writeFileSync(path.join(dir, 'people', `${name}.mdx`), text)
+  }
+  if (extra.sources !== undefined) fs.writeFileSync(path.join(dir, 'sources.yaml'), extra.sources)
+  if (extra.radar) {
+    fs.mkdirSync(path.join(dir, 'radar'))
+    for (const [name, text] of Object.entries(extra.radar)) fs.writeFileSync(path.join(dir, 'radar', `${name}.mdx`), text)
   }
   return dir
 }
@@ -169,5 +179,72 @@ describe('loadCatalog: referentes', () => {
   it('reporta un id distinto del nombre del archivo', () => {
     const errs = errorsOf(withPerson({ p: personFile('otro') }))
     expect(errs.some((e) => e.startsWith('people/p.mdx › id:'))).toBe(true)
+  })
+})
+
+const SOURCES = 'sources:\n  - { id: hn, name: Hacker News, kind: hackernews, minPoints: 100, keywords: [LLM] }\n'
+const SUMMARY = '## Resumen de la semana\nPasaron cosas.\n'
+const ITEM = '{ title: "Algo", url: "https://example.com/a", source: hn, publishedAt: 2026-10-20, topics: [a], relevance: high, summary: "Resumen" }'
+function reportFile(week: string, extra: Record<string, string> = {}, body = SUMMARY): string {
+  return file({
+    week, from: '2026-10-16', sourcesChecked: '3', items: `[${ITEM}]`,
+    generated: '{ by: manual, at: "2026-10-23T13:00:00Z" }', ...extra,
+  }, body)
+}
+const withRadar = (radar: Record<string, string>, sources = SOURCES) =>
+  makeContent({ a: file(fm('a')) }, TAXONOMY, {}, { radar, sources })
+const W = 'radar/2026-10-23.mdx'
+
+describe('loadCatalog: radar', () => {
+  it('carga fuentes e informes, el más reciente primero', () => {
+    const cat = loadCatalog(withRadar({ '2026-10-16': reportFile('2026-10-16'), '2026-10-23': reportFile('2026-10-23') }))
+    expect(cat.reports.map((r) => r.week)).toEqual(['2026-10-23', '2026-10-16'])
+    expect(cat.reports[0].summary).toBe('Pasaron cosas.')
+    expect(cat.reports[0].items[0].publishedAt).toBe('2026-10-20')
+    expect(cat.reports[0].proposals).toEqual([])
+    expect(cat.sources.map((s) => s.id)).toEqual(['hn'])
+  })
+  it('sin carpeta radar ni sources.yaml carga vacío', () => {
+    const cat = loadCatalog(makeContent({ a: file(fm('a')) }))
+    expect(cat.reports).toEqual([])
+    expect(cat.sources).toEqual([])
+  })
+  it('reporta un week distinto del nombre del archivo', () => {
+    const errs = errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-30') }))
+    expect(errs.some((e) => e.startsWith(`${W} › week:`))).toBe(true)
+  })
+  it('reporta un tema inexistente en un ítem', () => {
+    const items = `[${ITEM.replace('topics: [a]', 'topics: [zzz]')}]`
+    expect(errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', { items }) }))).toContain(`${W} › items.0.topics: "zzz" no existe`)
+  })
+  it('reporta una fuente que no es fuente ni referente', () => {
+    const items = `[${ITEM.replace('source: hn', 'source: nope')}]`
+    expect(errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', { items }) }))).toContain(`${W} › items.0.source: "nope" no es una fuente ni un referente`)
+  })
+  it('limita los ítems a 15', () => {
+    const items = `[${Array(16).fill(ITEM).join(', ')}]`
+    const errs = errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', { items }) }))
+    expect(errs.some((e) => e.startsWith(`${W} › items`))).toBe(true)
+  })
+  it('exige from y to en un cambio de estado', () => {
+    const proposals = '[{ type: status, target: a, reason: "r", evidence: ["https://example.com/a"] }]'
+    expect(errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', { proposals }) }))).toContain(`${W} › proposals.0.from: un cambio de estado requiere from y to`)
+  })
+  it('reporta el target inexistente de una propuesta', () => {
+    const proposals = '[{ type: status, target: zzz, from: emerging, to: rising, reason: "r", evidence: ["https://example.com/a"] }]'
+    expect(errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', { proposals }) }))).toContain(`${W} › proposals.0.target: "zzz" no existe`)
+  })
+  it('reporta la sección faltante', () => {
+    expect(errorsOf(withRadar({ '2026-10-23': reportFile('2026-10-23', {}, 'nada\n') }))).toContain(`${W} › cuerpo: falta la sección "## Resumen de la semana"`)
+  })
+  it('reporta un sources.yaml inválido', () => {
+    const errs = errorsOf(withRadar({}, 'sources:\n  - { id: hn, name: HN, kind: hackernews, keywords: [LLM] }\n'))
+    expect(errs.some((e) => e.startsWith('sources.yaml › sources.0'))).toBe(true)
+  })
+  it('reporta una fuente con el mismo id que un referente', () => {
+    const dir = makeContent({ a: file(fm('a')) }, TAXONOMY, { p: personFile('p') }, {
+      sources: 'sources:\n  - { id: p, name: P, kind: rss, url: "https://example.com/feed.xml" }\n',
+    })
+    expect(errorsOf(dir)).toContain('sources.yaml › sources.0.id: "p" coincide con un referente')
   })
 })

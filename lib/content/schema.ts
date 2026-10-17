@@ -1,5 +1,8 @@
 import { z } from 'zod'
-import { KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS, LANGUAGES, PERSON_KINDS, HIGHLIGHT_FORMATS } from './enums'
+import {
+  KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS, LANGUAGES, PERSON_KINDS, HIGHLIGHT_FORMATS,
+  RELEVANCES, PROPOSAL_TYPES, GENERATORS,
+} from './enums'
 import { parseReleased } from '@/lib/dates'
 
 const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'debe ser kebab-case')
@@ -101,3 +104,56 @@ export const personFrontmatterSchema = z
 export type NodeFrontmatter = z.infer<typeof nodeFrontmatterSchema>
 export type Category = z.infer<typeof taxonomySchema>['categories'][number]
 export type PersonFrontmatter = z.infer<typeof personFrontmatterSchema>
+
+const name = z.string().min(1)
+
+export const sourceSchema = z.discriminatedUnion('kind', [
+  z.object({ id, name, kind: z.literal('rss'), url }).strict(),
+  z.object({ id, name, kind: z.literal('hackernews'), minPoints: z.number().int().positive(), keywords: z.array(z.string().min(1)).min(1) }).strict(),
+  z.object({ id, name, kind: z.literal('github'), minStars: z.number().int().positive(), topics: z.array(z.string().min(1)).min(1) }).strict(),
+])
+
+export const sourcesSchema = z.object({ sources: z.array(sourceSchema).min(1) }).strict()
+
+const reportItemSchema = z
+  .object({
+    title: z.string().min(1),
+    url,
+    source: id,
+    publishedAt: added,
+    topics: z.array(id).min(1),
+    relevance: z.enum(RELEVANCES),
+    summary: z.string().min(1).max(280),
+  })
+  .strict()
+
+const proposalSchema = z
+  .object({
+    type: z.enum(PROPOSAL_TYPES),
+    target: id,
+    from: z.enum(STATUSES).optional(),
+    to: z.enum(STATUSES).optional(),
+    reason: z.string().min(1),
+    evidence: z.array(url).min(1),
+  })
+  .strict()
+  .refine((p) => p.type !== 'status' || (p.from !== undefined && p.to !== undefined), {
+    message: 'un cambio de estado requiere from y to',
+    path: ['from'],
+  })
+
+export const radarFrontmatterSchema = z
+  .object({
+    week: added,
+    from: added,
+    sourcesChecked: z.number().int().nonnegative(),
+    items: z.array(reportItemSchema).max(15).default([]),
+    proposals: z.array(proposalSchema).default([]),
+    generated: z.object({ by: z.enum(GENERATORS), model: z.string().optional(), at: z.string().min(1) }).strict(),
+  })
+  .strict()
+
+export type Source = z.infer<typeof sourceSchema>
+export type RadarFrontmatter = z.infer<typeof radarFrontmatterSchema>
+export type ReportItem = RadarFrontmatter['items'][number]
+export type Proposal = RadarFrontmatter['proposals'][number]
