@@ -73,3 +73,9 @@ export function getDependents(nodes: GraphNode[], id: string): string[] {
 export function getLearningPath(nodes: GraphNode[], targetId: string): string[] {
   return [...getPrerequisites(nodes, targetId), targetId]
 }
+
+// Para resaltar en el mapa: usar siempre el grafo completo, no el subconjunto filtrado,
+// para que la cadena no se corte en nodos ocultos
+export function getHighlight(nodes: GraphNode[], id: string): Set<string> {
+  return new Set([id, ...getPrerequisites(nodes, id), ...getDependents(nodes, id)])
+}

@@ -45,8 +45,10 @@ export function loadCatalog(contentDir = path.join(process.cwd(), 'content')): C
     for (const c of front.category) {
       if (!categoryIds.has(c)) errors.push(`${rel} › category: "${c}" no existe en taxonomy.yaml`)
     }
-    const { sections, missing } = splitSections(content)
+    const { sections, missing, unknown, duplicates } = splitSections(content)
     for (const h of missing) errors.push(`${rel} › cuerpo: falta la sección "## ${h}"`)
+    for (const h of unknown) errors.push(`${rel} › cuerpo: sección desconocida "## ${h}" (usa ### para subsecciones)`)
+    for (const h of duplicates) errors.push(`${rel} › cuerpo: sección duplicada "## ${h}"`)
     nodes.push({ ...front, date: parseReleased(front.released), sections: sections as NodeSections })
   }
 

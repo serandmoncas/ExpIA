@@ -23,8 +23,12 @@ describe('splitSections', () => {
     expect(missing).toEqual([])
     expect(sections.purpose).toBe('A')
   })
-  it('no mezcla secciones desconocidas con la anterior', () => {
-    const { sections } = splitSections('## Para qué sirve\nA\n## Extra\nZ\n## Cómo se usa\nB\n## Para no técnicos\nC')
+  it('reporta los títulos H2 desconocidos y no los mezcla con la sección anterior', () => {
+    const { sections, unknown } = splitSections('## Para qué sirve\nA\n## Extra\nZ\n## Cómo se usa\nB\n## Para no técnicos\nC')
     expect(sections.purpose).toBe('A')
+    expect(unknown).toEqual(['Extra'])
+  })
+  it('reporta las secciones duplicadas', () => {
+    expect(splitSections(FULL + '## Para qué sirve\nD\n').duplicates).toEqual(['Para qué sirve'])
   })
 })

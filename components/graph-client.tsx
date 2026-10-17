@@ -8,7 +8,7 @@ import { useUrlFilters } from '@/hooks/use-url-filters'
 import { applyFilters } from '@/lib/filters'
 import { createSearch } from '@/lib/search'
 import { layoutGraph, NODE_SIZE } from '@/lib/graph-layout'
-import { getPrerequisites, getDependents } from '@/lib/graph'
+import { getHighlight } from '@/lib/graph'
 import type { NodeMeta } from '@/lib/content/types'
 import type { Category } from '@/lib/content/schema'
 
@@ -22,10 +22,7 @@ export function GraphClient({ nodes, categories }: { nodes: NodeMeta[]; categori
   const colorOf = useMemo(() => new Map(categories.map((c) => [c.id, c.color])), [categories])
 
   const selectedNode = visible.find((n) => n.id === selected)
-  const highlight = useMemo(
-    () => (selectedNode ? new Set([selectedNode.id, ...getPrerequisites(visible, selectedNode.id), ...getDependents(visible, selectedNode.id)]) : null),
-    [selectedNode, visible],
-  )
+  const highlight = useMemo(() => (selectedNode ? getHighlight(nodes, selectedNode.id) : null), [selectedNode, nodes])
 
   const rfNodes: Node[] = visible.map((n) => ({
     id: n.id,

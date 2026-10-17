@@ -44,3 +44,19 @@ test('la línea de tiempo abre mostrando lo más reciente', async ({ page }) => 
   const scroller = page.getByTestId('timeline-scroll')
   await expect.poll(() => scroller.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0)
 })
+
+test('los filtros no pierden teclas ni clics con latencia de red', async ({ page }) => {
+  await page.route(/_rsc=/, async (route) => {
+    await new Promise((r) => setTimeout(r, 250))
+    await route.continue()
+  })
+  await page.goto('/explore')
+  await expect(page.getByTestId('node-card').first()).toBeVisible()
+  const search = page.getByPlaceholder('Buscar conceptos y herramientas…')
+  await search.pressSequentially('transformer', { delay: 90 })
+  await expect(search).toHaveValue('transformer')
+  await search.fill('')
+  await page.getByRole('button', { name: 'Herramienta', exact: true }).click()
+  await page.getByRole('button', { name: 'Modelo', exact: true }).click()
+  await expect(page).toHaveURL(/kind=tool,model/)
+})

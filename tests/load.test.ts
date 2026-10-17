@@ -92,6 +92,12 @@ describe('loadCatalog', () => {
     expect(errs).toContain('nodes/a.mdx › cuerpo: falta la sección "## Cómo se usa"')
   })
 
+  it('reporta títulos H2 desconocidos y duplicados', () => {
+    const errs = errorsOf(makeContent({ a: file(fm('a'), BODY + '## Ejemplo\nX\n## Para qué sirve\nY\n') }))
+    expect(errs).toContain('nodes/a.mdx › cuerpo: sección desconocida "## Ejemplo" (usa ### para subsecciones)')
+    expect(errs).toContain('nodes/a.mdx › cuerpo: sección duplicada "## Para qué sirve"')
+  })
+
   it('reporta un summary demasiado largo', () => {
     const errs = errorsOf(makeContent({ a: file(fm('a', { summary: `"${'x'.repeat(161)}"` })) }))
     expect(errs.some((e) => e.startsWith('nodes/a.mdx › summary'))).toBe(true)

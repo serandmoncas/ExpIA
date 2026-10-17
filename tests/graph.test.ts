@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { detectCycle, topoSort, getPrerequisites, getDependents, getLearningPath, type GraphNode } from '@/lib/graph'
+import { detectCycle, topoSort, getPrerequisites, getDependents, getLearningPath, getHighlight, type GraphNode } from '@/lib/graph'
 
 const chain: GraphNode[] = [
   { id: 'c', requires: ['b'] },
@@ -75,5 +75,15 @@ describe('getDependents / getLearningPath', () => {
   })
   it('la ruta de aprendizaje termina en el objetivo', () => {
     expect(getLearningPath(chain, 'c')).toEqual(['a', 'b', 'c'])
+  })
+})
+
+describe('getHighlight', () => {
+  it('incluye el nodo, sus prerrequisitos transitivos y sus dependientes directos', () => {
+    expect(getHighlight(diamond, 'b')).toEqual(new Set(['b', 'a', 'd']))
+  })
+  it('atraviesa nodos que la vista filtra (se calcula sobre el grafo completo)', () => {
+    // c → b → a: aunque b esté oculto en la vista, a sigue siendo prerrequisito de c
+    expect(getHighlight(chain, 'c').has('a')).toBe(true)
   })
 })
