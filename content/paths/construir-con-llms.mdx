@@ -1,0 +1,21 @@
+---
+id: construir-con-llms
+title: "Construir con LLMs"
+audience: [technical]
+goal: "Construir aplicaciones con LLMs: prompts, APIs, salidas estructuradas y RAG"
+after: fundamentos
+steps:
+  - node: prompting
+  - node: claude
+  - node: anthropic-api
+  - node: tool-use
+    note: "Fíjate en quién ejecuta la herramienta: el modelo solo pide la llamada; la ejecuta tu código y le devuelve el resultado."
+  - node: structured-outputs
+  - node: vector-db
+  - node: rag
+    note: "Aquí se juntan embeddings, base vectorial y prompt: indexar, recuperar y generar con la fuente citada."
+  - node: evals
+    note: "Antes de llevar nada a producción, arma un conjunto de casos reales y córrelo tras cada cambio."
+---
+
+Para desarrolladores que quieren pasar de usar un chat a construir con modelos de lenguaje. Al terminar sabrás llamar a una API de LLM, obtener respuestas con formato fijo, dar herramientas al modelo, responder con tus propios documentos mediante RAG y medir la calidad con evals.

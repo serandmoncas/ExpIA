@@ -27,9 +27,13 @@ Cada referente es un archivo `content/people/<id>.mdx`. Copia uno existente (por
 2. **Referentes** por tema y red social (este repo)
 3. Radar tecnológico personal y de equipo
 4. Tendencias y resumen automático (agente que propone PRs)
-5. Modo enseñanza: rutas, cursos y progreso
+5. **Modo enseñanza**: rutas de aprendizaje con repaso y progreso local (este repo; cuentas y cursos llegan con el 3)
 
 Especificación: `docs/superpowers/specs/2026-10-17-catalogo-ia-design.md`
+
+## Rutas de aprendizaje
+
+Las rutas curadas viven en `content/paths/<id>.mdx`: `title`, `audience`, `goal`, `after` (ruta que se asume hecha, opcional) y de 3 a 12 `steps` con `node` y una `note` opcional. `npm test` comprueba que cada paso aparezca después de sus prerrequisitos (o en la ruta `after`) y que sus nodos tengan al menos 2 preguntas de repaso (`review` en el frontmatter del nodo). Además, cada nodo tiene una ruta generada en `/learn/<id>`.
 
 ## Radar semanal
 

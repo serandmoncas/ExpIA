@@ -1,0 +1,20 @@
+---
+id: construir-un-agente
+title: "Construir un agente"
+audience: [technical]
+goal: "Entender y construir un agente que use herramientas"
+after: construir-con-llms
+steps:
+  - node: agents
+    note: "Fíjate en el bucle: el modelo pide una herramienta, tu código la ejecuta y le devuelve el resultado, hasta que el modelo indica que terminó."
+  - node: mcp
+  - node: context-engineering
+    note: "En un agente que trabaja muchos pasos, lo que entra en el contexto importa tanto como el prompt: si falta algo improvisa, si sobra se distrae."
+  - node: claude-agent-sdk
+  - node: agent-skills
+  - node: multi-agent
+    note: "Empieza con un solo agente y separa solo cuando haya una razón clara: varios agentes cuestan más tokens y son más difíciles de depurar."
+  - node: guardrails
+---
+
+Para desarrolladores que ya construyen con LLMs y quieren que el modelo trabaje por su cuenta. Al terminar sabrás cómo funciona el bucle de un agente, cómo conectarlo con herramientas mediante MCP, cómo cuidar su contexto, empaquetar procedimientos como skills y cuándo conviene repartir el trabajo entre varios agentes.
