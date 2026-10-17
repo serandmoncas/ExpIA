@@ -22,6 +22,15 @@ export type Platform = (typeof PLATFORMS)[number]
 export type PersonKind = (typeof PERSON_KINDS)[number]
 export type HighlightFormat = (typeof HIGHLIGHT_FORMATS)[number]
 
+export const RELEVANCES = ['high', 'medium'] as const
+export const PROPOSAL_TYPES = ['status', 'new-node', 'highlight', 'feeds'] as const
+export const SOURCE_KINDS = ['rss', 'hackernews', 'github'] as const
+export const GENERATORS = ['radar-agent', 'manual'] as const
+
+export type Relevance = (typeof RELEVANCES)[number]
+export type ProposalType = (typeof PROPOSAL_TYPES)[number]
+export type SourceKind = (typeof SOURCE_KINDS)[number]
+
 export const LABELS: Record<string, string> = {
   concept: 'Concepto',
   technique: 'Técnica',
@@ -60,4 +69,12 @@ export const LABELS: Record<string, string> = {
   thread: 'Hilo',
   book: 'Libro',
   repo: 'Repositorio',
+  high: 'Alta',
+  medium: 'Media',
+  status: 'Cambio de estado',
+  'new-node': 'Nodo nuevo',
+  highlight: 'Recurso destacado',
+  feeds: 'Feed de YouTube',
+  rss: 'RSS',
+  hackernews: 'Hacker News',
 }

@@ -1,4 +1,19 @@
 import { test, expect } from '@playwright/test'
+import fs from 'node:fs'
+import path from 'node:path'
+import matter from 'gray-matter'
+import { load, JSON_SCHEMA } from 'js-yaml'
+
+type SeedReport = { week: string; items: { title: string; topics: string[]; relevance: string }[] }
+
+function latestReport(): SeedReport {
+  const dir = path.join(process.cwd(), 'content/radar')
+  const file = fs.readdirSync(dir).filter((f) => f.endsWith('.mdx')).sort().at(-1)!
+  const { data } = matter(fs.readFileSync(path.join(dir, file), 'utf8'), {
+    engines: { yaml: (s: string) => load(s, { schema: JSON_SCHEMA }) as object },
+  })
+  return data as SeedReport
+}
 
 test('el dashboard muestra tendencias', async ({ page }) => {
   await page.goto('/')
@@ -112,4 +127,29 @@ test('el selector de temas acepta el id o un nombre parcial con Enter', async ({
   await input.fill('zzzz')
   await input.press('Enter')
   await expect(page.getByText('Sin coincidencias')).toBeVisible()
+})
+
+test('el radar lista los informes y abre el más reciente', async ({ page }) => {
+  const report = latestReport()
+  await page.goto('/')
+  await page.getByRole('link', { name: 'Radar', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Radar', level: 1 })).toBeVisible()
+  await page.getByTestId('report-link').first().getByRole('link').click()
+  await expect(page).toHaveURL(new RegExp(`/radar/${report.week}$`))
+  await expect(page.getByRole('heading', { name: 'Resumen de la semana' })).toBeVisible()
+  await expect(page.getByTestId('report-item')).toHaveCount(report.items.length)
+  await expect(page.getByRole('heading', { name: 'Cambios en el catálogo' })).toBeVisible()
+})
+
+test('el dashboard muestra esta semana en IA', async ({ page }) => {
+  await page.goto('/')
+  const block = page.getByTestId('this-week')
+  await expect(block.getByRole('heading', { name: 'Esta semana en IA' })).toBeVisible()
+  await expect(block.getByTestId('report-item').first()).toBeVisible()
+})
+
+test('la ficha de un nodo mencionado muestra menciones recientes', async ({ page }) => {
+  const [first] = latestReport().items
+  await page.goto(`/node/${first.topics[0]}`)
+  await expect(page.getByTestId('recent-mentions')).toContainText(first.title)
 })

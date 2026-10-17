@@ -30,3 +30,24 @@ Cada referente es un archivo `content/people/<id>.mdx`. Copia uno existente (por
 5. Modo enseñanza: rutas, cursos y progreso
 
 Especificación: `docs/superpowers/specs/2026-10-17-catalogo-ia-design.md`
+
+## Radar semanal
+
+Cada viernes, el workflow `Radar IA` (`.github/workflows/radar.yml`) lee las fuentes de `content/sources.yaml` y los feeds de los referentes, le pide a Claude que elija lo relevante y abre un PR con el informe (`content/radar/<fecha>.mdx`) y los cambios propuestos al catálogo. Nada se publica hasta que alguien mergea el PR.
+
+**Configuración (una vez):**
+
+1. Crea una llave en [console.anthropic.com](https://console.anthropic.com) y guárdala como secreto del repositorio `ANTHROPIC_API_KEY` (Settings › Secrets and variables › Actions).
+2. En Settings › Actions › General, activa "Allow GitHub Actions to create and approve pull requests".
+3. Lanza la primera ejecución a mano desde la pestaña Actions › Radar IA › Run workflow.
+
+**En local:**
+
+```bash
+npx tsx scripts/radar/run.ts --collect-only   # qué se recolectaría, sin llamar al modelo
+ANTHROPIC_API_KEY=... npx tsx scripts/radar/run.ts --dry-run   # informe completo sin escribir archivos
+```
+
+**Agregar una fuente:** si es el blog de un referente, va en su `feeds.rss`, así sus ítems quedan atribuidos a esa persona. Si no, agrégala a `content/sources.yaml` (`rss`, `hackernews` o `github`) y verifica con `--collect-only` que aparece sin errores.
+
+**Nota:** los PR abiertos con el `GITHUB_TOKEN` del workflow no disparan el workflow de CI; el radar corre `npm test` por su cuenta y abre el PR como borrador si falla. La vista previa de Vercel sí se genera.

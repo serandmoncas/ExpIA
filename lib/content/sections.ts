@@ -9,6 +9,8 @@ export const SECTION_HEADINGS: Record<SectionKey, string> = {
 
 export const PERSON_SECTION_HEADINGS: Record<'why', string> = { why: 'Por qué seguirle' }
 
+export const RADAR_SECTION_HEADINGS: Record<'summary', string> = { summary: 'Resumen de la semana' }
+
 export interface SplitResult<K extends string> {
   sections: Partial<Record<K, string>>
   missing: string[]
