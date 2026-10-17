@@ -46,3 +46,6 @@ playwright-report/
 
 # superpowers workspace
 .superpowers/
+
+# salida local del radar
+.radar/

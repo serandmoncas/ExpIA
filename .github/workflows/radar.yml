@@ -1,0 +1,68 @@
+name: Radar IA
+
+on:
+  schedule:
+    - cron: '0 13 * * 5' # viernes 8:00 en Colombia
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Ejecutar el radar
+        id: radar
+        run: npx tsx scripts/radar/run.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pruebas
+        id: tests
+        if: steps.radar.outputs.has_changes == 'true'
+        continue-on-error: true
+        run: npm test 2>&1 | tee .radar/test-output.txt
+
+      - name: Abrir el PR
+        if: steps.radar.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WEEK: ${{ steps.radar.outputs.week }}
+          TESTS: ${{ steps.tests.outcome }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          branch="radar/$WEEK"
+          git checkout -B "$branch"
+          git add content
+          git commit -m "content: radar IA, semana del $WEEK"
+          git push --force -u origin "$branch"
+
+          body=.radar/pr-body.md
+          draft=""
+          if [ "$TESTS" != "success" ]; then
+            draft="--draft"
+            { printf '\n## npm test falló\n\n```\n'; tail -n 80 .radar/test-output.txt; printf '```\n'; } >> "$body"
+          fi
+
+          gh label create radar --color 0E8A16 --description "Informe semanal del radar" --force
+          if gh pr view "$branch" --json state -q .state 2>/dev/null | grep -q OPEN; then
+            gh pr edit "$branch" --body-file "$body"
+          else
+            gh pr create --base main --head "$branch" --title "Radar IA: semana del $WEEK" --body-file "$body" --label radar $draft
+          fi
