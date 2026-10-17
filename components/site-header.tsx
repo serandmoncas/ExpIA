@@ -3,6 +3,7 @@ import { AudienceToggle } from './audience-toggle'
 
 const NAV = [
   { href: '/', label: 'Inicio' },
+  { href: '/paths', label: 'Rutas' },
   { href: '/timeline', label: 'Línea de tiempo' },
   { href: '/explore', label: 'Explorar' },
   { href: '/people', label: 'Referentes' },
