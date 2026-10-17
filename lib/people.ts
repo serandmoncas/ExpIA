@@ -13,6 +13,16 @@ export function getHighlightsForTopic(people: Person[], nodeId: string): TopicHi
   )
 }
 
+// La lista completa puede ser larga en temas populares (LLM); la ficha muestra solo unos pocos
+export function selectTopicHighlights(highlights: TopicHighlight[], pref: AudiencePref = 'all', limit = 5): TopicHighlight[] {
+  const score = (h: TopicHighlight) => (pref === 'business' && h.person.audience.includes('business') ? 1 : 0)
+  return highlights
+    .map((h, i) => ({ h, i, s: score(h) }))
+    .sort((a, b) => b.s - a.s || a.i - b.i)
+    .slice(0, limit)
+    .map((x) => x.h)
+}
+
 export function getVoicesForTopic(people: Person[], nodeId: string, pref: AudiencePref = 'all'): Person[] {
   const score = (p: Person) =>
     (pref === 'business' && p.audience.includes('business') ? 2 : 0) +

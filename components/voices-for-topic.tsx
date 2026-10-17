@@ -2,20 +2,21 @@
 import Link from 'next/link'
 import { useAudience } from './audience-provider'
 import { LABELS } from '@/lib/content/enums'
-import { getVoicesForTopic, highlightLanguage, type TopicHighlight } from '@/lib/people'
+import { getVoicesForTopic, highlightLanguage, selectTopicHighlights, type TopicHighlight } from '@/lib/people'
 import type { Person } from '@/lib/content/types'
 
 export function VoicesForTopic({ nodeId, nodeTitle, voices, highlights }: { nodeId: string; nodeTitle: string; voices: Person[]; highlights: TopicHighlight[] }) {
   const { audience } = useAudience()
   if (voices.length === 0 && highlights.length === 0) return null
   const ordered = getVoicesForTopic(voices, nodeId, audience).slice(0, 6)
+  const shownHighlights = selectTopicHighlights(highlights, audience)
 
   return (
     <section data-testid="voices-for-topic">
       <h2 className="mb-2 font-semibold">Quién habla de esto</h2>
-      {highlights.length > 0 && (
+      {shownHighlights.length > 0 && (
         <ul className="mb-3 space-y-2 text-sm">
-          {highlights.map(({ person, highlight }) => (
+          {shownHighlights.map(({ person, highlight }) => (
             <li key={highlight.url}>
               <a href={highlight.url} target="_blank" rel="noreferrer" className="font-medium hover:underline">{highlight.title}</a>
               <p className="text-xs text-muted-foreground">

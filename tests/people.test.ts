@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {
   getHighlightsForTopic, getVoicesForTopic, findUncoveredFundamentals,
-  selectStarterPeople, highlightLanguage, resolveTopic,
+  selectStarterPeople, highlightLanguage, resolveTopic, selectTopicHighlights,
 } from '@/lib/people'
 import type { Person } from '@/lib/content/types'
 
@@ -74,5 +74,17 @@ describe('resolveTopic', () => {
   it('devuelve undefined si el texto no coincide', () => {
     expect(resolveTopic(topics, 'ra')).toBeUndefined()
     expect(resolveTopic(topics, '')).toBeUndefined()
+  })
+})
+
+describe('selectTopicHighlights', () => {
+  it('limita los recursos sobre un tema y prioriza perfiles business con esa audiencia', () => {
+    const mk = (id: string, aud: Person['audience']) =>
+      person(id, { audience: aud, highlights: [{ title: id, url: `https://e.com/${id}`, format: 'video', topic: 'rag' }] })
+    const people = [mk('t1', ['technical']), mk('t2', ['technical']), mk('b1', ['business']), mk('t3', ['technical'])]
+    const all = getHighlightsForTopic(people, 'rag')
+    expect(selectTopicHighlights(all, 'all', 2).map((h) => h.person.id)).toEqual(['t1', 't2'])
+    expect(selectTopicHighlights(all, 'business', 2).map((h) => h.person.id)).toEqual(['b1', 't1'])
+    expect(selectTopicHighlights(all).length).toBe(4)
   })
 })
