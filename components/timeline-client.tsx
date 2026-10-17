@@ -1,5 +1,5 @@
 'use client'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FilterBar } from './filter-bar'
 import { useUrlFilters } from '@/hooks/use-url-filters'
 import { applyFilters } from '@/lib/filters'
@@ -27,6 +27,13 @@ export function TimelineClient({ nodes, categories }: { nodes: NodeMeta[]; categ
     () => layoutTimeline(visible, colorOf, { pxPerYear, maxYear: new Date().getFullYear() + 1, labelWidth: LABEL_W }),
     [visible, colorOf, pxPerYear],
   )
+  // Abrir desplazado al final: lo reciente es lo más consultado
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const hasItems = layout.items.length > 0
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollLeft = el.scrollWidth
+  }, [hasItems])
   const step = tickStep(pxPerYear)
   const ticks: number[] = []
   for (let y = layout.minYear; y <= layout.maxYear; y += step) ticks.push(y)
@@ -50,7 +57,7 @@ export function TimelineClient({ nodes, categories }: { nodes: NodeMeta[]; categ
               </div>
             ))}
           </div>
-          <div className="overflow-x-auto">
+          <div ref={scrollRef} data-testid="timeline-scroll" className="overflow-x-auto">
             <svg width={layout.width + LABEL_W} height={height} className="block text-foreground">
               {ticks.map((y) => {
                 const x = (y - layout.minYear) * pxPerYear
