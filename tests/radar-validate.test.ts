@@ -120,3 +120,20 @@ describe('validateJudgement: recursos destacados', () => {
     expect(v.discarded[0]).toMatch(/ya tiene 5 recursos/)
   })
 })
+
+describe('validateJudgement: títulos ## en el texto del modelo', () => {
+  it('descarta un nodo nuevo con un título ## en una sección', () => {
+    const v = validateJudgement(j({ newNodes: [newNode('con-titulo', { usage: 'Intro\n\n## Ejemplo\nX' })] }), ctx())
+    expect(v.newNodes).toEqual([])
+    expect(v.discarded[0]).toMatch(/título ##/)
+  })
+  it('acepta ## dentro de un bloque de código', () => {
+    const v = validateJudgement(j({ newNodes: [newNode('con-codigo', { usage: '```md\n## no es título\n```' })] }), ctx())
+    expect(v.newNodes).toHaveLength(1)
+  })
+  it('baja a ### los títulos ## del resumen semanal y lo registra', () => {
+    const v = validateJudgement(j({ summary: '## Lo importante\nTexto' }), ctx())
+    expect(v.summary).toBe('### Lo importante\nTexto')
+    expect(v.discarded.some((d) => d.startsWith('resumen semanal'))).toBe(true)
+  })
+})

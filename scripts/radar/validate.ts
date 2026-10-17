@@ -2,6 +2,7 @@ import { nodeFrontmatterSchema, type NodeFrontmatter, type ReportItem } from '@/
 import type { Status } from '@/lib/content/enums'
 import type { Highlight, Person } from '@/lib/content/types'
 import { isAdjacentStatus } from '@/lib/radar'
+import { splitSectionsBy } from '@/lib/content/sections'
 import { normalizeUrl, type RawItem } from './collect'
 import type { Judgement } from './judge'
 
@@ -27,6 +28,20 @@ export interface ValidatedJudgement {
   newNodes: NewNode[]
   highlights: HighlightProposal[]
   discarded: string[]
+}
+
+// Un título ## fuera de bloques de código rompería las reglas de secciones del cargador
+const hasH2 = (text: string) => splitSectionsBy(text, {} as Record<never, string>).unknown.length > 0
+
+function demoteH2(text: string): string {
+  let inFence = false
+  return text
+    .split('\n')
+    .map((line) => {
+      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
+      return !inFence && /^## /.test(line) ? `#${line}` : line
+    })
+    .join('\n')
 }
 
 // Descarta (nunca corrige) todo lo que el modelo no pueda respaldar con la entrada
@@ -87,6 +102,7 @@ export function validateJudgement(j: Judgement, ctx: ValidationContext): Validat
     const problem = evidenceProblem(n.evidence)
     if (problem) { reject(label, problem); continue }
     if (![n.purpose, n.usage, n.nonTechnical].every((s) => s.trim())) { reject(label, 'falta el texto de alguna sección'); continue }
+    if ([n.purpose, n.usage, n.nonTechnical].some(hasH2)) { reject(label, 'una sección incluye un título ## (usa ### o texto)'); continue }
     const parsed = nodeFrontmatterSchema.safeParse({
       id: n.id, title: n.title, kind: n.kind, category: n.category, released: n.released, audience: n.audience,
       level: n.level, requires: n.requires, related: n.related, status: n.status, summary: n.summary,
@@ -124,5 +140,11 @@ export function validateJudgement(j: Judgement, ctx: ValidationContext): Validat
     })
   }
 
-  return { summary: j.summary.trim(), items, statusChanges, newNodes, highlights, discarded }
+  // El resumen no se descarta: perderlo dejaría el informe sin contexto; se bajan sus títulos a ###
+  let summary = j.summary.trim()
+  if (hasH2(summary)) {
+    summary = demoteH2(summary)
+    reject('resumen semanal', 'tenía títulos ##; se convirtieron en ###')
+  }
+  return { summary, items, statusChanges, newNodes, highlights, discarded }
 }
