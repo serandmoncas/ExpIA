@@ -10,6 +10,13 @@ level: intermediate
 requires: [deep-learning, backpropagation]
 status: mainstream
 summary: "Redes neuronales diseñadas para imágenes: buscan patrones locales como bordes y formas, y los combinan para reconocer objetos."
+review:
+  - question: "¿Cómo reconoce una CNN un objeto en una imagen?"
+    answer: "Sus capas convolucionales deslizan pequeños filtros que detectan patrones locales; capa tras capa pasa de bordes a texturas, partes y objetos completos, y una capa final clasifica."
+  - question: "¿Para qué sirven las capas de pooling?"
+    answer: "Reducen el tamaño de la representación y conservan lo importante."
+  - question: "¿Por qué las CNN siguen usándose aunque existan los Transformers de visión?"
+    answer: "Por su eficiencia, sobre todo en dispositivos móviles."
 verified: false
 added: 2026-10-17
 related: [transfer-learning]

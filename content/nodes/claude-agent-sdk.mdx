@@ -15,6 +15,13 @@ pricing: free
 links:
   repo: "https://github.com/anthropics/claude-agent-sdk-python"
 summary: "Librería de Anthropic para crear agentes propios con el mismo motor que Claude Code: herramientas, archivos, comandos y MCP."
+review:
+  - question: "¿Qué ofrece el Claude Agent SDK?"
+    answer: "Expone como librería, en Python y TypeScript, el bucle de agente que impulsa Claude Code: el modelo planifica, usa herramientas como leer y editar archivos, ejecutar comandos o servidores MCP, y repite hasta terminar."
+  - question: "¿Qué te ahorras al usarlo en vez de construir un agente desde cero?"
+    answer: "Reimplementar la gestión de contexto, los permisos y la ejecución de herramientas."
+  - question: "¿Cómo se lanza un agente con el SDK?"
+    answer: "Se instala el paquete, se configura ANTHROPIC_API_KEY, se llama a query con el encargo y las opciones (herramientas permitidas, prompt de sistema, servidores MCP) y se recorren los mensajes que el agente emite."
 verified: false
 added: 2026-10-17
 ---

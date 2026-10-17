@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2201.11903"
 summary: "Pedir al modelo que razone paso a paso antes de responder, lo que mejora mucho su desempeño en problemas de lógica y matemáticas."
+review:
+  - question: "¿Por qué pedirle al modelo que razone paso a paso mejora sus respuestas?"
+    answer: "En problemas de varios pasos los modelos fallan si saltan directo a la respuesta; al escribir el razonamiento intermedio aciertan con mucha más frecuencia. Además, ese razonamiento permite revisar cómo llegaron a la conclusión."
+  - question: "¿Qué diferencia hay entre few-shot CoT y zero-shot CoT?"
+    answer: "Few-shot CoT incluye en el prompt ejemplos cuya respuesta muestra los pasos; zero-shot CoT simplemente pide «piensa paso a paso»."
+  - question: "¿Hace falta forzar el razonamiento con un modelo de razonamiento?"
+    answer: "No: esos modelos ya generan ese pensamiento de forma nativa, así que basta con darles el problema completo."
 verified: false
 added: 2026-10-17
 ---

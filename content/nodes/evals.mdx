@@ -13,6 +13,13 @@ status: rising
 links:
   repo: "https://github.com/openai/evals"
 summary: "Pruebas sistemáticas que miden qué tan bien responde un sistema de IA en casos reales, para mejorar con datos y no por intuición."
+review:
+  - question: "¿Por qué hacen falta evals al cambiar un prompt o un modelo?"
+    answer: "Porque un cambio puede mejorar unos casos y empeorar otros sin que nadie lo note. Las evals son el equivalente a los tests de software: permiten detectar regresiones y decidir con datos."
+  - question: "¿Qué formas hay de calificar cada caso de una eval?"
+    answer: "Comparación exacta, reglas en código, o un modelo que actúa como juez siguiendo una rúbrica."
+  - question: "¿Qué casos conviene incluir en un conjunto de evals?"
+    answer: "Casos reales, como preguntas de usuarios, documentos o tareas, incluidos los difíciles y los que ya fallaron."
 verified: false
 added: 2026-10-17
 ---

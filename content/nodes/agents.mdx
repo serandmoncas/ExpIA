@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2210.03629"
 summary: "Sistemas donde un modelo de lenguaje decide qué pasos dar y usa herramientas en bucle hasta completar una tarea, no solo responder una pregunta."
+review:
+  - question: "¿Qué diferencia a un agente de un chatbot?"
+    answer: "Un chatbot responde una pregunta; un agente recibe un objetivo y trabaja por su cuenta: planifica, llama herramientas, mira los resultados, corrige y continúa hasta terminar."
+  - question: "¿Cómo funciona el bucle de un agente?"
+    answer: "El modelo pide una herramienta, tu código la ejecuta y le devuelve el resultado, y así sucesivamente hasta que el modelo indica que terminó."
+  - question: "¿Qué límites conviene ponerle a un agente?"
+    answer: "Un número máximo de pasos, permisos acotados y confirmación humana para acciones irreversibles. Además, medir su comportamiento con evals sobre tareas reales."
 verified: false
 added: 2026-10-17
 ---

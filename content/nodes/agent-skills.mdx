@@ -11,6 +11,13 @@ requires: [agents, context-engineering]
 related: [context-engineering, mcp, agents]
 status: emerging
 summary: "Carpetas con instrucciones, scripts y recursos que un agente carga solo cuando los necesita, para aprender tareas especializadas."
+review:
+  - question: "¿Por qué un agente puede tener muchas skills sin saturar su contexto?"
+    answer: "Porque al inicio solo ve el nombre y la descripción de cada skill, y carga el contenido completo únicamente cuando la tarea lo requiere. A eso se le llama progressive disclosure."
+  - question: "¿Por qué importa tanto la descripción en el SKILL.md?"
+    answer: "Porque es lo que el agente usa para decidir cuándo activar la skill. Una descripción imprecisa hace que no se use cuando hace falta, o que se use cuando no corresponde."
+  - question: "¿En qué se complementan las skills y MCP?"
+    answer: "MCP da acceso a herramientas y datos; las skills enseñan procedimientos, como los pasos de un cierre contable o cómo arma la empresa sus presentaciones."
 verified: false
 added: 2026-10-17
 ---
