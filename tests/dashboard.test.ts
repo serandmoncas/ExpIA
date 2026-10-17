@@ -8,7 +8,7 @@ const n = (id: string, o: Partial<NodeMeta> & { released?: string } = {}): NodeM
   return {
     id, title: id, kind: 'concept', category: ['llm'], released, audience: ['technical'], level: 'intermediate',
     requires: [], related: [], status: 'mainstream', links: {}, summary: 's', verified: false, added: '2026-10-17',
-    voices: [], ...o, date: parseReleased(released),
+    ...o, date: parseReleased(released),
   }
 }
 

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { splitSections } from '@/lib/content/sections'
+import { splitSections, splitSectionsBy, PERSON_SECTION_HEADINGS } from '@/lib/content/sections'
 
 const FULL = '## Para qué sirve\nA\n\n## Cómo se usa\nB\n\n## Para no técnicos\nC\n'
 
@@ -30,5 +30,19 @@ describe('splitSections', () => {
   })
   it('reporta las secciones duplicadas', () => {
     expect(splitSections(FULL + '## Para qué sirve\nD\n').duplicates).toEqual(['Para qué sirve'])
+  })
+})
+
+describe('splitSectionsBy', () => {
+  it('acepta otro conjunto de títulos (referentes)', () => {
+    const { sections, missing, unknown } = splitSectionsBy('## Por qué seguirle\nPorque sí.\n', PERSON_SECTION_HEADINGS)
+    expect(sections.why).toBe('Porque sí.')
+    expect(missing).toEqual([])
+    expect(unknown).toEqual([])
+  })
+  it('los títulos de nodos son desconocidos para referentes', () => {
+    const { missing, unknown } = splitSectionsBy('## Para qué sirve\nA\n', PERSON_SECTION_HEADINGS)
+    expect(missing).toEqual(['Por qué seguirle'])
+    expect(unknown).toEqual(['Para qué sirve'])
   })
 })

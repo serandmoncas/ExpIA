@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS } from './enums'
+import { KINDS, AUDIENCES, LEVELS, STATUSES, LICENSES, PRICINGS, LANGUAGES, PERSON_KINDS, HIGHLIGHT_FORMATS } from './enums'
 import { parseReleased } from '@/lib/dates'
 
 const id = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'debe ser kebab-case')
@@ -14,6 +14,8 @@ const released = yamlString.refine((s) => {
     return false
   }
 }, 'debe ser YYYY, YYYY-MM o YYYY-MM-DD válido')
+
+const added = yamlString.refine((s) => /^\d{4}-\d{2}-\d{2}$/.test(s), 'debe ser YYYY-MM-DD')
 
 export const nodeFrontmatterSchema = z
   .object({
@@ -41,8 +43,7 @@ export const nodeFrontmatterSchema = z
       .default({}),
     summary: z.string().min(1).max(160),
     verified: z.boolean(),
-    added: yamlString.refine((s) => /^\d{4}-\d{2}-\d{2}$/.test(s), 'debe ser YYYY-MM-DD'),
-    voices: z.array(id).default([]),
+    added,
   })
   .strict()
 
@@ -52,5 +53,51 @@ export const taxonomySchema = z.object({
     .min(1),
 })
 
+const url = z.string().url()
+
+export const personFrontmatterSchema = z
+  .object({
+    id,
+    name: z.string().min(1),
+    kind: z.enum(PERSON_KINDS),
+    languages: z.array(z.enum(LANGUAGES)).min(1),
+    topics: z.array(id).min(1),
+    audience: z.array(z.enum(AUDIENCES)).min(1),
+    level: z.enum(LEVELS),
+    summary: z.string().min(1).max(160),
+    platforms: z
+      .object({
+        youtube: url.optional(),
+        x: url.optional(),
+        linkedin: url.optional(),
+        github: url.optional(),
+        blog: url.optional(),
+        podcast: url.optional(),
+        newsletter: url.optional(),
+        site: url.optional(),
+      })
+      .strict()
+      .refine((p) => Object.values(p).some(Boolean), 'debe tener al menos una plataforma'),
+    highlights: z
+      .array(
+        z
+          .object({
+            title: z.string().min(1),
+            url,
+            format: z.enum(HIGHLIGHT_FORMATS),
+            topic: id.optional(),
+            language: z.enum(LANGUAGES).optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(5),
+    feeds: z.object({ youtubeChannelId: z.string().optional(), rss: url.optional() }).strict().optional(),
+    verified: z.boolean(),
+    added,
+  })
+  .strict()
+
 export type NodeFrontmatter = z.infer<typeof nodeFrontmatterSchema>
 export type Category = z.infer<typeof taxonomySchema>['categories'][number]
+export type PersonFrontmatter = z.infer<typeof personFrontmatterSchema>

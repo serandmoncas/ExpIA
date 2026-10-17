@@ -60,3 +60,56 @@ test('los filtros no pierden teclas ni clics con latencia de red', async ({ page
   await page.getByRole('button', { name: 'Modelo', exact: true }).click()
   await expect(page).toHaveURL(/kind=tool,model/)
 })
+
+test('referentes filtra por idioma y lo refleja en la URL', async ({ page }) => {
+  await page.goto('/people')
+  const cards = page.getByTestId('person-card')
+  await expect(cards.first()).toBeVisible()
+  const total = await cards.count()
+  await page.getByRole('button', { name: 'Español', exact: true }).click()
+  await expect(page).toHaveURL(/lang=es/)
+  await expect.poll(() => cards.count()).toBeLessThan(total)
+  for (const card of await cards.all()) await expect(card).toHaveAttribute('data-languages', /es/)
+})
+
+test('referentes filtra por tema desde la URL', async ({ page }) => {
+  await page.goto('/people')
+  const cards = page.getByTestId('person-card')
+  await expect(cards.first()).toBeVisible()
+  const total = await cards.count()
+  await page.goto('/people?topic=neural-network')
+  await expect(cards.first()).toBeVisible()
+  expect(await cards.count()).toBeLessThan(total)
+  await expect(page.getByRole('button', { name: 'Quitar Redes neuronales' })).toBeVisible()
+})
+
+test('referentes tolera parámetros inválidos', async ({ page }) => {
+  await page.goto('/people?lang=fr&topic=nope&platform=tiktok')
+  await expect(page.getByTestId('person-card').first()).toBeVisible()
+})
+
+test('el perfil muestra los recursos destacados', async ({ page }) => {
+  await page.goto('/people/andrej-karpathy')
+  await expect(page.getByRole('heading', { name: 'Recursos destacados' })).toBeVisible()
+  await expect(page.getByRole('link', { name: /Let's build GPT/ })).toBeVisible()
+})
+
+test('la ficha muestra quién habla de esto', async ({ page }) => {
+  await page.goto('/node/neural-network')
+  const voices = page.getByTestId('voices-for-topic')
+  await expect(voices).toBeVisible()
+  await expect(voices).toContainText('3Blue1Brown')
+})
+
+test('el selector de temas acepta el id o un nombre parcial con Enter', async ({ page }) => {
+  await page.goto('/people')
+  await expect(page.getByTestId('person-card').first()).toBeVisible()
+  const input = page.getByLabel('Agregar tema')
+  await input.fill('llm')
+  await input.press('Enter')
+  await expect(page.getByRole('button', { name: 'Quitar Modelos de lenguaje grandes (LLM)' })).toBeVisible()
+  await expect(page).toHaveURL(/topic=llm/)
+  await input.fill('zzzz')
+  await input.press('Enter')
+  await expect(page.getByText('Sin coincidencias')).toBeVisible()
+})

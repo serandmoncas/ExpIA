@@ -7,25 +7,28 @@ export const SECTION_HEADINGS: Record<SectionKey, string> = {
   nonTechnical: 'Para no técnicos',
 }
 
-const KEYS = Object.keys(SECTION_HEADINGS) as SectionKey[]
+export const PERSON_SECTION_HEADINGS: Record<'why', string> = { why: 'Por qué seguirle' }
 
-export function splitSections(body: string): {
-  sections: Partial<NodeSections>
+export interface SplitResult<K extends string> {
+  sections: Partial<Record<K, string>>
   missing: string[]
   unknown: string[]
   duplicates: string[]
-} {
-  const collected: Partial<Record<SectionKey, string[]>> = {}
+}
+
+export function splitSectionsBy<K extends string>(body: string, headings: Record<K, string>): SplitResult<K> {
+  const keys = Object.keys(headings) as K[]
+  const collected: Partial<Record<K, string[]>> = {}
   const unknown: string[] = []
   const duplicates: string[] = []
-  let current: SectionKey | null = null
+  let current: K | null = null
   let inFence = false
 
   for (const line of body.split(/\r?\n/)) {
     if (/^\s*(```|~~~)/.test(line)) inFence = !inFence
     const heading = !inFence ? /^## +(.+?)\s*$/.exec(line) : null
     if (heading) {
-      current = KEYS.find((k) => SECTION_HEADINGS[k] === heading[1]) ?? null
+      current = keys.find((k) => headings[k] === heading[1]) ?? null
       if (!current) unknown.push(heading[1])
       else if (collected[current]) duplicates.push(heading[1])
       if (current) collected[current] = []
@@ -34,8 +37,12 @@ export function splitSections(body: string): {
     if (current) collected[current]!.push(line)
   }
 
-  const sections: Partial<NodeSections> = {}
-  for (const k of KEYS) if (collected[k]) sections[k] = collected[k]!.join('\n').trim()
-  const missing = KEYS.filter((k) => !collected[k]).map((k) => SECTION_HEADINGS[k])
+  const sections: Partial<Record<K, string>> = {}
+  for (const k of keys) if (collected[k]) sections[k] = collected[k]!.join('\n').trim()
+  const missing = keys.filter((k) => !collected[k]).map((k) => headings[k])
   return { sections, missing, unknown, duplicates }
+}
+
+export function splitSections(body: string): SplitResult<SectionKey> {
+  return splitSectionsBy(body, SECTION_HEADINGS)
 }

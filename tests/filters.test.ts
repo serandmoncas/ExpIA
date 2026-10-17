@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { parseFilters, serializeFilters, applyFilters, toggleValue, EMPTY_FILTERS, type FilterableNode, type Filters } from '@/lib/filters'
+import {
+  parseFilters, serializeFilters, applyFilters, toggleValue, EMPTY_FILTERS, type FilterableNode, type Filters,
+  parsePeopleFilters, serializePeopleFilters, applyPeopleFilters, EMPTY_PEOPLE_FILTERS, type FilterablePerson, type PeopleFilters,
+} from '@/lib/filters'
 
 const CATS = ['llm', 'agents', 'retrieval']
 const p = (qs: string) => parseFilters(new URLSearchParams(qs), CATS)
@@ -78,5 +81,45 @@ describe('toggleValue', () => {
   it('agrega y quita', () => {
     expect(toggleValue(['a'], 'b')).toEqual(['a', 'b'])
     expect(toggleValue(['a', 'b'], 'a')).toEqual(['b'])
+  })
+})
+
+describe('filtros de personas', () => {
+  const TOPICS = ['rag', 'llm']
+  const pp = (qs: string) => parsePeopleFilters(new URLSearchParams(qs), TOPICS)
+  type P = FilterablePerson & { id: string }
+  const person = (id: string, o: Partial<FilterablePerson> = {}): P => ({
+    id, topics: ['llm'], languages: ['en'], platforms: { youtube: 'https://y.com' },
+    audience: ['technical'], level: 'intermediate', kind: 'person', ...o,
+  })
+  const people = [
+    person('en'),
+    person('bi', { languages: ['en', 'es'], topics: ['rag'], platforms: { x: 'https://x.com/a' } }),
+    person('es', { languages: ['es'], kind: 'organization', platforms: { youtube: 'https://y.com', x: undefined } }),
+  ]
+  const ids = (f: Partial<PeopleFilters>) => applyPeopleFilters(people, { ...EMPTY_PEOPLE_FILTERS, ...f }).map((p) => p.id)
+
+  it('ignora valores inválidos en la URL', () => {
+    const f = pp('lang=fr,es&topic=nope,rag&platform=tiktok&kind=alien')
+    expect(f.lang).toEqual(['es'])
+    expect(f.topic).toEqual(['rag'])
+    expect(f.platform).toEqual([])
+    expect(f.kind).toEqual([])
+  })
+  it('hace ida y vuelta', () => {
+    const f: PeopleFilters = { ...EMPTY_PEOPLE_FILTERS, q: 'ana, b', topic: ['rag'], lang: ['es', 'en'], platform: ['youtube'] }
+    expect(pp(serializePeopleFilters(f))).toEqual(f)
+    expect(serializePeopleFilters(EMPTY_PEOPLE_FILTERS)).toBe('')
+  })
+  it('un referente bilingüe aparece con cualquiera de sus idiomas', () => {
+    expect(ids({ lang: ['es'] })).toEqual(['bi', 'es'])
+    expect(ids({ lang: ['en'] })).toEqual(['en', 'bi'])
+  })
+  it('filtra por plataforma ignorando claves vacías', () => {
+    expect(ids({ platform: ['x'] })).toEqual(['bi'])
+  })
+  it('combina grupos con AND', () => {
+    expect(ids({ lang: ['es'], kind: ['organization'] })).toEqual(['es'])
+    expect(ids({ topic: ['rag'], lang: ['en'] })).toEqual(['bi'])
   })
 })

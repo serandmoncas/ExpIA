@@ -10,6 +10,8 @@ import { Markdown } from '@/components/markdown'
 import { NodeSectionsView } from '@/components/node-sections'
 import { PrereqList } from '@/components/prereq-list'
 import { NodeCard } from '@/components/node-card'
+import { VoicesForTopic } from '@/components/voices-for-topic'
+import { getHighlightsForTopic } from '@/lib/people'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -29,7 +31,7 @@ const LINK_LABELS: Record<string, string> = { docs: 'Documentación', paper: 'Pa
 
 export default async function NodePage({ params }: Props) {
   const { id } = await params
-  const { nodes, byId, categories } = getCatalog()
+  const { nodes, byId, categories, people } = getCatalog()
   const node = byId.get(id)
   if (!node) notFound()
 
@@ -37,6 +39,8 @@ export default async function NodePage({ params }: Props) {
   const prereqs = meta(getPrerequisites(nodes, id))
   const dependents = meta(getDependents(nodes, id))
   const related = meta(node.related)
+  const voices = people.filter((p) => p.topics.includes(id))
+  const topicHighlights = getHighlightsForTopic(people, id)
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
@@ -82,6 +86,7 @@ export default async function NodePage({ params }: Props) {
           <p className="mb-2 text-xs text-muted-foreground">Lo que conviene conocer antes, en orden.</p>
           <PrereqList nodes={prereqs} />
         </section>
+        <VoicesForTopic nodeId={id} nodeTitle={node.title} voices={voices} highlights={topicHighlights} />
         {dependents.length > 0 && (
           <section>
             <h2 className="mb-2 font-semibold">Qué se apoya en esto</h2>

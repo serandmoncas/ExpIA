@@ -20,3 +20,12 @@ describe('createSearch', () => {
     expect(search('protocl').map((n) => n.id)).toContain('mcp')
   })
 })
+
+describe('createSearch con claves propias', () => {
+  it('busca personas por nombre y resumen', () => {
+    const people = [{ id: 'k', name: 'Andrej Karpathy', summary: 'LLMs desde cero' }, { id: 'd', name: 'DotCSV', summary: 'Divulgación en español' }]
+    const search = createSearch(people, ['name', 'summary'])
+    expect(search('karpathy').map((p) => p.id)).toEqual(['k'])
+    expect(search('español').map((p) => p.id)).toEqual(['d'])
+  })
+})
