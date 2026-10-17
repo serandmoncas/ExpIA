@@ -1,0 +1,46 @@
+---
+id: cnn
+title: "Redes convolucionales (CNN)"
+kind: concept
+category: [foundations, vision]
+released: 1989
+origin: "Yann LeCun y colaboradores (AT&T Bell Labs)"
+audience: [technical]
+level: intermediate
+requires: [deep-learning, backpropagation]
+status: mainstream
+summary: "Redes neuronales diseñadas para imágenes: buscan patrones locales como bordes y formas, y los combinan para reconocer objetos."
+verified: false
+added: 2026-10-17
+related: [transfer-learning]
+---
+
+## Para qué sirve
+
+Las CNN son la arquitectura clásica para visión por computador: clasificar imágenes, detectar objetos, segmentar tumores en radiografías, leer matrículas o inspeccionar defectos en una línea de producción.
+
+Su gran salto público fue AlexNet en 2012, que ganó ImageNet con mucha ventaja y desató la ola del deep learning. Aunque los Transformers de visión compiten con ellas, las CNN siguen siendo muy usadas por su eficiencia, sobre todo en dispositivos móviles.
+
+## Cómo se usa
+
+1. Una capa convolucional desliza pequeños filtros sobre la imagen y detecta patrones locales.
+2. Capas de *pooling* reducen el tamaño y conservan lo importante.
+3. Tras varias capas, la red pasa de bordes a texturas, partes y objetos completos.
+4. Una capa final clasifica. Lo habitual es partir de un modelo preentrenado y ajustarlo.
+
+```python
+import torch.nn as nn
+
+model = nn.Sequential(
+    nn.Conv2d(3, 16, kernel_size=3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    nn.Conv2d(16, 32, kernel_size=3, padding=1), nn.ReLU(), nn.MaxPool2d(2),
+    nn.Flatten(),
+    nn.Linear(32 * 8 * 8, 10),   # para imágenes de 32x32 y 10 clases
+)
+```
+
+## Para no técnicos
+
+Es como mirar una foto con una lupa, pedacito a pedacito: primero notas líneas, luego esquinas, luego ojos y orejas, y al final concluyes "es un gato". La red hace exactamente eso, pero aprende sola qué buscar.
+
+Caso de negocio: una fábrica instala cámaras en la línea de producción y una CNN marca automáticamente las piezas con rayones o fallas, reduciendo inspecciones manuales y devoluciones.

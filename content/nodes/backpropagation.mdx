@@ -1,0 +1,47 @@
+---
+id: backpropagation
+title: "Backpropagation"
+kind: technique
+category: [foundations]
+released: 1986
+origin: "Rumelhart, Hinton y Williams (popularización en Nature)"
+audience: [technical]
+level: intermediate
+requires: [neural-network]
+status: mainstream
+summary: "El método que permite a una red neuronal saber cuánto contribuyó cada peso al error y corregirlo. Sin él no habría deep learning."
+verified: false
+added: 2026-10-17
+related: [perceptron, cnn]
+---
+
+## Para qué sirve
+
+Backpropagation calcula de forma eficiente el gradiente del error respecto a cada peso de una red con muchas capas. Con esos gradientes, un optimizador como el descenso de gradiente ajusta los pesos para que la red se equivoque menos.
+
+Prácticamente todo modelo moderno se entrena con esta técnica: clasificadores de imágenes, reconocimiento de voz, traductores y los modelos de lenguaje grandes.
+
+## Cómo se usa
+
+1. **Paso hacia adelante:** la red procesa un lote de datos y produce una predicción.
+2. **Pérdida:** se mide qué tan lejos está la predicción de la respuesta correcta.
+3. **Paso hacia atrás:** aplicando la regla de la cadena, el error se propaga desde la salida hacia la entrada y se obtiene el gradiente de cada peso.
+4. **Actualización:** el optimizador mueve cada peso un poco en la dirección que reduce el error.
+
+Hoy nadie lo programa a mano: los frameworks lo hacen con diferenciación automática.
+
+```python
+import torch
+
+pred = model(x)
+loss = torch.nn.functional.cross_entropy(pred, y)
+loss.backward()          # backpropagation: llena .grad de cada parámetro
+optimizer.step()         # descenso de gradiente
+optimizer.zero_grad()
+```
+
+## Para no técnicos
+
+Piensa en una cadena de montaje que entrega un producto defectuoso. Backpropagation es como recorrer la cadena desde el final hacia el principio preguntando "¿cuánta culpa tuvo cada estación?" y ajustar cada una en proporción a su responsabilidad.
+
+Caso de negocio: cada vez que una empresa entrena un modelo propio, por ejemplo para detectar fraudes o clasificar tickets de soporte, este es el mecanismo que hace que el modelo mejore con los datos.

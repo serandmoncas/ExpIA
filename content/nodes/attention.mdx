@@ -1,0 +1,49 @@
+---
+id: attention
+title: "Mecanismo de atención"
+kind: concept
+category: [foundations]
+released: 2014-09
+origin: "Bahdanau, Cho y Bengio"
+audience: [technical]
+level: intermediate
+requires: [rnn-lstm, embeddings]
+status: mainstream
+summary: "Permite que un modelo decida en qué partes de la entrada fijarse en cada momento, en lugar de resumirlo todo en un solo vector."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1409.0473"
+related: [transformer, rnn-lstm]
+---
+
+## Para qué sirve
+
+Las primeras redes de traducción comprimían toda la frase de origen en un único vector, y con frases largas perdían información. La atención resolvió eso: al generar cada palabra, el modelo mira todas las palabras de entrada y les asigna un peso según su relevancia.
+
+Esta idea es el corazón del Transformer y, por tanto, de los modelos de lenguaje actuales. También permite visualizar qué partes de la entrada influyeron en una salida.
+
+## Cómo se usa
+
+1. Cada elemento se representa con tres vectores: consulta (*query*), clave (*key*) y valor (*value*).
+2. Se compara la consulta con todas las claves para obtener puntuaciones de relevancia.
+3. Las puntuaciones se normalizan con softmax y se convierten en pesos.
+4. La salida es la suma ponderada de los valores.
+
+```python
+import torch
+
+def attention(Q, K, V):
+    scores = Q @ K.transpose(-2, -1) / K.shape[-1] ** 0.5
+    weights = torch.softmax(scores, dim=-1)
+    return weights @ V
+
+# en PyTorch 2.x existe ya optimizada:
+# torch.nn.functional.scaled_dot_product_attention(Q, K, V)
+```
+
+## Para no técnicos
+
+Cuando lees "el banco estaba lleno de gente porque pagaban la pensión", tu mente conecta "banco" con "pagaban" y entiende que no es un asiento. La atención le da a la IA esa capacidad de mirar el resto de la frase para entender cada palabra.
+
+Caso de negocio: gracias a la atención, un sistema de traducción o de resumen de contratos mantiene la coherencia en documentos largos en lugar de perder el hilo después de unas pocas líneas.

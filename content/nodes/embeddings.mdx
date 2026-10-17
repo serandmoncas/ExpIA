@@ -1,0 +1,47 @@
+---
+id: embeddings
+title: "Embeddings"
+kind: concept
+category: [foundations, retrieval]
+released: 2013
+origin: "Mikolov y colaboradores en Google (word2vec)"
+audience: [technical, business]
+level: fundamentals
+requires: [neural-network]
+status: mainstream
+summary: "Listas de números que representan el significado de palabras, textos o imágenes, de modo que lo parecido queda cerca."
+verified: false
+added: 2026-10-17
+links:
+  paper: "https://arxiv.org/abs/1301.3781"
+related: [tokenization, transformer]
+---
+
+## Para qué sirve
+
+Un embedding convierte algo (una palabra, un párrafo, una imagen, un producto) en un vector de cientos o miles de números. Lo importante es que textos con significado parecido quedan cerca en ese espacio, aunque usen palabras distintas.
+
+Con eso se construye búsqueda semántica ("devolver un pedido" encuentra "política de reembolsos"), sistemas de recomendación, detección de duplicados, agrupación de comentarios de clientes y la parte de recuperación de los sistemas RAG.
+
+## Cómo se usa
+
+1. Se elige un modelo de embeddings (de un proveedor de API o uno abierto).
+2. Se convierte cada documento en un vector y se guarda, a menudo en una base de datos vectorial.
+3. Cuando llega una consulta, se convierte también en vector.
+4. Se buscan los vectores más cercanos, normalmente con similitud coseno.
+
+```python
+from sentence_transformers import SentenceTransformer
+from sentence_transformers.util import cos_sim
+
+model = SentenceTransformer("all-MiniLM-L6-v2")
+docs = model.encode(["Política de reembolsos", "Horario de atención"])
+query = model.encode("¿Cómo devuelvo un pedido?")
+print(cos_sim(query, docs))   # el primer documento sale más parecido
+```
+
+## Para no técnicos
+
+Imagina un mapa donde cada idea tiene una ubicación: "perro" queda junto a "cachorro", y "factura" junto a "recibo". Los embeddings son las coordenadas de ese mapa, y permiten a una computadora medir qué tan parecidas son dos cosas por su significado, no por sus letras.
+
+Caso de negocio: una tienda en línea usa embeddings para que su buscador entienda "zapatillas para correr" aunque el producto se llame "calzado running", y para recomendar artículos similares a los que el cliente ya miró.
