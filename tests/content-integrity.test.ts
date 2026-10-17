@@ -25,4 +25,12 @@ describe('content/ real', () => {
     const urls = loadCatalog().reports.flatMap((r) => r.items.map((i) => i.url))
     expect(new Set(urls).size).toBe(urls.length)
   })
+
+  it('cada nodo tiene de 2 a 3 preguntas de repaso, salvo los propuestos por el radar', () => {
+    const { nodes, reports } = loadCatalog()
+    // Los nodos que llegan por el radar no traen preguntas hasta que alguien las escribe
+    const fromRadar = new Set(reports.flatMap((r) => r.proposals.filter((p) => p.type === 'new-node').map((p) => p.target)))
+    const missing = nodes.filter((n) => !fromRadar.has(n.id) && !n.review).map((n) => n.id)
+    expect(missing).toEqual([])
+  })
 })

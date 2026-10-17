@@ -10,6 +10,13 @@ level: intermediate
 requires: [deep-learning, backpropagation]
 status: declining
 summary: "Redes que procesan secuencias paso a paso y recuerdan lo anterior. Dominaron texto y voz antes de la llegada del Transformer."
+review:
+  - question: "¿Cómo procesa una red recurrente una secuencia?"
+    answer: "Lee los datos en orden, uno tras otro, y mantiene un estado interno que resume lo visto hasta ese momento."
+  - question: "¿Qué añaden las LSTM a las RNN simples?"
+    answer: "Compuertas que deciden qué recordar y qué olvidar, lo que les permite manejar dependencias más largas sin que el aprendizaje se degrade."
+  - question: "¿Cuál es la principal desventaja de leer la secuencia en orden?"
+    answer: "Que hay que procesarla página por página, y eso es lento. El Transformer las reemplazó en lenguaje, aunque siguen en series temporales y sistemas con pocos recursos."
 verified: false
 added: 2026-10-17
 related: [attention, transformer]

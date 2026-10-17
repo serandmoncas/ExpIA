@@ -10,6 +10,13 @@ level: fundamentals
 requires: []
 status: mainstream
 summary: "Los modelos de lenguaje no leen letras ni palabras sino tokens: trozos de texto. Determinan costo, límites y comportamiento."
+review:
+  - question: "¿Cómo parte el texto un tokenizador?"
+    answer: "En tokens: palabras frecuentes enteras y fragmentos para las raras. Técnicas como BPE logran un vocabulario manejable que puede representar cualquier palabra nueva."
+  - question: "¿Por qué entender los tokens tiene consecuencias prácticas?"
+    answer: "Porque las APIs cobran por token, la ventana de contexto se mide en tokens y algunas rarezas, como contar letras o que otros idiomas gasten más tokens que el inglés, se explican por cómo se parte el texto."
+  - question: "¿Qué hacer si un texto no cabe en la ventana de contexto?"
+    answer: "Resumirlo, recortarlo o dividirlo en fragmentos."
 verified: false
 added: 2026-10-17
 links:

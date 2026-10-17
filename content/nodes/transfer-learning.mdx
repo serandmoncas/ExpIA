@@ -10,6 +10,13 @@ level: intermediate
 requires: [deep-learning]
 status: mainstream
 summary: "Reutilizar un modelo ya entrenado con muchos datos y adaptarlo a una tarea nueva con pocos datos y poco cómputo."
+review:
+  - question: "¿Qué ahorra el transfer learning frente a entrenar desde cero?"
+    answer: "Enormes volúmenes de datos y de cómputo: se parte de un modelo preentrenado y se ajusta con unos cientos o miles de ejemplos propios."
+  - question: "¿Cuáles son los pasos típicos para aplicarlo?"
+    answer: "Elegir un modelo preentrenado, reemplazar la capa final por una con las clases propias, congelar las capas iniciales o entrenarlas con una tasa baja, y entrenar y evaluar con los datos propios."
+  - question: "¿Qué mostró ULMFiT en 2018?"
+    answer: "Que el transfer learning también funcionaba muy bien en lenguaje, lo que abrió el camino a BERT, GPT y al fine-tuning de modelos de lenguaje actual."
 verified: false
 added: 2026-10-17
 links:
