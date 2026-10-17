@@ -44,20 +44,23 @@ Una persona revisa y mergea el PR. El agente nunca publica directamente.
 
 ```yaml
 sources:
-  - id: simon-willison-blog        # requerido; kebab-case; único
+  - id: openai-news                # requerido; kebab-case; único; distinto de los IDs de referentes
+    name: OpenAI News              # requerido; nombre que muestra el sitio
     kind: rss                      # rss | hackernews | github
-    url: https://simonwillison.net/atom/everything/
+    url: https://openai.com/news/rss.xml
   - id: hackernews-ai
+    name: Hacker News
     kind: hackernews               # API de Algolia (hn.algolia.com)
     minPoints: 200                 # requerido para hackernews
     keywords: [LLM, GPT, Claude, Gemini, "AI agent", RAG, diffusion]
   - id: github-ai
+    name: GitHub
     kind: github                   # API de búsqueda de GitHub: repos creados en los últimos 7 días
     minStars: 300                  # requerido para github
     topics: [llm, ai-agents, rag, generative-ai]
 ```
 
-Además de esta lista, el script lee automáticamente las fuentes de los referentes: `feeds.rss` y `feeds.youtubeChannelId` (convertido en `https://www.youtube.com/feeds/videos.xml?channel_id=<id>`).
+Además de esta lista, el script lee automáticamente las fuentes de los referentes (el blog de un referente va en su `feeds.rss`, no en `sources.yaml`, para que sus ítems queden atribuidos a él y puedan proponerse como recursos destacados): `feeds.rss` y `feeds.youtubeChannelId` (convertido en `https://www.youtube.com/feeds/videos.xml?channel_id=<id>`).
 
 **Nota sobre GitHub:** se usa la API de búsqueda (`created:>fecha stars:>=N topic:X`) en lugar de raspar la página de *trending*, que no tiene API y cambia sin aviso.
 
