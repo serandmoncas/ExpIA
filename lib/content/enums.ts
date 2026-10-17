@@ -12,6 +12,16 @@ export type Status = (typeof STATUSES)[number]
 export type License = (typeof LICENSES)[number]
 export type Pricing = (typeof PRICINGS)[number]
 
+export const LANGUAGES = ['es', 'en'] as const
+export const PLATFORMS = ['youtube', 'x', 'linkedin', 'github', 'blog', 'podcast', 'newsletter', 'site'] as const
+export const PERSON_KINDS = ['person', 'organization'] as const
+export const HIGHLIGHT_FORMATS = ['video', 'course', 'article', 'thread', 'podcast', 'book', 'repo'] as const
+
+export type Language = (typeof LANGUAGES)[number]
+export type Platform = (typeof PLATFORMS)[number]
+export type PersonKind = (typeof PERSON_KINDS)[number]
+export type HighlightFormat = (typeof HIGHLIGHT_FORMATS)[number]
+
 export const LABELS: Record<string, string> = {
   concept: 'Concepto',
   technique: 'Técnica',
@@ -32,4 +42,22 @@ export const LABELS: Record<string, string> = {
   free: 'Gratis',
   freemium: 'Freemium',
   paid: 'Pago',
+  es: 'Español',
+  en: 'Inglés',
+  youtube: 'YouTube',
+  x: 'X',
+  linkedin: 'LinkedIn',
+  github: 'GitHub',
+  blog: 'Blog',
+  podcast: 'Podcast',
+  newsletter: 'Newsletter',
+  site: 'Sitio web',
+  person: 'Persona',
+  organization: 'Organización',
+  video: 'Video',
+  course: 'Curso',
+  article: 'Artículo',
+  thread: 'Hilo',
+  book: 'Libro',
+  repo: 'Repositorio',
 }
