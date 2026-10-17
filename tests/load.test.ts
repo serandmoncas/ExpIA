@@ -98,6 +98,11 @@ describe('loadCatalog', () => {
     expect(errs).toContain('nodes/a.mdx › cuerpo: sección duplicada "## Para qué sirve"')
   })
 
+  it('rechaza el campo retirado voices en un nodo', () => {
+    const errs = errorsOf(makeContent({ a: file(fm('a', { voices: '[]' })) }))
+    expect(errs.some((e) => e.startsWith('nodes/a.mdx') && e.includes('voices'))).toBe(true)
+  })
+
   it('reporta un summary demasiado largo', () => {
     const errs = errorsOf(makeContent({ a: file(fm('a', { summary: `"${'x'.repeat(161)}"` })) }))
     expect(errs.some((e) => e.startsWith('nodes/a.mdx › summary'))).toBe(true)

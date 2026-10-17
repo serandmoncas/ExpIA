@@ -42,7 +42,6 @@ export const nodeFrontmatterSchema = z
     summary: z.string().min(1).max(160),
     verified: z.boolean(),
     added: yamlString.refine((s) => /^\d{4}-\d{2}-\d{2}$/.test(s), 'debe ser YYYY-MM-DD'),
-    voices: z.array(id).default([]),
   })
   .strict()
 
