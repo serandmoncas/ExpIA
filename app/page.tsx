@@ -3,6 +3,8 @@ import { getCatalog } from '@/lib/content/load'
 import { toMeta } from '@/lib/content/types'
 import { countByCategory, selectTrending, selectLatestAdded, selectFundamentals } from '@/lib/dashboard'
 import { NodeCard } from '@/components/node-card'
+import { PersonCard } from '@/components/person-card'
+import { selectStarterPeople } from '@/lib/people'
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
@@ -14,7 +16,9 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 export default function Home() {
-  const { nodes, categories } = getCatalog()
+  const { nodes, categories, people } = getCatalog()
+  const starters = selectStarterPeople(people)
+  const topicTitles = Object.fromEntries(nodes.map((n) => [n.id, n.title]))
   const metas = nodes.map(toMeta)
   const counts = countByCategory(metas, categories)
   const max = Math.max(1, ...counts.map((c) => c.count))
@@ -31,11 +35,12 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Stat label="Nodos en total" value={metas.length} />
         <Stat label="Conceptos y técnicas" value={metas.filter((n) => n.kind === 'concept' || n.kind === 'technique').length} />
         <Stat label="Herramientas y modelos" value={metas.filter((n) => n.kind === 'tool' || n.kind === 'model').length} />
         <Stat label="Tomando fuerza" value={metas.filter((n) => n.status === 'emerging' || n.status === 'rising').length} />
+        <Stat label="Referentes" value={people.length} />
       </section>
 
       {trending.length > 0 && (
@@ -72,6 +77,18 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      {starters.length > 0 && (
+        <section className="space-y-3">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-xl font-semibold">Referentes para empezar</h2>
+            <Link href="/people" className="text-sm underline underline-offset-4">Ver todos</Link>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {starters.map((p) => <PersonCard key={p.id} person={p} topicTitles={topicTitles} />)}
+          </div>
+        </section>
+      )}
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Últimos agregados</h2>
