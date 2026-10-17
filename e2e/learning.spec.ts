@@ -98,3 +98,15 @@ test('la ruta no produce errores de hidratación', async ({ page }) => {
   await expect(page.getByTestId('learned-toggle').first()).toHaveAttribute('data-ready', 'true')
   expect(errors.filter((e) => /hydrat/i.test(e))).toEqual([])
 })
+
+test('la portada sugiere rutas y luego el siguiente paso de la empezada', async ({ page }) => {
+  await page.goto('/')
+  const block = page.getByTestId('continue-learning')
+  await expect(block.getByRole('heading', { name: 'Sigue aprendiendo' })).toBeVisible()
+  await expect(block.getByRole('link', { name: 'Fundamentos de IA' })).toBeVisible()
+  await page.goto('/paths/fundamentos')
+  await toggleOn(page, page.getByTestId('path-step').first())
+  await page.goto('/')
+  await expect(block).toContainText('1 de 10')
+  await expect(block.getByRole('link', { name: 'Redes neuronales', exact: false })).toHaveAttribute('href', '/node/neural-network')
+})
