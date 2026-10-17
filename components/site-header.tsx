@@ -6,6 +6,7 @@ const NAV = [
   { href: '/timeline', label: 'Línea de tiempo' },
   { href: '/explore', label: 'Explorar' },
   { href: '/people', label: 'Referentes' },
+  { href: '/radar', label: 'Radar' },
   { href: '/graph', label: 'Mapa' },
 ]
 

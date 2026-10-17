@@ -12,6 +12,8 @@ import { PrereqList } from '@/components/prereq-list'
 import { NodeCard } from '@/components/node-card'
 import { VoicesForTopic } from '@/components/voices-for-topic'
 import { getHighlightsForTopic } from '@/lib/people'
+import { RecentMentions } from '@/components/recent-mentions'
+import { getMentionsForTopic, sourceNames } from '@/lib/radar'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -31,7 +33,7 @@ const LINK_LABELS: Record<string, string> = { docs: 'Documentación', paper: 'Pa
 
 export default async function NodePage({ params }: Props) {
   const { id } = await params
-  const { nodes, byId, categories, people } = getCatalog()
+  const { nodes, byId, categories, people, reports, sources } = getCatalog()
   const node = byId.get(id)
   if (!node) notFound()
 
@@ -87,6 +89,7 @@ export default async function NodePage({ params }: Props) {
           <PrereqList nodes={prereqs} />
         </section>
         <VoicesForTopic nodeId={id} nodeTitle={node.title} voices={voices} highlights={topicHighlights} />
+        <RecentMentions mentions={getMentionsForTopic(reports, id)} sourceNames={sourceNames(sources, people)} />
         {dependents.length > 0 && (
           <section>
             <h2 className="mb-2 font-semibold">Qué se apoya en esto</h2>

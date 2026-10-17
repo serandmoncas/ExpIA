@@ -5,6 +5,8 @@ import { countByCategory, selectTrending, selectLatestAdded, selectFundamentals 
 import { NodeCard } from '@/components/node-card'
 import { PersonCard } from '@/components/person-card'
 import { selectStarterPeople } from '@/lib/people'
+import { ThisWeekBlock } from '@/components/this-week-block'
+import { getLatestReport, sourceNames } from '@/lib/radar'
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
@@ -16,7 +18,8 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 export default function Home() {
-  const { nodes, categories, people } = getCatalog()
+  const { nodes, categories, people, reports, sources } = getCatalog()
+  const latestReport = getLatestReport(reports)
   const starters = selectStarterPeople(people)
   const topicTitles = Object.fromEntries(nodes.map((n) => [n.id, n.title]))
   const metas = nodes.map(toMeta)
@@ -51,6 +54,8 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {latestReport && <ThisWeekBlock report={latestReport} topicTitles={topicTitles} sourceNames={sourceNames(sources, people)} />}
 
       <section className="space-y-3">
         <h2 className="text-xl font-semibold">Por categoría</h2>
