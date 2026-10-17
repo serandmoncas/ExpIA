@@ -20,6 +20,11 @@ const released = yamlString.refine((s) => {
 
 const added = yamlString.refine((s) => /^\d{4}-\d{2}-\d{2}$/.test(s), 'debe ser YYYY-MM-DD')
 
+const reviewSchema = z
+  .array(z.object({ question: z.string().min(1).max(200), answer: z.string().min(1).max(400) }).strict())
+  .min(2)
+  .max(3)
+
 export const nodeFrontmatterSchema = z
   .object({
     id,
@@ -45,6 +50,7 @@ export const nodeFrontmatterSchema = z
       .strict()
       .default({}),
     summary: z.string().min(1).max(160),
+    review: reviewSchema.optional(),
     verified: z.boolean(),
     added,
   })
@@ -104,6 +110,7 @@ export const personFrontmatterSchema = z
 export type NodeFrontmatter = z.infer<typeof nodeFrontmatterSchema>
 export type Category = z.infer<typeof taxonomySchema>['categories'][number]
 export type PersonFrontmatter = z.infer<typeof personFrontmatterSchema>
+export type ReviewItem = NonNullable<NodeFrontmatter['review']>[number]
 
 const name = z.string().min(1)
 

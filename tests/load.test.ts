@@ -130,6 +130,31 @@ describe('loadCatalog', () => {
     expect(errs.some((e) => e.startsWith('nodes/a.mdx'))).toBe(true)
     expect(errs.some((e) => e.startsWith('nodes/b.mdx'))).toBe(true)
   })
+
+  it('carga las preguntas de repaso de un nodo', () => {
+    const review = '[{ question: "¿Para qué sirve?", answer: "Para algo." }, { question: "¿Cuándo se usa?", answer: "Siempre." }]'
+    const { byId } = loadCatalog(makeContent({ a: file(fm('a', { review })) }))
+    expect(byId.get('a')!.review).toEqual([
+      { question: '¿Para qué sirve?', answer: 'Para algo.' },
+      { question: '¿Cuándo se usa?', answer: 'Siempre.' },
+    ])
+  })
+  it('un nodo sin preguntas de repaso sigue cargando', () => {
+    const { byId } = loadCatalog(makeContent({ a: file(fm('a')) }))
+    expect(byId.get('a')!.review).toBeUndefined()
+  })
+  it('exige de 2 a 3 preguntas de repaso', () => {
+    const one = '[{ question: "¿q?", answer: "a" }]'
+    const four = `[${Array(4).fill('{ question: "¿q?", answer: "a" }').join(', ')}]`
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: one })) })).join()).toMatch(/nodes\/a\.mdx › review/)
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: four })) })).join()).toMatch(/nodes\/a\.mdx › review/)
+  })
+  it('limita el largo de pregunta y respuesta', () => {
+    const longQ = `[{ question: "${'x'.repeat(201)}", answer: "a" }, { question: "¿q?", answer: "a" }]`
+    const longA = `[{ question: "¿q?", answer: "${'x'.repeat(401)}" }, { question: "¿q?", answer: "a" }]`
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: longQ })) })).join()).toMatch(/review\.0\.question/)
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: longA })) })).join()).toMatch(/review\.0\.answer/)
+  })
 })
 
 const WHY = '## Por qué seguirle\nPorque sí.\n'
