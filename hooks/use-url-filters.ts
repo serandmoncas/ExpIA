@@ -1,26 +1,42 @@
 'use client'
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { parseFilters, serializeFilters, type Filters } from '@/lib/filters'
+import {
+  parseFilters, serializeFilters, parsePeopleFilters, serializePeopleFilters,
+  type Filters, type PeopleFilters,
+} from '@/lib/filters'
 
 // El estado local es la fuente de verdad para renderizar; la URL solo se sincroniza.
 // router.replace pediría un payload RSC por cada tecla y, con latencia, perdería
 // caracteres y clics. history.replaceState no hace petición y Next lo integra con useSearchParams.
-export function useUrlFilters(categoryIds: readonly string[]): [Filters, (f: Filters) => void] {
+export function useUrlState<T>(parse: (params: URLSearchParams) => T, serialize: (value: T) => string): [T, (value: T) => void] {
   const params = useSearchParams()
-  const [filters, setLocal] = useState(() => parseFilters(new URLSearchParams(params.toString()), categoryIds))
+  const [value, setLocal] = useState(() => parse(new URLSearchParams(params.toString())))
 
   useEffect(() => {
-    const onPopState = () => setLocal(parseFilters(new URLSearchParams(window.location.search), categoryIds))
+    const onPopState = () => setLocal(parse(new URLSearchParams(window.location.search)))
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
-  }, [categoryIds])
+  }, [parse])
 
-  const setFilters = useCallback((f: Filters) => {
-    setLocal(f)
-    const qs = serializeFilters(f)
-    window.history.replaceState(null, '', qs ? `${window.location.pathname}?${qs}` : window.location.pathname)
-  }, [])
+  const setValue = useCallback(
+    (v: T) => {
+      setLocal(v)
+      const qs = serialize(v)
+      window.history.replaceState(null, '', qs ? `${window.location.pathname}?${qs}` : window.location.pathname)
+    },
+    [serialize],
+  )
 
-  return [filters, setFilters]
+  return [value, setValue]
+}
+
+export function useUrlFilters(categoryIds: readonly string[]): [Filters, (f: Filters) => void] {
+  const parse = useCallback((p: URLSearchParams) => parseFilters(p, categoryIds), [categoryIds])
+  return useUrlState(parse, serializeFilters)
+}
+
+export function useUrlPeopleFilters(topicIds: readonly string[]): [PeopleFilters, (f: PeopleFilters) => void] {
+  const parse = useCallback((p: URLSearchParams) => parsePeopleFilters(p, topicIds), [topicIds])
+  return useUrlState(parse, serializePeopleFilters)
 }
