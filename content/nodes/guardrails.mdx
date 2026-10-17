@@ -10,6 +10,13 @@ requires: [llm, evals]
 related: [evals, structured-outputs]
 status: rising
 summary: "Controles que revisan lo que entra y sale de un sistema de IA para bloquear contenido dañino, fugas de datos o respuestas fuera de tema."
+review:
+  - question: "¿Qué riesgos buscan contener los guardrails?"
+    answer: "Intentos de manipulación como el prompt injection, filtración de datos personales, políticas inventadas y respuestas fuera del tema de negocio."
+  - question: "¿Qué se controla en la entrada y qué en la salida?"
+    answer: "En la entrada: detección de inyección, filtrado de datos sensibles y límites de longitud. En la salida: moderación, validación de esquema y verificar que la respuesta se apoya en las fuentes."
+  - question: "¿Por qué se combinan varias capas de guardrails?"
+    answer: "Porque ningún guardrail es infalible; por eso se apilan varias capas y se miden con evals."
 verified: false
 added: 2026-10-17
 ---

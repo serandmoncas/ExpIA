@@ -10,6 +10,13 @@ requires: [llm, transfer-learning]
 related: [rlhf, lora]
 status: mainstream
 summary: "Seguir entrenando un modelo ya preentrenado con tus propios ejemplos para especializarlo en una tarea, un estilo o un dominio."
+review:
+  - question: "¿Cuándo conviene hacer fine-tuning en vez de quedarse con prompting o RAG?"
+    answer: "Cuando hay un formato muy estricto, se necesita un modelo más pequeño y barato que imite a uno grande, o la tarea requiere un comportamiento consistente difícil de describir con instrucciones."
+  - question: "¿Por qué se separa un conjunto de validación?"
+    answer: "Para medir si el modelo ajustado mejora de verdad; solo se despliega si le gana al modelo base."
+  - question: "¿Cómo explicarías el fine-tuning a alguien no técnico?"
+    answer: "Como dar unas semanas de capacitación interna a un profesional con buena formación general: ya sabía escribir y razonar, y ahora aprende cómo se hacen las cosas en tu empresa."
 verified: false
 added: 2026-10-17
 ---

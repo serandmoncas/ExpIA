@@ -10,6 +10,13 @@ level: intermediate
 requires: [deep-learning]
 status: declining
 summary: "Dos redes que compiten: una genera imágenes falsas y otra intenta detectarlas. Así aprenden a crear contenido realista."
+review:
+  - question: "¿Cómo aprenden las dos redes de una GAN?"
+    answer: "El generador produce muestras a partir de ruido y el discriminador intenta distinguirlas de las reales. Se entrenan por turnos: uno para detectar mejor y el otro para engañarlo."
+  - question: "¿Qué se usa al terminar el entrenamiento?"
+    answer: "Solo el generador; el discriminador se descarta."
+  - question: "¿Por qué los modelos de difusión desplazaron a las GANs y dónde siguen vigentes?"
+    answer: "Porque son más estables de entrenar y más diversos. Las GANs siguen vigentes donde importa la velocidad de generación, como la superresolución en tiempo real."
 verified: false
 added: 2026-10-17
 links:

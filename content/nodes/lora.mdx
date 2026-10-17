@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2106.09685"
 summary: "Forma barata de ajustar un modelo grande: en vez de modificar todos sus pesos, entrena unas pocas matrices pequeñas que se suman al original."
+review:
+  - question: "¿Cómo reduce LoRA el costo de ajustar un modelo grande?"
+    answer: "Congela los pesos originales y entrena solo matrices pequeñas de bajo rango insertadas en ciertas capas, lo que reduce los parámetros entrenables en órdenes de magnitud."
+  - question: "¿Qué ventaja tiene que el resultado sea un adaptador de pocos megabytes?"
+    answer: "Que se puede cargar o quitar sobre el modelo base, y servir muchos adaptadores distintos (legal, ventas, soporte) sobre el mismo modelo."
+  - question: "¿Qué es QLoRA?"
+    answer: "LoRA combinado con cuantización, para bajar aún más el costo del ajuste."
 verified: false
 added: 2026-10-17
 ---
