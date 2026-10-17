@@ -1,0 +1,46 @@
+---
+id: rlhf
+title: "RLHF"
+kind: technique
+category: [llm, safety]
+released: 2017-06
+origin: "Christiano y colaboradores (OpenAI y DeepMind); popularizado por InstructGPT de OpenAI"
+audience: [technical]
+level: advanced
+requires: [fine-tuning]
+related: [llm, guardrails]
+status: mainstream
+links:
+  paper: "https://arxiv.org/abs/1706.03741"
+summary: "Entrenar un modelo con preferencias humanas: personas comparan respuestas y el modelo aprende a dar las que se prefieren."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+RLHF (Reinforcement Learning from Human Feedback) convierte un modelo que solo predice texto en un asistente útil, honesto y menos dañino. En lugar de dar la respuesta "correcta" para cada ejemplo, se pide a personas que comparen dos respuestas y elijan la mejor; el modelo aprende de esas preferencias.
+
+Fue la técnica clave entre GPT-3 y ChatGPT (el trabajo InstructGPT de 2022) y hoy forma parte del entrenamiento de casi todos los asistentes comerciales. Existen alternativas más simples que persiguen lo mismo, como DPO, o variantes con feedback generado por IA (RLAIF).
+
+## Cómo se usa
+
+1. Ajuste supervisado (SFT): se entrena el modelo con ejemplos de buenas respuestas.
+2. Modelo de recompensa: se recogen pares de respuestas comparadas por humanos y se entrena un modelo que puntúa cuál es mejor.
+3. Optimización: se ajusta el LLM con aprendizaje por refuerzo (típicamente PPO) para maximizar esa puntuación, con una penalización para que no se aleje demasiado del modelo original.
+
+```python
+import torch.nn.functional as F
+
+# Paso 2: pérdida del modelo de recompensa sobre pares (elegida vs. rechazada)
+r_elegida = reward_model(prompt, respuesta_elegida)    # puntuación escalar
+r_rechazada = reward_model(prompt, respuesta_rechazada)
+loss = -F.logsigmoid(r_elegida - r_rechazada).mean()
+loss.backward()
+```
+
+## Para no técnicos
+
+Es como entrenar a un nuevo empleado mostrándole dos borradores y diciéndole "este está mejor". Tras miles de comparaciones, interioriza qué tipo de respuesta gusta: clara, útil, educada y sin inventar.
+
+Caso de negocio: una empresa que construye un asistente interno recoge las valoraciones de "pulgar arriba / abajo" de sus empleados y las usa para afinar el modelo, de modo que con el tiempo responde más como el equipo espera.

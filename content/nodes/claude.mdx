@@ -1,0 +1,51 @@
+---
+id: claude
+title: "Claude (Anthropic)"
+kind: model
+category: [llm]
+released: 2023-03
+origin: "Anthropic"
+audience: [technical, business]
+level: fundamentals
+requires: [llm]
+related: [anthropic-api, claude-code, gpt]
+status: mainstream
+license: proprietary
+pricing: freemium
+links:
+  docs: "https://docs.anthropic.com"
+  site: "https://www.anthropic.com/claude"
+summary: "La familia de modelos de lenguaje de Anthropic, conocida por su ventana de contexto amplia, su habilidad con código y su enfoque en seguridad."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Claude es la familia de LLM de Anthropic. Se usa para analizar documentos largos, redactar y editar, programar, razonar sobre problemas complejos, trabajar con imágenes y actuar como agente que usa herramientas. Anthropic lo entrena con un fuerte énfasis en seguridad, incluido su enfoque de "IA constitucional".
+
+La familia se ofrece en varios tamaños (históricamente Haiku, Sonnet y Opus) para equilibrar capacidad, velocidad y costo. Está disponible en la app de Claude, en la API de Anthropic y en nubes como AWS Bedrock y Google Cloud Vertex AI.
+
+## Cómo se usa
+
+1. Para uso personal o de equipo: la app de Claude en web, escritorio o móvil.
+2. Para integrarlo: crea una clave en la consola de Anthropic y usa su SDK.
+3. Elige el modelo de la familia según la tarea; la lista de modelos vigentes está en la documentación.
+
+```python
+import anthropic
+
+client = anthropic.Anthropic()  # lee ANTHROPIC_API_KEY del entorno
+msg = client.messages.create(
+    model="nombre-del-modelo",  # consulta los modelos vigentes en la documentación
+    max_tokens=1024,
+    messages=[{"role": "user", "content": "Resume este informe en 5 puntos: ..."}],
+)
+print(msg.content[0].text)
+```
+
+## Para no técnicos
+
+Claude es otro gran asistente de IA, de una empresa distinta a la de ChatGPT. Como elegir entre dos consultoras igual de buenas, cada una tiene su estilo y sus puntos fuertes; muchas empresas prueban ambas para cada tarea.
+
+Caso de negocio: un despacho legal sube contratos de cientos de páginas y pide a Claude que identifique cláusulas de riesgo. El abogado revisa la lista en lugar de leer todo desde cero.

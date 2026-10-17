@@ -1,0 +1,49 @@
+---
+id: fine-tuning
+title: "Fine-tuning"
+kind: technique
+category: [llm]
+released: 2018-06
+audience: [technical, business]
+level: intermediate
+requires: [llm, transfer-learning]
+related: [rlhf, lora]
+status: mainstream
+summary: "Seguir entrenando un modelo ya preentrenado con tus propios ejemplos para especializarlo en una tarea, un estilo o un dominio."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Toma un modelo general y lo especializa con ejemplos propios: que siempre responda en el tono de la marca, que extraiga campos de facturas en un formato fijo, que clasifique tickets con las categorías de la empresa o que domine la jerga de un sector (legal, médico, industrial).
+
+Conviene cuando el prompting y el RAG no bastan: hay un formato muy estricto, se necesita un modelo más pequeño y barato que imite a uno grande, o la tarea requiere un comportamiento consistente que es difícil de describir con instrucciones.
+
+## Cómo se usa
+
+1. Reúne cientos o miles de ejemplos de entrada y salida deseada, limpios y representativos.
+2. Separa un conjunto de validación para medir si el modelo mejora de verdad.
+3. Lanza el entrenamiento: vía la API de un proveedor o en tu propia GPU (a menudo con técnicas eficientes como LoRA).
+4. Evalúa contra el modelo base y despliega solo si gana.
+
+```python
+from openai import OpenAI
+
+client = OpenAI()
+
+# datos.jsonl: una conversación de ejemplo por línea
+archivo = client.files.create(file=open("datos.jsonl", "rb"), purpose="fine-tune")
+
+job = client.fine_tuning.jobs.create(
+    training_file=archivo.id,
+    model="modelo-base",  # un modelo que el proveedor permita ajustar
+)
+print(job.id, job.status)
+```
+
+## Para no técnicos
+
+Es como contratar a un profesional con buena formación general y darle unas semanas de capacitación interna: ya sabía escribir y razonar, ahora aprende cómo se hacen las cosas en tu empresa.
+
+Caso de negocio: una aseguradora ajusta un modelo con miles de reclamaciones ya clasificadas. El modelo resultante etiqueta las nuevas reclamaciones con la misma lógica que el equipo experto, más rápido y a menor costo que usar un modelo grande con instrucciones largas.

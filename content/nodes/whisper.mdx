@@ -1,0 +1,49 @@
+---
+id: whisper
+title: "Whisper"
+kind: model
+category: [audio]
+released: 2022-09
+origin: "OpenAI"
+audience: [technical]
+level: intermediate
+requires: [transformer]
+related: [multimodal-models, openai-api]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  paper: "https://arxiv.org/abs/2212.04356"
+  repo: "https://github.com/openai/whisper"
+summary: "Modelo abierto de OpenAI que transcribe voz a texto en decenas de idiomas y puede traducirla al inglés."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Whisper convierte audio en texto con una precisión robusta frente a acentos, ruido de fondo y vocabulario técnico. Funciona en muchos idiomas, detecta automáticamente cuál se habla y puede traducir directamente al inglés.
+
+Se usa para transcribir reuniones, entrevistas y pódcasts, generar subtítulos, analizar llamadas de un centro de atención o como primer paso de un asistente de voz. Al ser abierto (licencia MIT), puede ejecutarse en local y hay versiones optimizadas para correr incluso en portátiles.
+
+## Cómo se usa
+
+1. Instala el paquete `openai-whisper` (requiere ffmpeg) o usa una variante optimizada.
+2. Elige el tamaño del modelo: los pequeños son rápidos; los grandes, más precisos.
+3. Transcribe el archivo y procesa el texto o los segmentos con marcas de tiempo.
+
+```python
+import whisper
+
+model = whisper.load_model("base")
+result = model.transcribe("reunion.mp3")
+print(result["text"])
+for seg in result["segments"]:
+    print(f'{seg["start"]:.1f}s: {seg["text"]}')
+```
+
+## Para no técnicos
+
+Es como un taquígrafo que entiende decenas de idiomas y nunca se cansa: le das una grabación y te devuelve el texto, con la hora de cada frase.
+
+Caso de negocio: un centro de atención al cliente transcribe todas sus llamadas con Whisper en sus propios servidores y luego analiza los textos para detectar los motivos de queja más frecuentes.

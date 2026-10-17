@@ -1,0 +1,47 @@
+---
+id: llama
+title: "Llama (Meta)"
+kind: model
+category: [llm]
+released: 2023-02
+origin: "Meta AI"
+audience: [technical]
+level: intermediate
+requires: [llm]
+related: [mistral, ollama, hugging-face]
+status: mainstream
+license: open-source
+pricing: free
+links:
+  paper: "https://arxiv.org/abs/2302.13971"
+summary: "Familia de modelos de lenguaje de Meta con pesos descargables, que impulsó el ecosistema de LLM abiertos."
+verified: false
+added: 2026-10-17
+---
+
+## Para qué sirve
+
+Llama es la familia de LLM de Meta cuyos pesos se pueden descargar y ejecutar en infraestructura propia. Eso permite usar un modelo de lenguaje sin enviar datos a un tercero, ajustarlo con datos privados, controlar costos a gran escala y desplegarlo en entornos sin conexión.
+
+Su publicación en 2023 desató una ola de modelos derivados, herramientas de ejecución local y técnicas de ajuste eficiente. Ojo: se distribuye con una licencia propia de Meta, con condiciones de uso, que no es una licencia open source clásica.
+
+## Cómo se usa
+
+1. Acepta la licencia en el sitio de Meta o en Hugging Face para acceder a los pesos.
+2. Elige el tamaño según tu hardware: los pequeños corren en un portátil; los grandes requieren varias GPU.
+3. Ejecútalo con Transformers, con un servidor como vLLM o localmente con Ollama, o úsalo vía un proveedor en la nube.
+
+```python
+from transformers import pipeline
+
+chat = pipeline("text-generation", model="meta-llama/<modelo-instruct>", device_map="auto")
+mensajes = [{"role": "user", "content": "Explica qué es una API en una frase."}]
+salida = chat(mensajes, max_new_tokens=100)
+print(salida[0]["generated_text"][-1]["content"])
+```
+
+## Para no técnicos
+
+Si usar un modelo por API es como alquilar un coche, Llama es como comprarlo: lo tienes en tu garaje, lo modificas como quieras y nadie más ve a dónde vas. A cambio, el mantenimiento corre por tu cuenta.
+
+Caso de negocio: un banco que no puede enviar datos de clientes a servicios externos despliega Llama en sus propios servidores para resumir expedientes internos, cumpliendo sus políticas de privacidad.
