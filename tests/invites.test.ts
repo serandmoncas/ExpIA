@@ -131,6 +131,30 @@ describe('canjear', () => {
     expect(results.filter((r) => r.ok)).toHaveLength(1)
     expect(await db.select().from(memberships)).toHaveLength(1)
   })
+  it('el mismo alumno canjeando dos veces en paralelo entra una vez y gasta un solo uso', async () => {
+    const { g, group } = await setup()
+    const { token } = await createLinkInvite(db, g, group.id, { maxUses: 2 }, now)
+    const s = await seedUser(db)
+    const results = await Promise.all([
+      redeemInvite(db, { token, userId: s.id, email: s.email }, now),
+      redeemInvite(db, { token, userId: s.id, email: s.email }, now),
+    ])
+    expect(results).toEqual([{ ok: true, groupId: group.id }, { ok: true, groupId: group.id }])
+    expect(await db.select().from(memberships)).toHaveLength(1)
+    expect((await listInvites(db, g, group.id))[0].uses).toBe(1)
+  })
+  it('el mismo alumno en paralelo con un enlace de un solo uso: ambos ok, un uso', async () => {
+    const { g, group } = await setup()
+    const { token } = await createLinkInvite(db, g, group.id, { maxUses: 1 }, now)
+    const s = await seedUser(db)
+    const results = await Promise.all([
+      redeemInvite(db, { token, userId: s.id, email: s.email }, now),
+      redeemInvite(db, { token, userId: s.id, email: s.email }, now),
+    ])
+    expect(results).toEqual([{ ok: true, groupId: group.id }, { ok: true, groupId: group.id }])
+    expect(await db.select().from(memberships)).toHaveLength(1)
+    expect((await listInvites(db, g, group.id))[0].uses).toBe(1)
+  })
   it('findInvite devuelve el grupo y el nombre del guía', async () => {
     const { g, group } = await setup()
     const { token } = await createLinkInvite(db, g, group.id, {}, now)

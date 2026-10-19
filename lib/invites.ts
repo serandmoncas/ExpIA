@@ -115,27 +115,35 @@ export async function redeemInvite(
     return { ok: false, reason: problem }
   }
 
-  return db.transaction(async (tx) => {
-    const [member] = await tx
-      .select()
-      .from(memberships)
-      .where(and(eq(memberships.groupId, invite.groupId), eq(memberships.userId, input.userId)))
-    if (member) return { ok: true as const, groupId: invite.groupId }
+  try {
+    await db.transaction(async (tx) => {
+      // La clave primaria de memberships decide: dos canjes simultáneos del mismo alumno no gastan dos usos
+      const added = await tx
+        .insert(memberships)
+        .values({ groupId: invite.groupId, userId: input.userId })
+        .onConflictDoNothing()
+        .returning({ userId: memberships.userId })
+      if (added.length === 0) return // ya era miembro: no se descuenta nada
 
-    // Validar y descontar en una sola sentencia: dos canjes simultáneos no pasan los dos
-    const taken = await tx
-      .update(invites)
-      .set({ uses: sql`${invites.uses} + 1` })
-      .where(
-        and(
-          eq(invites.id, invite.id), isNull(invites.revokedAt), gt(invites.expiresAt, now),
-          or(isNull(invites.maxUses), lt(invites.uses, invites.maxUses)),
-        ),
-      )
-      .returning({ id: invites.id })
-    if (taken.length === 0) return { ok: false as const, reason: 'exhausted' as const }
-
-    await tx.insert(memberships).values({ groupId: invite.groupId, userId: input.userId }).onConflictDoNothing()
-    return { ok: true as const, groupId: invite.groupId }
-  })
+      // Validar y descontar en una sola sentencia: dos alumnos distintos no pasan los dos
+      const taken = await tx
+        .update(invites)
+        .set({ uses: sql`${invites.uses} + 1` })
+        .where(
+          and(
+            eq(invites.id, invite.id), isNull(invites.revokedAt), gt(invites.expiresAt, now),
+            or(isNull(invites.maxUses), lt(invites.uses, invites.maxUses)),
+          ),
+        )
+        .returning({ id: invites.id })
+      // Lanzar revierte también la inserción de membresía
+      if (taken.length === 0) throw new ExhaustedSignal()
+    })
+    return { ok: true, groupId: invite.groupId }
+  } catch (e) {
+    if (e instanceof ExhaustedSignal) return { ok: false, reason: 'exhausted' }
+    throw e
+  }
 }
+
+class ExhaustedSignal extends Error {}
