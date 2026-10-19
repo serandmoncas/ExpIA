@@ -30,7 +30,10 @@ export function createAuth(deps: AuthDeps, extraPlugins: BetterAuthPlugin[] = []
       // Nadie se registra solo: cada cuenta nueva necesita una invitación (o ser administrador)
       validateUserInfo: async ({ user, source }, ctx) => {
         if (source.action !== 'create-user') return
-        const ok = await registrationAllowed(db, admins, String(user.email ?? ''), ctx?.headers?.get('cookie') ?? null)
+        const ok = await registrationAllowed(db, admins, String(user.email ?? ''), {
+          cookieHeader: ctx?.headers?.get('cookie') ?? null,
+          callbackURL: ctx?.query?.callbackURL,
+        })
         if (!ok) return { error: 'not_invited', errorDescription: 'Necesitas una invitación para entrar.' }
       },
     },
@@ -50,7 +53,10 @@ export function createAuth(deps: AuthDeps, extraPlugins: BetterAuthPlugin[] = []
           const to = normalizeEmail(email)
           const [existing] = await db.select({ id: schema.user.id }).from(schema.user).where(eq(schema.user.email, to))
           // A un correo sin cuenta ni invitación no se le envía nada (y no se avisa, para no revelar quién está)
-          if (!existing && !(await registrationAllowed(db, admins, to, ctx?.headers?.get('cookie') ?? null))) return
+          if (!existing && !(await registrationAllowed(db, admins, to, {
+            cookieHeader: ctx?.headers?.get('cookie') ?? null,
+            callbackURL: ctx?.body?.callbackURL,
+          }))) return
           await sendLimited(db, mailer, { kind: 'magic-link', to }, magicLinkMail(url))
         },
       }),

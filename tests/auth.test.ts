@@ -7,7 +7,7 @@ import { createAuth } from '@/lib/auth-config'
 import { parseAdminEmails, type Actor } from '@/lib/access'
 import { createGroup, grantGuide } from '@/lib/groups'
 import { createLinkInvite, INVITE_COOKIE } from '@/lib/invites'
-import { readCookie } from '@/lib/registration'
+import { readCookie, tokenFromCallback } from '@/lib/registration'
 import { resetDb, seedUser, testDb } from './helpers/db'
 
 let db: Db
@@ -24,9 +24,9 @@ beforeAll(async () => {
 beforeEach(async () => { await resetDb(db); sent = [] })
 
 // Pide el enlace mágico y lo abre, como haría el navegador
-async function signIn(email: string, cookie = '') {
+async function signIn(email: string, cookie = '', callbackURL = '/cuenta') {
   await auth.handler(new Request(`${BASE}/api/auth/sign-in/magic-link`, {
-    method: 'POST', headers: { 'content-type': 'application/json', cookie, origin: BASE }, body: JSON.stringify({ email, callbackURL: '/cuenta' }),
+    method: 'POST', headers: { 'content-type': 'application/json', cookie, origin: BASE }, body: JSON.stringify({ email, callbackURL }),
   }))
   const mail = sent.at(-1)
   if (!mail) return { mailed: false, location: null as string | null }
@@ -66,6 +66,19 @@ describe('registro solo por invitación', () => {
   it('con la cookie de una invitación inválida no se envía nada', async () => {
     expect(await signIn('alumno@x.com', `${INVITE_COOKIE}=inventado`)).toEqual({ mailed: false, location: null })
   })
+  it('un alumno que pide el enlace en un equipo y lo abre en otro (sin cookie) entra si el enlace vuelve a /unirse/<token>/canjear', async () => {
+    const g: Actor = { ...(await seedUser(db, { isGuide: true })), isAdmin: false }
+    const group = await createGroup(db, g, 'Taller')
+    const { token } = await createLinkInvite(db, g, group.id, {})
+    const r = await signIn('alumno@x.com', '', `/unirse/${token}/canjear`)
+    expect(r.mailed).toBe(true)
+    expect(r.location).toMatch(new RegExp(`/unirse/${token}/canjear$`))
+    expect((await users()).some((u) => u.email === 'alumno@x.com')).toBe(true)
+  })
+  it('un callbackURL con un token inventado no permite registrarse', async () => {
+    expect(await signIn('alumno@x.com', '', '/unirse/inventado/canjear')).toEqual({ mailed: false, location: null })
+    expect(await users()).toHaveLength(0)
+  })
   it('quien ya tiene cuenta siempre puede pedir su enlace', async () => {
     await seedUser(db, { email: 'ya@x.com' })
     expect((await signIn('ya@x.com')).location).toBe(`${BASE}/cuenta`)
@@ -77,5 +90,18 @@ describe('readCookie', () => {
     expect(readCookie('a=1; expia_invite=abc; b=2', 'expia_invite')).toBe('abc')
     expect(readCookie(null, 'expia_invite')).toBeNull()
     expect(readCookie('a=1', 'expia_invite')).toBeNull()
+  })
+})
+
+describe('tokenFromCallback', () => {
+  it('extrae el token solo de /unirse/<token>/canjear', () => {
+    expect(tokenFromCallback('/unirse/abc_-123/canjear')).toBe('abc_-123')
+    expect(tokenFromCallback('http://localhost:3000/unirse/abc/canjear')).toBe('abc')
+    expect(tokenFromCallback('/unirse/abc/canjear/mas')).toBeNull()
+    expect(tokenFromCallback('/unirse/abc')).toBeNull()
+    expect(tokenFromCallback('/cuenta')).toBeNull()
+    expect(tokenFromCallback('no es url')).toBeNull()
+    expect(tokenFromCallback(null)).toBeNull()
+    expect(tokenFromCallback(undefined)).toBeNull()
   })
 })
