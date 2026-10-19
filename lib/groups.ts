@@ -12,6 +12,12 @@ export type GroupRow = typeof groups.$inferSelect
 
 const nameSchema = z.string().trim().min(1).max(80)
 const dueSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()
+
+// La forma YYYY-MM-DD no basta: 2026-02-30 pasaría la regex y Postgres fallaría
+function isRealDate(s: string): boolean {
+  const d = new Date(`${s}T00:00:00Z`)
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === s
+}
 const emailSchema = z.string().email()
 
 function parseName(name: string): string {
@@ -90,7 +96,7 @@ export async function assignPath(
   await loadManagedGroup(db, actor, groupId)
   if (!resolvePathRef(ref, catalog)) throw new InputError('ruta-inexistente')
   const due = dueSchema.safeParse(dueDate)
-  if (!due.success) throw new InputError('fecha-invalida')
+  if (!due.success || (due.data !== null && !isRealDate(due.data))) throw new InputError('fecha-invalida')
   await db
     .insert(assignments)
     .values({ groupId, pathRef: ref, dueDate: due.data })
@@ -102,6 +108,7 @@ export async function unassignPath(db: Db, actor: Actor, groupId: string, ref: s
   await db.delete(assignments).where(and(eq(assignments.groupId, groupId), eq(assignments.pathRef, ref)))
 }
 
+// Sin control de acceso: quien llama ya verificó que puede ver el grupo (getGroupForGuide o sus propios grupos)
 export async function listAssignments(db: Db, groupId: string): Promise<{ pathRef: string; dueDate: string | null }[]> {
   return db
     .select({ pathRef: assignments.pathRef, dueDate: assignments.dueDate })
