@@ -13,7 +13,7 @@ items:
       - reasoning-models
       - multimodal-models
     relevance: high
-    summary: Google lanza Gemini 4 Argon, su nuevo modelo de frontera, disponible para desarrolladores, empresas y usuarios. Redefine la comparación entre los grandes modelos del momento y llega acompañado de variantes para robótica.
+    summary: Google lanza Gemini 4 Argon, su nuevo modelo de frontera, disponible para desarrolladores, empresas y usuarios. Redefine la comparación entre los grandes modelos del momento y se presenta con aplicaciones en robótica.
   - title: '[AINews] Meta Muse Wonder & Wonder Full: MSL’s Claude 5.5-tier Frontier Model'
     url: https://www.latent.space/p/ainews-meta-muse-wonder-and-wonder
     source: latent-space
@@ -52,15 +52,6 @@ items:
       - evals
     relevance: high
     summary: El equipo de Claude Code explica cómo revisa código cuando los agentes escriben gran parte de él. En lugar de preguntar si un humano lo leyó, decide qué control, humano o automático, debe detectar cada riesgo.
-  - title: Postgres 19 delayed after AI reviewers find more bugs than humans can fix
-    url: https://www.theregister.com/databases/2026/10/16/postgres-19-delayed-after-ai-reviewers-find-more-bugs-than-humans-can-fix/5303471
-    source: hackernews-ai
-    publishedAt: '2026-10-16'
-    topics:
-      - agents
-      - evals
-    relevance: medium
-    summary: Postgres 19 se retrasa porque revisores de IA encontraron más errores de los que el equipo humano puede arreglar. Es una señal del impacto real de la revisión automática en proyectos críticos.
   - title: AI coding agents generate more code, but not more software
     url: https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/
     source: hackernews-ai
@@ -108,35 +99,6 @@ items:
       - agents
     relevance: medium
     summary: 'Una idea práctica: en vez de confiar solo en AGENTS.md, usar hooks de pre-commit que fallen e inyecten la corrección en el contexto del agente. Así las reglas se cumplen de forma fiable.'
-  - title: I Turned Structured Output Into a Game 🎮
-    url: https://www.youtube.com/shorts/LNy__Ge8OLQ
-    source: hugging-face
-    publishedAt: '2026-10-13'
-    topics:
-      - structured-outputs
-      - tokenization
-    relevance: medium
-    summary: Token Arcade convierte en juego la decodificación restringida. Muestra que la predicción más probable del modelo puede romper un formato y cómo las salidas estructuradas lo evitan.
-  - title: 'Pg_vectorsearch: An index that is faster than pgvector''s IVFFlat and HNSW'
-    url: https://github.com/timescale/pg_vectorsearch
-    source: hackernews-ai
-    publishedAt: '2026-10-14'
-    topics:
-      - pgvector
-      - vector-db
-      - semantic-search
-    relevance: medium
-    summary: pg_vectorsearch es un nuevo índice para Postgres que promete superar en velocidad a IVFFlat y HNSW de pgvector. Es relevante para quien hace RAG sobre su base de datos de siempre.
-  - title: 'Janas: Run LLMs larger than RAM by streaming experts from SSD'
-    url: https://github.com/prabanta-dev/janas
-    source: hackernews-ai
-    publishedAt: '2026-10-12'
-    topics:
-      - llm
-      - quantization
-      - ollama
-    relevance: medium
-    summary: Janas permite ejecutar modelos más grandes que la memoria RAM cargando los expertos desde el SSD bajo demanda. Es otra vía para usar modelos grandes en hardware doméstico.
   - title: How to Build Your Own AI Agent (Like PewDiePie)
     url: https://www.youtube.com/watch?v=EuN8WCWQf7g
     source: hugging-face
@@ -147,6 +109,34 @@ items:
       - fine-tuning
     relevance: medium
     summary: Este tutorial explica cómo funciona un harness de agente desde cero, cómo correr un modelo local con llama.cpp y cómo ajustar un modelo pequeño para tu propio asistente.
+  - title: "Building trust in AI agents: A production-ready evaluation framework with Amazon Bedrock AgentCore"
+    url: https://aws.amazon.com/blogs/machine-learning/building-trust-in-ai-agents-a-production-ready-evaluation-framework-with-amazon-bedrock-agentcore/
+    source: aws-ml-blog
+    publishedAt: "2026-10-16"
+    topics: [agents, evals]
+    relevance: high
+    summary: "Los agentes fallan en silencio: la latencia no cambia, pero la calidad de las respuestas baja. AWS propone un marco de evaluación en nueve etapas para detectar esas caídas desde el primer commit hasta producción."
+  - title: "Pi Agent desde cero: La alternativa minimalista a Claude Code, OpenCode, Codex..."
+    url: https://www.youtube.com/watch?v=oKKJr7QIskI
+    source: mouredev
+    publishedAt: "2026-10-15"
+    topics: [agents, claude-code]
+    relevance: medium
+    summary: "MoureDev explica en español cómo instalar y configurar Pi Agent, un agente de programación open source y ligero para la terminal. Sirve para entender qué hace un agente de código sin la complejidad de las herramientas grandes."
+  - title: "Local AI 202: Get Massive Speed-ups with Speculative Decoding"
+    url: https://www.youtube.com/watch?v=H4azmWcqO5g
+    source: hugging-face
+    publishedAt: "2026-10-14"
+    topics: [llm, ollama]
+    relevance: medium
+    summary: "Sesión de Hugging Face sobre decodificación especulativa (EAGLE, MTP y otras) con llama.cpp y transformers: técnicas para que un modelo local genere texto mucho más rápido sin perder calidad."
+  - title: "Welcome FLUX.3 Image Klein in Diffusers"
+    url: https://huggingface.co/blog/flux-3
+    source: hugging-face
+    publishedAt: "2026-10-15"
+    topics: [diffusion-models, hugging-face]
+    relevance: medium
+    summary: "FLUX.3 Image Klein llega a la librería Diffusers de Hugging Face, lo que facilita probar este modelo de generación de imágenes con el mismo código que otros modelos de difusión."
 proposals:
   - type: new-node
     target: mixture-of-experts
@@ -291,6 +281,8 @@ generated:
 
 La semana estuvo dominada por los modelos de frontera: Google lanzó **Gemini 4 Argon**, su nuevo modelo insignia, y Meta presentó **Muse Wonder**, con el que su laboratorio se coloca al nivel de los modelos más capaces. En el terreno abierto destacan **Reflection Beam**, pensado para programación con agentes, y **LFM2.5-24B-A2B** de Liquid AI. Este último es un modelo de mezcla de expertos que activa solo una fracción de sus parámetros y permite ejecutar agentes rápidos y privados en el propio dispositivo.
 
-En la práctica diaria, el foco está en cómo convivir con los agentes de programación. El equipo de Claude Code explicó cómo replantea la revisión de código. Postgres 19 se retrasó porque revisores de IA encontraron más bugs de los que el equipo puede corregir. Un análisis de Ars Technica advierte que los agentes generan más código, pero no necesariamente más software útil. También explotó la ingeniería inversa y la descompilación de juegos asistida por agentes, con debate sobre sus límites.
+En la práctica diaria, el foco está en cómo convivir con los agentes de programación. El equipo de Claude Code explicó cómo replantea la revisión de código. Un análisis de Ars Technica advierte que los agentes generan más código, pero no necesariamente más software útil. También explotó la ingeniería inversa y la descompilación de juegos asistida por agentes, con debate sobre sus límites.
 
-En cuanto a la seguridad, AWS propuso *Trust in Depth*, un enfoque por capas para dar autonomía a los agentes sin perder el control. Anthropic mostró cómo coordina varios agentes Claude con sus *Dynamic Workflows*. Para quien aprende, Hugging Face publicó recursos muy didácticos sobre salidas estructuradas y sobre cómo construir un agente propio con un modelo local.
+En cuanto a la confianza, AWS publicó dos marcos: *Trust in Depth*, un enfoque por capas para dar autonomía a los agentes sin perder el control, y otro para evaluarlos y detectar cuando su calidad baja en silencio. Anthropic mostró cómo coordina varios agentes Claude con sus *Dynamic Workflows*.
+
+Para quien aprende, MoureDev explicó en español cómo usar Pi Agent, un agente de programación minimalista para la terminal, y Hugging Face mostró cómo construir un agente propio con un modelo local. Si trabajas con modelos locales, su sesión sobre decodificación especulativa enseña a acelerarlos. En imágenes, FLUX.3 Image Klein llegó a la librería Diffusers.

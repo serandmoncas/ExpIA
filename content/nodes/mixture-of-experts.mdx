@@ -18,16 +18,23 @@ related:
   - vllm
   - ollama
 status: rising
-summary: 'Arquitectura que divide el modelo en ''expertos'' y activa solo unos pocos por token: mucha capacidad total con un costo de cómputo bajo.'
+summary: "Arquitectura que divide el modelo en «expertos» y activa solo unos pocos por token: mucha capacidad total con un costo de cómputo bajo."
+review:
+  - question: "¿Por qué un modelo MoE es rápido aunque tenga muchos parámetros?"
+    answer: "Porque un enrutador activa solo unos pocos expertos por token: el modelo guarda mucho conocimiento en total, pero cada paso calcula con una fracción pequeña de sus parámetros."
+  - question: "¿Qué significa un nombre como «24B-A2B»?"
+    answer: "Que el modelo tiene 24.000 millones de parámetros en total, pero solo unos 2.000 millones están activos en cada token."
+  - question: "¿Qué cuesta usar un modelo MoE, aunque calcule con pocos parámetros?"
+    answer: "Memoria: hay que tener cargados todos los expertos, no solo los activos. Por eso suele combinarse con cuantización, con descarga de expertos al SSD o con motores como vLLM."
 verified: false
 added: '2026-10-17'
 ---
 
 ## Para qué sirve
 
-Un modelo de mezcla de expertos tiene muchos parámetros en total, pero en cada paso solo usa una pequeña fracción. Un enrutador elige qué 'expertos' (subredes) procesan cada token. Así se consigue la calidad de un modelo grande con la velocidad y el costo de uno mucho más pequeño.
+Un modelo de mezcla de expertos tiene muchos parámetros en total, pero en cada paso solo usa una pequeña fracción. Un enrutador elige qué "expertos" (subredes) procesan cada token. Así se consigue la calidad de un modelo grande con la velocidad y el costo de uno mucho más pequeño.
 
-Por eso aparece en los nombres de muchos modelos actuales. Por ejemplo, '24B-A2B' significa 24.000 millones de parámetros totales, de los que solo unos 2.000 millones están activos por token.
+Por eso aparece en los nombres de muchos modelos actuales. Por ejemplo, "24B-A2B" significa 24.000 millones de parámetros totales, de los que solo unos 2.000 millones están activos por token.
 
 ## Cómo se usa
 
