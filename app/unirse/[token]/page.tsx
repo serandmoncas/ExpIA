@@ -1,11 +1,10 @@
-import Link from 'next/link'
 import { accountsConfigured } from '@/lib/accounts-config'
 import { getDb } from '@/lib/db/client'
 import { getActor } from '@/lib/session'
 import { findInvite } from '@/lib/invites'
 import { inviteProblem, maskEmail } from '@/lib/access'
 import { INVITE_MESSAGES, parseInviteProblem } from '@/lib/join'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Invitación' }
@@ -37,7 +36,9 @@ export default async function UnirsePage({
           <Button type="submit">Unirme al grupo</Button>
         </form>
       ) : (
-        <Link prefetch={false} className={buttonVariants()} href={`/unirse/${token}/entrar`}>Entrar para unirme</Link>
+        <form method="post" action={`/unirse/${token}/entrar`}>
+          <Button type="submit">Entrar para unirme</Button>
+        </form>
       )}
     </div>
   )

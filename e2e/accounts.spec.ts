@@ -60,6 +60,24 @@ test('un guía crea un grupo, un alumno se une con su avance local y el guía lo
   await expect(guide.getByTestId('progress-row')).toContainText('2 de 10')
 })
 
+test('abrir /unirse/<t>/canjear sin haber empezado desde la invitación no une al grupo', async ({ browser }) => {
+  const guideEmail = mail('guia-csrf')
+  await authorizeGuide(browser, guideEmail)
+  const guide = await loginAs(browser, guideEmail, '/guia')
+  await guide.getByLabel('Nombre del grupo').fill('Sin CSRF')
+  await guide.getByRole('button', { name: 'Crear grupo' }).click()
+  await expect(guide.getByRole('heading', { name: 'Sin CSRF' })).toBeVisible()
+  await guide.getByRole('button', { name: 'Crear enlace' }).click()
+  const token = new URL((await guide.getByTestId('new-invite').textContent())!.trim()).pathname.split('/')[2]
+
+  const victim = await loginAs(browser, mail('victima'), '/cuenta')
+  await victim.goto(`/unirse/${token}/canjear`)
+  await expect(victim).toHaveURL(new RegExp(`/unirse/${token}$`))
+  await expect(victim.getByRole('button', { name: 'Unirme al grupo' })).toBeVisible()
+  await victim.goto('/cuenta')
+  await expect(victim.getByTestId('student-group')).toHaveCount(0)
+})
+
 test('otro guía recibe 404 en un grupo ajeno', async ({ browser }) => {
   const owner = mail('dueno')
   const intruder = mail('intruso')
