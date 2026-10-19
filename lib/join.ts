@@ -29,3 +29,8 @@ export async function joinRedeem(req: Request, token: string, deps: { db: Db; ac
   if (r.ok) res.cookies.set(INVITE_COOKIE, '', { path: '/', maxAge: 0 })
   return res
 }
+
+// El ?error de la URL lo controla cualquiera: solo se acepta un motivo conocido
+export function parseInviteProblem(value: string | undefined): InviteProblem | null {
+  return value !== undefined && Object.hasOwn(INVITE_MESSAGES, value) ? (value as InviteProblem) : null
+}

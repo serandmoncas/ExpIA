@@ -2,8 +2,8 @@ import Link from 'next/link'
 import { getDb } from '@/lib/db/client'
 import { getActor } from '@/lib/session'
 import { findInvite } from '@/lib/invites'
-import { inviteProblem, maskEmail, type InviteProblem } from '@/lib/access'
-import { INVITE_MESSAGES } from '@/lib/join'
+import { inviteProblem, maskEmail } from '@/lib/access'
+import { INVITE_MESSAGES, parseInviteProblem } from '@/lib/join'
 import { buttonVariants } from '@/components/ui/button'
 
 export const dynamic = 'force-dynamic'
@@ -17,7 +17,7 @@ export default async function UnirsePage({
   const db = await getDb()
   const found = await findInvite(db, token)
   const actor = await getActor()
-  const problem = (error as InviteProblem | undefined) ?? inviteProblem(found?.invite, Boolean(found?.group.archivedAt), actor?.email ?? null, new Date())
+  const problem = parseInviteProblem(error) ?? inviteProblem(found?.invite, Boolean(found?.group.archivedAt), actor?.email ?? null, new Date())
 
   if (!found || problem) {
     const msg = problem === 'wrong-email' && found?.invite.email

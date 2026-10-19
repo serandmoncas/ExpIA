@@ -4,7 +4,7 @@ import { memberships } from '@/lib/db/schema'
 import type { Actor } from '@/lib/access'
 import { createGroup } from '@/lib/groups'
 import { createLinkInvite, INVITE_COOKIE } from '@/lib/invites'
-import { INVITE_MESSAGES, joinRedeem, joinStart } from '@/lib/join'
+import { INVITE_MESSAGES, joinRedeem, joinStart, parseInviteProblem } from '@/lib/join'
 import { resetDb, seedUser, testDb } from './helpers/db'
 
 let db: Db
@@ -50,5 +50,10 @@ describe('unirse a un grupo', () => {
   it('hay un mensaje en español para cada problema', () => {
     expect(INVITE_MESSAGES.expired).toBe('Este enlace ya no es válido. Pídele uno nuevo a tu guía.')
     expect(Object.keys(INVITE_MESSAGES).sort()).toEqual(['archived', 'exhausted', 'expired', 'not-found', 'revoked', 'wrong-email'])
+  })
+  it('parseInviteProblem solo acepta motivos conocidos', () => {
+    expect(parseInviteProblem('expired')).toBe('expired')
+    expect(parseInviteProblem('wrong-email')).toBe('wrong-email')
+    for (const v of ['__proto__', 'constructor', 'toString', '', undefined, 'otra-cosa']) expect(parseInviteProblem(v)).toBeNull()
   })
 })
