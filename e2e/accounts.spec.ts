@@ -38,7 +38,13 @@ test('un guía crea un grupo, un alumno se une con su avance local y el guía lo
   await student.goto('/')
   await student.evaluate(() => localStorage.setItem('expia.learned', JSON.stringify(['machine-learning'])))
   await student.goto(`/api/test/login?email=${encodeURIComponent(mail('alumno'))}&next=${encodeURIComponent(invitePath)}`)
-  await student.getByRole('link', { name: 'Unirme al grupo' }).click()
+  await expect(student.getByRole('button', { name: 'Unirme al grupo' })).toBeVisible()
+  // Ver la invitación no basta: Next precarga los enlaces, y unirse debe requerir un clic
+  await student.waitForTimeout(2000)
+  await student.goto('/cuenta')
+  await expect(student.getByTestId('student-group')).toHaveCount(0)
+  await student.goto(invitePath)
+  await student.getByRole('button', { name: 'Unirme al grupo' }).click()
   await expect(student.getByTestId('student-group').filter({ hasText: 'Taller E2E' })).toBeVisible()
 
   await student.getByRole('button', { name: /Traer tu avance de este navegador \(1 nodo\)/ }).click()
@@ -103,4 +109,28 @@ test('si falla la carga del avance, Reintentar lo recupera', async ({ browser })
 test('un enlace inventado muestra que no es válido', async ({ page }) => {
   await page.goto('/unirse/esto-no-existe')
   await expect(page.getByTestId('invite-invalid')).toHaveText('Este enlace ya no es válido. Pídele uno nuevo a tu guía.')
+})
+
+test('/entrar con un error que es una clave de Object.prototype muestra el mensaje genérico', async ({ page }) => {
+  for (const error of ['__proto__', 'constructor', 'toString']) {
+    const res = await page.goto(`/entrar?error=${error}`)
+    expect(res?.status()).toBe(200)
+    await expect(page.getByText('No se pudo iniciar sesión. Inténtalo de nuevo.')).toBeVisible()
+  }
+})
+
+test('si falla el envío del enlace mágico, el formulario avisa en lugar de decir "Revisa tu correo"', async ({ page }) => {
+  await page.route('**/api/auth/sign-in/magic-link', (route) => route.fulfill({ status: 500, contentType: 'application/json', body: '{}' }))
+  await page.goto('/entrar')
+  await page.getByLabel('O recibe un enlace en tu correo').fill('alguien@e2e.test')
+  await page.getByRole('button', { name: 'Enviarme el enlace' }).click()
+  await expect(page.getByTestId('magic-error')).toHaveText('No se pudo enviar el enlace. Inténtalo de nuevo.')
+  await expect(page.getByTestId('magic-sent')).toHaveCount(0)
+})
+
+test('el enlace mágico muestra "Revisa tu correo" aunque el correo no tenga cuenta', async ({ page }) => {
+  await page.goto('/entrar')
+  await page.getByLabel('O recibe un enlace en tu correo').fill(`nadie-${run}@e2e.test`)
+  await page.getByRole('button', { name: 'Enviarme el enlace' }).click()
+  await expect(page.getByTestId('magic-sent')).toBeVisible()
 })

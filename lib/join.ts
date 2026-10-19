@@ -23,9 +23,11 @@ export function joinStart(req: Request, token: string): Response {
 }
 
 export async function joinRedeem(req: Request, token: string, deps: { db: Db; actor: Actor | null; now?: Date }): Promise<Response> {
-  if (!deps.actor) return NextResponse.redirect(new URL(`/unirse/${token}`, req.url))
+  // Tras un POST se responde 303: el navegador sigue con GET y no reenvía el formulario
+  const status = req.method === 'POST' ? 303 : 307
+  if (!deps.actor) return NextResponse.redirect(new URL(`/unirse/${token}`, req.url), status)
   const r = await redeemInvite(deps.db, { token, userId: deps.actor.id, email: deps.actor.email }, deps.now)
-  const res = NextResponse.redirect(new URL(r.ok ? `/cuenta?unido=${r.groupId}` : `/unirse/${token}?error=${r.reason}`, req.url))
+  const res = NextResponse.redirect(new URL(r.ok ? `/cuenta?unido=${r.groupId}` : `/unirse/${token}?error=${r.reason}`, req.url), status)
   if (r.ok) res.cookies.set(INVITE_COOKIE, '', { path: '/', maxAge: 0 })
   return res
 }

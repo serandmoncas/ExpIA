@@ -66,11 +66,13 @@ Variables de entorno (en Vercel y en `.env.local`, nunca en el repo):
 |---|---|
 | `DATABASE_URL` | Postgres en Neon (la crea la integración de Vercel) |
 | `BETTER_AUTH_SECRET` | Firma de las sesiones (`openssl rand -base64 32`) |
-| `BETTER_AUTH_URL` | URL pública del sitio. **Obligatoria en producción**: sin ella fallan las invitaciones por correo |
+| `BETTER_AUTH_URL` | URL pública del sitio. **Obligatoria en producción**: los enlaces de los correos (enlace mágico e invitaciones) se arman con ella, y sin ella esa parte falla |
 | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` | Entrar con Google |
 | `RESEND_API_KEY`, `EMAIL_FROM` | Enlaces mágicos e invitaciones por correo |
 | `ADMIN_EMAILS` | Correos administradores, separados por coma |
 
-`EXPIA_E2E` solo existe para las pruebas E2E: nunca la definas en un despliegue real, porque desactiva la verificación de `BETTER_AUTH_URL` y usa una base de datos local en lugar de `DATABASE_URL`.
+`EXPIA_E2E=1` solo existe para las pruebas E2E: nunca la definas en un despliegue real (ni en Vercel). `DATABASE_URL` sigue teniendo prioridad; la base local (PGlite, en `.pglite-e2e`) se usa únicamente cuando no hay `DATABASE_URL`. Además habilita el inicio de sesión de prueba (`/api/test/login`), cambia el envío de correos por uno que solo escribe el asunto en la consola y omite la exigencia de `BETTER_AUTH_URL` en producción.
+
+Si no hay `DATABASE_URL` (y no es E2E), el sitio sigue funcionando sin cuentas: nadie tiene sesión y `/entrar` avisa que las cuentas todavía no están disponibles.
 
 Las migraciones están en `drizzle/` (`npx drizzle-kit generate` después de cambiar `lib/db/schema.ts`) y se aplican solas en el build cuando hay `DATABASE_URL` (`scripts/migrate.ts`); sin ella, el build las omite. Las pruebas usan PGlite: no necesitan base de datos ni cuentas externas.

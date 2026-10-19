@@ -85,6 +85,14 @@ describe('registro solo por invitación', () => {
   })
 })
 
+describe('nombre de las cuentas nuevas', () => {
+  it('un alta por enlace mágico sin nombre usa la parte local del correo', async () => {
+    await signIn('Admin@X.com')
+    const [u] = await users()
+    expect(u.name).toBe('admin')
+  })
+})
+
 describe('readCookie', () => {
   it('lee una cookie por nombre', () => {
     expect(readCookie('a=1; expia_invite=abc; b=2', 'expia_invite')).toBe('abc')

@@ -33,12 +33,14 @@ const numberOrNull = (v: FormDataEntryValue | null) => (v === null || v === '' ?
 
 export async function createLinkAction(groupId: string, form: FormData) {
   await run(groupId, async (actor) => {
+    // Primero el origen: si falta BETTER_AUTH_URL falla antes de crear una invitación que nadie vería
+    const origin = siteUrl(await headers())
     const { token } = await createLinkInvite(await getDb(), actor, groupId, {
       days: numberOrNull(form.get('days')) ?? undefined,
       maxUses: numberOrNull(form.get('maxUses')),
     })
     // El enlace se muestra una sola vez: solo se guarda su hash
-    return `?nuevo=${encodeURIComponent(`${siteUrl(await headers())}/unirse/${token}`)}`
+    return `?nuevo=${encodeURIComponent(`${origin}/unirse/${token}`)}`
   })
 }
 

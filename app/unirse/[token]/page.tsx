@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import { accountsConfigured } from '@/lib/accounts-config'
 import { getDb } from '@/lib/db/client'
 import { getActor } from '@/lib/session'
 import { findInvite } from '@/lib/invites'
 import { inviteProblem, maskEmail } from '@/lib/access'
 import { INVITE_MESSAGES, parseInviteProblem } from '@/lib/join'
-import { buttonVariants } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 
 export const dynamic = 'force-dynamic'
 export const metadata = { title: 'Invitación' }
@@ -14,6 +15,7 @@ export default async function UnirsePage({
 }: { params: Promise<{ token: string }>; searchParams: Promise<{ error?: string }> }) {
   const { token } = await params
   const { error } = await searchParams
+  if (!accountsConfigured()) return <p role="alert">Las cuentas todavía no están disponibles.</p>
   const db = await getDb()
   const found = await findInvite(db, token)
   const actor = await getActor()
@@ -31,9 +33,11 @@ export default async function UnirsePage({
       <h1 className="text-2xl font-bold">Te invitaron a «{found.group.name}»</h1>
       <p className="text-muted-foreground">Guía: {found.guideName}</p>
       {actor ? (
-        <Link className={buttonVariants()} href={`/unirse/${token}/canjear`}>Unirme al grupo</Link>
+        <form method="post" action={`/unirse/${token}/canjear`}>
+          <Button type="submit">Unirme al grupo</Button>
+        </form>
       ) : (
-        <Link className={buttonVariants()} href={`/unirse/${token}/entrar`}>Entrar para unirme</Link>
+        <Link prefetch={false} className={buttonVariants()} href={`/unirse/${token}/entrar`}>Entrar para unirme</Link>
       )}
     </div>
   )

@@ -41,6 +41,13 @@ describe('unirse a un grupo', () => {
     expect(res.headers.get('set-cookie')).toContain(`${INVITE_COOKIE}=;`)
     expect(await db.select().from(memberships)).toHaveLength(1)
   })
+  it('canjear por POST redirige con 303 para que el navegador pase a GET', async () => {
+    const { token, group } = await invite()
+    const s = asActor(await seedUser(db))
+    const res = await joinRedeem(new Request(`${BASE}/unirse/${token}/canjear`, { method: 'POST' }), token, { db, actor: s })
+    expect(res.status).toBe(303)
+    expect(res.headers.get('location')).toBe(`${BASE}/cuenta?unido=${group.id}`)
+  })
   it('un enlace agotado devuelve a la invitación con el motivo', async () => {
     const { token } = await invite(1)
     await joinRedeem(new Request(`${BASE}/x`), token, { db, actor: asActor(await seedUser(db)) })

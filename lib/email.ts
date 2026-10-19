@@ -55,7 +55,7 @@ export function getMailer(): Mailer {
       if (error) throw new Error(`No se pudo enviar el correo: ${error.message}`)
     }
   }
-  // E2E: no se envía nada; el enlace queda en el log del servidor
+  // E2E: no se envía nada; en el log del servidor solo queda el asunto (nunca el enlace)
   if (process.env.EXPIA_E2E === '1') return async (m) => { console.log(`[correo] ${m.to}: ${m.subject}`) }
   return async () => { throw new Error('Falta RESEND_API_KEY') }
 }

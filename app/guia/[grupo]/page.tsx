@@ -133,7 +133,7 @@ export default async function GrupoPage({
               <code data-testid="new-invite" className="break-all">{q.nuevo}</code>
             </p>
           )}
-          {q.enviados && <p className="text-sm">Se enviaron {q.enviados} invitaciones{Number(q.omitidos) > 0 && <>; {q.omitidos} quedaron sin enviar por el límite diario</>}.</p>}
+          {q.enviados && <p className="text-sm">Se {Number(q.enviados) === 1 ? 'envió 1 invitación' : `enviaron ${q.enviados} invitaciones`}{Number(q.omitidos) > 0 && <>; {q.omitidos} quedaron sin enviar por el límite diario</>}.</p>}
           <form action={createLinkAction.bind(null, group.id)} className="flex flex-wrap items-end gap-2">
             <label className="flex flex-col text-sm">Vence en (días)<Input type="number" name="days" min={1} max={MAX_DAYS} defaultValue={DEFAULT_DAYS} /></label>
             <label className="flex flex-col text-sm">Máximo de usos<Input type="number" name="maxUses" min={1} placeholder="Sin límite" /></label>

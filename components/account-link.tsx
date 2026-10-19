@@ -6,7 +6,7 @@ export function AccountLink() {
   const { data, isPending } = authClient.useSession()
   if (isPending) return <span className="w-16" />
   return data ? (
-    <Link href="/cuenta" data-testid="account-link" className="text-sm font-medium">{data.user.name}</Link>
+    <Link href="/cuenta" data-testid="account-link" className="text-sm font-medium">{data.user.name || data.user.email}</Link>
   ) : (
     <Link href="/entrar" data-testid="account-link" className="text-sm text-muted-foreground hover:text-foreground">Entrar</Link>
   )

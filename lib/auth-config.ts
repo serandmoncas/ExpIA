@@ -40,7 +40,11 @@ export function createAuth(deps: AuthDeps, extraPlugins: BetterAuthPlugin[] = []
     databaseHooks: {
       user: {
         create: {
-          before: async (u) => ({ data: { ...u, email: normalizeEmail(u.email) } }),
+          before: async (u) => {
+            const email = normalizeEmail(u.email)
+            // Better Auth guarda name: "" en las altas por enlace mágico
+            return { data: { ...u, email, name: u.name?.trim() || email.split('@')[0] } }
+          },
           after: async (u) => { await claimGuideInvite(db, u) },
         },
       },
