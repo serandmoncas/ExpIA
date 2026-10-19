@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { AudienceToggle } from './audience-toggle'
+import { AccountLink } from './account-link'
 
 const NAV = [
   { href: '/', label: 'Inicio' },
@@ -21,7 +22,10 @@ export function SiteHeader() {
             <Link key={n.href} href={n.href} className="text-muted-foreground hover:text-foreground">{n.label}</Link>
           ))}
         </nav>
-        <AudienceToggle />
+        <div className="flex items-center gap-4">
+          <AudienceToggle />
+          <AccountLink />
+        </div>
       </div>
     </header>
   )
