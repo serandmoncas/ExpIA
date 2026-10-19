@@ -27,6 +27,8 @@ export function LearnedProvider({ knownIds, children }: { knownIds: string[]; ch
   const [serverIds, setServerIds] = useState<string[] | null>(null)
   const [ready, setReady] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [loadFailed, setLoadFailed] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
 
   const setFromServer = useCallback((all: string[]) => {
     const visible = all.filter((id) => known.has(id))
@@ -49,12 +51,14 @@ export function LearnedProvider({ knownIds, children }: { knownIds: string[]; ch
       return () => window.removeEventListener('storage', onStorage)
     }
     let alive = true
+    setError(null)
+    setLoadFailed(false)
     fetch('/api/learned')
       .then((r) => (r.ok ? r.json() : Promise.reject(new Error(String(r.status)))))
       .then((body: { ids: string[] }) => { if (alive) { setFromServer(body.ids); setReady(true) } })
-      .catch(() => { if (alive) setError('No se pudo cargar tu avance.') })
+      .catch(() => { if (alive) { setError('No se pudo cargar tu avance.'); setLoadFailed(true) } })
     return () => { alive = false }
-  }, [isPending, signedIn, known, setFromServer])
+  }, [isPending, signedIn, known, setFromServer, reloadKey])
 
   const toggle = useCallback(
     (id: string) => {
@@ -65,6 +69,7 @@ export function LearnedProvider({ knownIds, children }: { knownIds: string[]; ch
       }
       const wanted = !ids.includes(id)
       setError(null)
+      setLoadFailed(false)
       setIds(toggleLearned(ids, id))
       fetch('/api/learned', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ nodeId: id, learned: wanted }) })
         .then((r) => { if (!r.ok) throw new Error(String(r.status)) })
@@ -84,6 +89,11 @@ export function LearnedProvider({ knownIds, children }: { knownIds: string[]; ch
       {error && (
         <p role="alert" data-testid="learned-error" className="fixed bottom-4 left-1/2 -translate-x-1/2 rounded-md bg-destructive px-4 py-2 text-sm text-white shadow">
           {error}
+          {loadFailed && (
+            <button type="button" data-testid="learned-retry" className="ml-3 underline" onClick={() => setReloadKey((k) => k + 1)}>
+              Reintentar
+            </button>
+          )}
         </p>
       )}
     </LearnedContext.Provider>
