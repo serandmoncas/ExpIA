@@ -77,7 +77,8 @@ export const mayRegister = (i: { isAdmin: boolean; hasGuideInvite: boolean; invi
 
 // Solo rutas internas: evita redirigir a otro sitio después de iniciar sesión
 export function safeNext(next: string | null | undefined, fallback = '/cuenta'): string {
-  if (!next || !next.startsWith('/') || next.startsWith('//') || next.startsWith('/\\')) return fallback
+  // Los navegadores quitan tab/CR/LF al interpretar URLs: "/\t/evil.com" se vuelve "//evil.com"
+  if (!next || !next.startsWith('/') || next.startsWith('//') || /[\u0000-\u0020\u007f\\]/.test(next)) return fallback
   return next
 }
 

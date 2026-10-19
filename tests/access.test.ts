@@ -92,7 +92,7 @@ describe('safeNext', () => {
   it('acepta rutas internas', () => {
     expect(safeNext('/guia/abc?x=1')).toBe('/guia/abc?x=1')
   })
-  it.each(['//evil.com', 'https://evil.com', '/\\evil.com', 'javascript:alert(1)', '', null, undefined])('rechaza %s', (n) => {
+  it.each(['//evil.com', 'https://evil.com', '/\\evil.com', '/\t/evil.com', '/\n/evil.com', '/ /evil.com', '/foo\\bar', 'javascript:alert(1)', '', null, undefined])('rechaza %s', (n) => {
     expect(safeNext(n)).toBe('/cuenta')
   })
 })
