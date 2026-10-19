@@ -6,6 +6,7 @@ import { NotFoundError } from '@/lib/access'
 import { getGroupForGuide, listMembers } from '@/lib/groups'
 import { listInvites, DEFAULT_DAYS, MAX_DAYS } from '@/lib/invites'
 import { groupProgress } from '@/lib/progress'
+import { messageFor } from '@/lib/messages'
 import {
   archiveAction, assignAction, createLinkAction, emailInvitesAction, removeMemberAction, renameAction, revokeInviteAction, unassignAction,
 } from './actions'
@@ -58,7 +59,7 @@ export default async function GrupoPage({
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold">{group.name}</h1>
         {!editable && <p className="text-muted-foreground">Grupo archivado: se puede consultar, pero no modificar.</p>}
-        {q.error && <p role="alert" className="text-destructive">{ERROR_MESSAGES[q.error] ?? 'No se pudo completar la acción.'}</p>}
+        {q.error && <p role="alert" className="text-destructive">{messageFor(ERROR_MESSAGES, q.error, 'No se pudo completar la acción.')}</p>}
       </header>
 
       <section>
