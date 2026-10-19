@@ -1,22 +1,114 @@
 ---
-week: "2026-10-17"
-from: "2026-10-10"
+week: '2026-10-17'
+from: '2026-10-10'
 sourcesChecked: 36
 items:
-  - title: "Welcome Beam: a 501B open model you can own, customize, and scale"
-    url: https://huggingface.co/blog/reflection-beam
-    source: hugging-face
-    publishedAt: "2026-10-16"
-    topics: [llm, hugging-face]
+  - title: 'Gemini 4 Argon: Built to solve your hardest problems'
+    url: https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-argon/
+    source: google-ai-blog
+    publishedAt: '2026-10-13'
+    topics:
+      - gemini
+      - llm
+      - reasoning-models
+      - multimodal-models
     relevance: high
-    summary: "Hugging Face presenta Beam, un modelo de pesos abiertos de 501 mil millones de parámetros. Que un modelo de ese tamaño se pueda descargar, adaptar y desplegar por cuenta propia amplía las opciones frente a los modelos cerrados."
-  - title: "Welcome Muse Spark Open: open-weight frontier multimodal mixture-of-experts model from Meta"
-    url: https://huggingface.co/blog/meta-muse-spark-open
+    summary: Google lanza Gemini 4 Argon, su nuevo modelo de frontera, disponible para desarrolladores, empresas y usuarios. Redefine la comparación entre los grandes modelos del momento y se presenta con aplicaciones en robótica.
+  - title: '[AINews] Meta Muse Wonder & Wonder Full: MSL’s Claude 5.5-tier Frontier Model'
+    url: https://www.latent.space/p/ainews-meta-muse-wonder-and-wonder
+    source: latent-space
+    publishedAt: '2026-10-13'
+    topics:
+      - llm
+    relevance: medium
+    summary: Meta presenta Muse Wonder y Wonder Full, modelos que se sitúan al nivel de los mejores del mercado. Meta vuelve así a la carrera de frontera.
+  - title: 'Introducing Reflection Beam: an open-weight model for agentic coding on AWS'
+    url: https://aws.amazon.com/blogs/machine-learning/introducing-reflection-beam-an-open-weight-model-for-agentic-coding-on-aws/
+    source: aws-ml-blog
+    publishedAt: '2026-10-16'
+    topics:
+      - llm
+      - agents
+      - vllm
+    relevance: medium
+    summary: Reflection Beam es un modelo de pesos abiertos pensado para programación con agentes y tareas largas. El artículo muestra cómo desplegarlo con vLLM o SGLang.
+  - title: Run fast, private agents on-device with LFM2.5-24B-A2B
+    url: https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b
     source: hugging-face
-    publishedAt: "2026-10-15"
-    topics: [multimodal-models, llm]
+    publishedAt: '2026-10-13'
+    topics:
+      - llm
+      - agents
+      - quantization
+    relevance: medium
+    summary: LFM2.5-24B-A2B activa solo unos 2.000 millones de sus 24.000 millones de parámetros. Así logra agentes rápidos y privados en el propio dispositivo, un ejemplo claro de mezcla de expertos aplicada a la ejecución local.
+  - title: How the Claude Code team does code review
+    url: https://claude.dev/blog/solving-code-review-at-anthropic/
+    source: hackernews-ai
+    publishedAt: '2026-10-16'
+    topics:
+      - claude-code
+      - agents
+      - evals
     relevance: high
-    summary: "Meta publica Muse Spark Open, un modelo multimodal de pesos abiertos con arquitectura de mezcla de expertos. Es otra señal de que los modelos abiertos compiten cada vez más cerca de la frontera."
+    summary: El equipo de Claude Code explica cómo revisa código cuando los agentes escriben gran parte de él. En lugar de preguntar si un humano lo leyó, decide qué control, humano o automático, debe detectar cada riesgo.
+  - title: AI coding agents generate more code, but not more software
+    url: https://arstechnica.com/ai/2026/10/ai-coding-agents-generate-more-code-but-not-more-software/
+    source: hackernews-ai
+    publishedAt: '2026-10-12'
+    topics:
+      - agents
+      - claude-code
+      - cursor
+    relevance: medium
+    summary: Este análisis muestra que los agentes de programación multiplican las líneas de código, pero no tanto el software terminado. Sirve para calibrar expectativas sobre productividad.
+  - title: How Anthropic’s Dynamic Workflows Coordinate Claude Agents (Updated with video!)
+    url: https://www.latent.space/p/claude-dynamic-workflows
+    source: latent-space
+    publishedAt: '2026-10-12'
+    topics:
+      - multi-agent
+      - claude
+      - agents
+    relevance: high
+    summary: Anthropic explica cómo sus Dynamic Workflows coordinan varios agentes Claude con ideas tomadas de Unix. El objetivo es abordar proyectos grandes sin abrumar a los desarrolladores.
+  - title: 'Trust in Depth: Giving agents more autonomy without losing control'
+    url: https://aws.amazon.com/blogs/machine-learning/trust-in-depth-giving-agents-more-autonomy-without-losing-control/
+    source: aws-ml-blog
+    publishedAt: '2026-10-15'
+    topics:
+      - agents
+      - guardrails
+    relevance: medium
+    summary: 'AWS propone Trust in Depth, un marco por capas para dar autonomía a los agentes: acotar, conocer, limitar, observar y probar. El juicio humano queda reservado para las decisiones que no pueden verificarse.'
+  - title: AI is mass decompiling games. That's both awesome and scary.
+    url: https://simonwillison.net/2026/Oct/14/ai-is-mass-decompiling-games/
+    source: simon-willison
+    publishedAt: '2026-10-14'
+    topics:
+      - agents
+      - tool-use
+    relevance: medium
+    summary: Hay una ola de descompilación de videojuegos con agentes de IA. Abre posibilidades de preservación y mezclas creativas entre juegos, pero también plantea dudas legales y éticas.
+  - title: Quoting Geoffrey Huntley
+    url: https://simonwillison.net/2026/Oct/13/geoffrey-huntley/
+    source: simon-willison
+    publishedAt: '2026-10-13'
+    topics:
+      - context-engineering
+      - agents
+    relevance: medium
+    summary: 'Una idea práctica: en vez de confiar solo en AGENTS.md, usar hooks de pre-commit que fallen e inyecten la corrección en el contexto del agente. Así las reglas se cumplen de forma fiable.'
+  - title: How to Build Your Own AI Agent (Like PewDiePie)
+    url: https://www.youtube.com/watch?v=EuN8WCWQf7g
+    source: hugging-face
+    publishedAt: '2026-10-13'
+    topics:
+      - agents
+      - hugging-face
+      - fine-tuning
+    relevance: medium
+    summary: Este tutorial explica cómo funciona un harness de agente desde cero, cómo correr un modelo local con llama.cpp y cómo ajustar un modelo pequeño para tu propio asistente.
   - title: "Building trust in AI agents: A production-ready evaluation framework with Amazon Bedrock AgentCore"
     url: https://aws.amazon.com/blogs/machine-learning/building-trust-in-ai-agents-a-production-ready-evaluation-framework-with-amazon-bedrock-agentcore/
     source: aws-ml-blog
@@ -45,21 +137,152 @@ items:
     topics: [diffusion-models, hugging-face]
     relevance: medium
     summary: "FLUX.3 Image Klein llega a la librería Diffusers de Hugging Face, lo que facilita probar este modelo de generación de imágenes con el mismo código que otros modelos de difusión."
-  - title: "[AINews] AI Engineer NYC: Gemini 4 Argon, Vals AI Benchmarks"
-    url: https://www.latent.space/p/ainews-ai-engineer-nyc-gemini-4-argon
-    source: latent-space
-    publishedAt: "2026-10-14"
-    topics: [gemini]
-    relevance: medium
-    summary: "Gemini 4 Argon ya está disponible de forma general. Según Latent Space, benchmarks independientes como CursorBench confirman lo que Google había anunciado sobre su rendimiento."
-proposals: []
+proposals:
+  - type: new-node
+    target: mixture-of-experts
+    reason: 'Varios ítems de esta semana giran en torno a modelos MoE y a cómo ejecutarlos: modelos para dispositivos, carga de expertos desde SSD y optimización de kernels. El concepto ya es clave para entender los modelos actuales y no está en el catálogo.'
+    evidence:
+      - https://huggingface.co/blog/LiquidAI/lfm25-24b-a2b
+      - https://github.com/prabanta-dev/janas
+      - https://aws.amazon.com/blogs/machine-learning/mixture-of-experts-kernel-engineering-on-amazon-sagemaker-ai/
+      - https://www.liquid.ai/blog/lfm2-5-24b-a2b
+  - type: highlight
+    target: latent-space
+    reason: Ofrece una mirada de primera mano a cómo Anthropic coordina varios agentes en proyectos grandes.
+    evidence:
+      - https://www.latent.space/p/claude-dynamic-workflows
+  - type: highlight
+    target: simon-willison
+    reason: Da contexto crítico sobre la ola de descompilación con agentes y sus implicaciones.
+    evidence:
+      - https://simonwillison.net/2026/Oct/14/ai-is-mass-decompiling-games/
+  - type: highlight
+    target: ai-explained
+    reason: Resume con perspectiva la semana de nuevos modelos y los riesgos de seguridad que señalan los propios laboratorios.
+    evidence:
+      - https://www.youtube.com/watch?v=C4Sq3Rot8FU
+  - type: feeds
+    target: 3blue1brown
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@3blue1brown
+  - type: feeds
+    target: ai-explained
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@aiexplained-official
+  - type: feeds
+    target: alejavi-rivera
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@AlejaviRivera
+  - type: feeds
+    target: andrej-karpathy
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@AndrejKarpathy
+  - type: feeds
+    target: codigofacilito
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@codigofacilito
+  - type: feeds
+    target: deeplearning-ai
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@Deeplearningai
+  - type: feeds
+    target: dotcsv
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@DotCSV
+  - type: feeds
+    target: hugging-face
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@HuggingFace
+  - type: feeds
+    target: jon-hernandez
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@JonHernandezAI
+  - type: feeds
+    target: la-hora-maker
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@LaHoraMaker
+  - type: feeds
+    target: latent-space
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@LatentSpacePod
+  - type: feeds
+    target: lex-fridman
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@lexfridman
+  - type: feeds
+    target: midudev
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@midudev
+  - type: feeds
+    target: mouredev
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@MoureDev
+  - type: feeds
+    target: platzi
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@Platzi
+  - type: feeds
+    target: ringa-tech
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@RingaTech
+  - type: feeds
+    target: saturdays-ai
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@SaturdaysAI
+  - type: feeds
+    target: somosnlp
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@somosnlp
+  - type: feeds
+    target: statquest
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@statquest
+  - type: feeds
+    target: two-minute-papers
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@TwoMinutePapers
+  - type: feeds
+    target: xavier-mitjana
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@XavierMitjana
+  - type: feeds
+    target: yannic-kilcher
+    reason: ID del canal de YouTube resuelto automáticamente
+    evidence:
+      - https://www.youtube.com/@YannicKilcher
 generated:
-  by: manual
-  at: "2026-10-17T12:00:00Z"
+  by: radar-agent
+  model: claude-opus-5-5
+  at: '2026-10-17T16:10:19.158Z'
 ---
 
 ## Resumen de la semana
 
-La semana estuvo marcada por los **modelos de pesos abiertos**: Hugging Face presentó Beam, de 501 mil millones de parámetros, y Meta publicó Muse Spark Open, un modelo multimodal con mezcla de expertos. Para quien aprende IA, esto significa más modelos potentes que se pueden descargar, estudiar y adaptar sin depender de una API cerrada. En la misma línea, FLUX.3 Image Klein llegó a Diffusers y Gemini 4 Argon quedó disponible de forma general.
+La semana estuvo dominada por los modelos de frontera: Google lanzó **Gemini 4 Argon**, su nuevo modelo insignia, y Meta presentó **Muse Wonder**, con el que su laboratorio se coloca al nivel de los modelos más capaces. En el terreno abierto destacan **Reflection Beam**, pensado para programación con agentes, y **LFM2.5-24B-A2B** de Liquid AI. Este último es un modelo de mezcla de expertos que activa solo una fracción de sus parámetros y permite ejecutar agentes rápidos y privados en el propio dispositivo.
 
-En el lado práctico, los **agentes** siguen en el centro: AWS compartió un marco para evaluar agentes antes de que la calidad baje sin que nadie lo note, y MoureDev explicó en español cómo usar un agente de programación minimalista desde la terminal. Si trabajas con modelos locales, la sesión de Hugging Face sobre decodificación especulativa es una buena introducción a cómo acelerarlos.
+En la práctica diaria, el foco está en cómo convivir con los agentes de programación. El equipo de Claude Code explicó cómo replantea la revisión de código. Un análisis de Ars Technica advierte que los agentes generan más código, pero no necesariamente más software útil. También explotó la ingeniería inversa y la descompilación de juegos asistida por agentes, con debate sobre sus límites.
+
+En cuanto a la confianza, AWS publicó dos marcos: *Trust in Depth*, un enfoque por capas para dar autonomía a los agentes sin perder el control, y otro para evaluarlos y detectar cuando su calidad baja en silencio. Anthropic mostró cómo coordina varios agentes Claude con sus *Dynamic Workflows*.
+
+Para quien aprende, MoureDev explicó en español cómo usar Pi Agent, un agente de programación minimalista para la terminal, y Hugging Face mostró cómo construir un agente propio con un modelo local. Si trabajas con modelos locales, su sesión sobre decodificación especulativa enseña a acelerarlos. En imágenes, FLUX.3 Image Klein llegó a la librería Diffusers.
