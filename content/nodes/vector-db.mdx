@@ -10,6 +10,13 @@ requires: [embeddings]
 related: [rag, semantic-search, pgvector]
 status: mainstream
 summary: "Bases de datos diseñadas para guardar embeddings y encontrar rápidamente los más parecidos entre millones de registros."
+review:
+  - question: "¿Por qué una base de datos relacional normal no basta para buscar embeddings?"
+    answer: "Porque hay que encontrar los vectores más cercanos entre millones en milisegundos. Las bases vectoriales usan índices aproximados como HNSW o IVF que lo hacen muy rápido a cambio de una precisión ligeramente menor."
+  - question: "¿Qué se guarda junto a cada vector?"
+    answer: "Un id y metadatos como el texto original, la fuente o la fecha, que además permiten filtrar las consultas."
+  - question: "¿Qué opciones existen para tener una base vectorial?"
+    answer: "Bases dedicadas como Pinecone, Chroma, Milvus, Weaviate o Qdrant, o extensiones para bases existentes, como pgvector para PostgreSQL."
 verified: false
 added: 2026-10-17
 ---

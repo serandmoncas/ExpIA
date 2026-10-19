@@ -11,6 +11,13 @@ requires: [tool-use]
 related: [tool-use, evals]
 status: mainstream
 summary: "Obligar al modelo a responder con un formato fijo, como un JSON que cumple un esquema, para que tu programa lo pueda procesar sin errores."
+review:
+  - question: "¿Por qué hacen falta salidas estructuradas cuando la respuesta alimenta otro programa?"
+    answer: "Porque un texto libre o un JSON mal formado rompe todo. Las salidas estructuradas garantizan campos obligatorios, tipos correctos y valores permitidos."
+  - question: "¿Cómo se lograba antes un formato fijo y qué cambió en 2024?"
+    answer: "Antes se pedía en el prompt o se forzaba una llamada a herramienta; en agosto de 2024 OpenAI lanzó Structured Outputs, que restringe la generación para cumplir el esquema."
+  - question: "¿Qué casos hay que manejar aunque el esquema esté garantizado?"
+    answer: "Que el modelo se niegue o falte información, por ejemplo con campos opcionales o valores «desconocido»."
 verified: false
 added: 2026-10-17
 ---

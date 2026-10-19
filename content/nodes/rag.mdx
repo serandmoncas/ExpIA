@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2005.11401"
 summary: "Buscar primero la información relevante en tus documentos y dársela al modelo para que responda con datos actualizados y verificables."
+review:
+  - question: "¿Qué problema de los LLM resuelve RAG?"
+    answer: "Que un LLM solo sabe lo que vio en su entrenamiento. RAG busca los fragmentos relevantes en tu base de conocimiento y los pega en el prompt antes de preguntar."
+  - question: "¿Cuáles son las tres fases de RAG?"
+    answer: "Indexar (trocear documentos, calcular embeddings y guardarlos en una base vectorial), recuperar (buscar los trozos más parecidos a la pregunta) y generar (responder con esos trozos como contexto, citando la fuente)."
+  - question: "¿Por qué RAG permite actualizar el conocimiento sin reentrenar?"
+    answer: "Porque basta con reindexar los documentos; además, al apoyarse en texto concreto, el modelo alucina menos."
 verified: false
 added: 2026-10-17
 ---

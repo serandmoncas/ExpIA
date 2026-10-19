@@ -10,6 +10,13 @@ level: fundamentals
 requires: [neural-network]
 status: declining
 summary: "La neurona artificial más simple: suma entradas con pesos y decide sí o no. Es el antepasado directo de las redes neuronales modernas."
+review:
+  - question: "¿Cómo decide un perceptrón?"
+    answer: "Multiplica cada entrada por un peso, suma los resultados junto con un sesgo y, si la suma supera cero, la salida es 1; si no, 0. Cuando se equivoca, ajusta los pesos en la dirección del error."
+  - question: "¿Cuál es el límite más famoso del perceptrón?"
+    answer: "No puede resolver problemas que no se separan con una línea recta, como el XOR. Esa limitación motivó años después las redes de varias capas entrenadas con backpropagation."
+  - question: "¿Por qué vale la pena entenderlo si casi no se usa solo?"
+    answer: "Porque es la pieza conceptual de la que salen todas las redes neuronales y muestra que la IA, en el fondo, aprende a pesar señales."
 verified: false
 added: 2026-10-17
 related: [backpropagation]

@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2208.07339"
 summary: "Guardar los pesos de un modelo con menos bits para que ocupe menos memoria y corra más rápido, con una pérdida de calidad pequeña."
+review:
+  - question: "¿Qué gana un modelo al cuantizarse?"
+    answer: "Guardar cada peso con menos bits hace que ocupe menos memoria y corra más rápido: con 8 o 4 bits ocupa la mitad o la cuarta parte, y puede correr en una sola GPU, un portátil o un celular."
+  - question: "¿Cómo se elige el nivel de cuantización?"
+    answer: "Según el hardware y la tolerancia a pérdida de calidad: 8 bits casi no pierde, 4 bits suele ser un buen equilibrio, y conviene evaluar la calidad frente a la versión sin cuantizar."
+  - question: "¿Cómo explicarías la cuantización a alguien no técnico?"
+    answer: "Como comprimir una foto: pesa mucho menos y a simple vista se ve casi igual, aunque se pierde algo de detalle fino."
 verified: false
 added: 2026-10-17
 ---

@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/2006.11239"
 summary: "Modelos que generan imágenes, audio o vídeo partiendo de ruido aleatorio y eliminándolo paso a paso hasta obtener un resultado nítido."
+review:
+  - question: "¿Cómo genera una imagen un modelo de difusión?"
+    answer: "Parte de ruido puro y, paso a paso, lo va limpiando hasta formar una imagen. Un texto convertido en embeddings guía cada paso para que la imagen corresponda a la descripción."
+  - question: "¿Qué aprende el modelo durante el entrenamiento?"
+    answer: "A predecir el ruido que se añadió a imágenes reales en muchos pasos, para poder quitarlo."
+  - question: "¿Por qué desplazaron a las GANs?"
+    answer: "Porque entrenan de forma más estable y producen resultados más variados y de mayor calidad."
 verified: false
 added: 2026-10-17
 ---

@@ -7,6 +7,7 @@ import { PersonCard } from '@/components/person-card'
 import { selectStarterPeople } from '@/lib/people'
 import { ThisWeekBlock } from '@/components/this-week-block'
 import { getLatestReport, sourceNames } from '@/lib/radar'
+import { ContinueLearning } from '@/components/continue-learning'
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
@@ -18,7 +19,7 @@ function Stat({ label, value }: { label: string; value: number }) {
 }
 
 export default function Home() {
-  const { nodes, categories, people, reports, sources } = getCatalog()
+  const { nodes, categories, people, reports, sources, paths } = getCatalog()
   const latestReport = getLatestReport(reports)
   const starters = selectStarterPeople(people)
   const topicTitles = Object.fromEntries(nodes.map((n) => [n.id, n.title]))
@@ -37,6 +38,8 @@ export default function Home() {
           Aprende IA navegando conceptos y herramientas por fecha, por lo que necesitas saber antes y por lo que está tomando fuerza.
         </p>
       </section>
+
+      <ContinueLearning paths={paths} titles={topicTitles} />
 
       <section className="grid grid-cols-2 gap-3 sm:grid-cols-5">
         <Stat label="Nodos en total" value={metas.length} />

@@ -16,6 +16,13 @@ links:
   docs: "https://docs.vllm.ai"
   repo: "https://github.com/vllm-project/vllm"
 summary: "Motor de código abierto para servir modelos de lenguaje en GPU con alto rendimiento y muchos usuarios a la vez."
+review:
+  - question: "¿Para qué está pensado vLLM?"
+    answer: "Para servir modelos de lenguaje en producción, atendiendo muchas peticiones simultáneas y aprovechando al máximo la GPU."
+  - question: "¿Qué aporta PagedAttention?"
+    answer: "Gestiona la memoria de la caché de atención como páginas, lo que reduce el desperdicio y permite agrupar más peticiones (continuous batching)."
+  - question: "¿Por qué es fácil integrar vLLM en una aplicación existente?"
+    answer: "Porque expone una API compatible con la de OpenAI, así que se puede consumir con cualquier cliente compatible."
 verified: false
 added: 2026-10-17
 ---

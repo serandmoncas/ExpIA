@@ -13,6 +13,13 @@ status: rising
 links:
   paper: "https://arxiv.org/abs/2308.08155"
 summary: "Varios agentes de IA con roles distintos que colaboran, se reparten el trabajo o se revisan entre sí para resolver tareas grandes."
+review:
+  - question: "¿Qué gana un sistema multiagente frente a un solo agente?"
+    answer: "Trabajar en paralelo, mantener contextos más limpios para cada subagente especializado y añadir revisiones cruzadas."
+  - question: "¿Cuál es el costo de usar varios agentes?"
+    answer: "Mayor consumo de tokens y más complejidad para depurar; por eso conviene empezar con un solo agente y separar solo cuando haya una razón clara."
+  - question: "¿Qué debería devolver un subagente al orquestador?"
+    answer: "Idealmente un resumen corto de su resultado, no todo su historial."
 verified: false
 added: 2026-10-17
 ---

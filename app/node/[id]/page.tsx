@@ -14,6 +14,9 @@ import { VoicesForTopic } from '@/components/voices-for-topic'
 import { getHighlightsForTopic } from '@/lib/people'
 import { RecentMentions } from '@/components/recent-mentions'
 import { getMentionsForTopic, sourceNames } from '@/lib/radar'
+import { LearnedToggle } from '@/components/learned-toggle'
+import { ReviewQuestions } from '@/components/review-questions'
+import { pathsContaining } from '@/lib/paths'
 
 type Props = { params: Promise<{ id: string }> }
 
@@ -33,7 +36,7 @@ const LINK_LABELS: Record<string, string> = { docs: 'Documentación', paper: 'Pa
 
 export default async function NodePage({ params }: Props) {
   const { id } = await params
-  const { nodes, byId, categories, people, reports, sources } = getCatalog()
+  const { nodes, byId, categories, people, reports, sources, paths } = getCatalog()
   const node = byId.get(id)
   if (!node) notFound()
 
@@ -43,12 +46,16 @@ export default async function NodePage({ params }: Props) {
   const related = meta(node.related)
   const voices = people.filter((p) => p.topics.includes(id))
   const topicHighlights = getHighlightsForTopic(people, id)
+  const inPaths = pathsContaining(paths, id)
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
       <article className="min-w-0 space-y-6">
         <header className="space-y-3">
-          <h1 className="text-3xl font-bold">{node.title}</h1>
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h1 className="text-3xl font-bold">{node.title}</h1>
+            <LearnedToggle nodeId={id} title={node.title} />
+          </div>
           <p className="text-lg text-muted-foreground">{node.summary}</p>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <Badge variant="secondary">{LABELS[node.kind]}</Badge>
@@ -80,6 +87,10 @@ export default async function NodePage({ params }: Props) {
             nonTechnical: <Markdown source={node.sections.nonTechnical} />,
           }}
         />
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold">Repasa</h2>
+          <ReviewQuestions review={node.review} />
+        </section>
       </article>
 
       <aside className="space-y-8">
@@ -87,6 +98,19 @@ export default async function NodePage({ params }: Props) {
           <h2 className="mb-2 font-semibold">Ruta sugerida</h2>
           <p className="mb-2 text-xs text-muted-foreground">Lo que conviene conocer antes, en orden.</p>
           <PrereqList nodes={prereqs} />
+          {prereqs.length > 0 && (
+            <Link href={`/learn/${id}`} className="mt-2 inline-block text-sm underline underline-offset-4">
+              Aprender desde cero ({prereqs.length + 1} pasos)
+            </Link>
+          )}
+          {inPaths.length > 0 && (
+            <p data-testid="in-paths" className="mt-2 text-xs text-muted-foreground">
+              Aparece en:{' '}
+              {inPaths.map((p, i) => (
+                <span key={p.id}>{i > 0 && ', '}<Link href={`/paths/${p.id}`} className="underline underline-offset-4">{p.title}</Link></span>
+              ))}
+            </p>
+          )}
         </section>
         <VoicesForTopic nodeId={id} nodeTitle={node.title} voices={voices} highlights={topicHighlights} />
         <RecentMentions mentions={getMentionsForTopic(reports, id)} sourceNames={sourceNames(sources, people)} />

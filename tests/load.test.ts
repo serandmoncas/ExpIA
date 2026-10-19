@@ -20,7 +20,7 @@ function makeContent(
   nodes: Record<string, string>,
   taxonomy = TAXONOMY,
   people: Record<string, string> = {},
-  extra: { radar?: Record<string, string>; sources?: string } = {},
+  extra: { radar?: Record<string, string>; sources?: string; paths?: Record<string, string> } = {},
 ): string {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'expia-'))
   fs.mkdirSync(path.join(dir, 'nodes'))
@@ -34,6 +34,10 @@ function makeContent(
   if (extra.radar) {
     fs.mkdirSync(path.join(dir, 'radar'))
     for (const [name, text] of Object.entries(extra.radar)) fs.writeFileSync(path.join(dir, 'radar', `${name}.mdx`), text)
+  }
+  if (extra.paths) {
+    fs.mkdirSync(path.join(dir, 'paths'))
+    for (const [name, text] of Object.entries(extra.paths)) fs.writeFileSync(path.join(dir, 'paths', `${name}.mdx`), text)
   }
   return dir
 }
@@ -129,6 +133,31 @@ describe('loadCatalog', () => {
     }))
     expect(errs.some((e) => e.startsWith('nodes/a.mdx'))).toBe(true)
     expect(errs.some((e) => e.startsWith('nodes/b.mdx'))).toBe(true)
+  })
+
+  it('carga las preguntas de repaso de un nodo', () => {
+    const review = '[{ question: "¿Para qué sirve?", answer: "Para algo." }, { question: "¿Cuándo se usa?", answer: "Siempre." }]'
+    const { byId } = loadCatalog(makeContent({ a: file(fm('a', { review })) }))
+    expect(byId.get('a')!.review).toEqual([
+      { question: '¿Para qué sirve?', answer: 'Para algo.' },
+      { question: '¿Cuándo se usa?', answer: 'Siempre.' },
+    ])
+  })
+  it('un nodo sin preguntas de repaso sigue cargando', () => {
+    const { byId } = loadCatalog(makeContent({ a: file(fm('a')) }))
+    expect(byId.get('a')!.review).toBeUndefined()
+  })
+  it('exige de 2 a 3 preguntas de repaso', () => {
+    const one = '[{ question: "¿q?", answer: "a" }]'
+    const four = `[${Array(4).fill('{ question: "¿q?", answer: "a" }').join(', ')}]`
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: one })) })).join()).toMatch(/nodes\/a\.mdx › review/)
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: four })) })).join()).toMatch(/nodes\/a\.mdx › review/)
+  })
+  it('limita el largo de pregunta y respuesta', () => {
+    const longQ = `[{ question: "${'x'.repeat(201)}", answer: "a" }, { question: "¿q?", answer: "a" }]`
+    const longA = `[{ question: "¿q?", answer: "${'x'.repeat(401)}" }, { question: "¿q?", answer: "a" }]`
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: longQ })) })).join()).toMatch(/review\.0\.question/)
+    expect(errorsOf(makeContent({ a: file(fm('a', { review: longA })) })).join()).toMatch(/review\.0\.answer/)
   })
 })
 
@@ -246,5 +275,65 @@ describe('loadCatalog: radar', () => {
       sources: 'sources:\n  - { id: p, name: P, kind: rss, url: "https://example.com/feed.xml" }\n',
     })
     expect(errorsOf(dir)).toContain('sources.yaml › sources.0.id: "p" coincide con un referente')
+  })
+})
+
+describe('loadCatalog: rutas', () => {
+  const REVIEW = '[{ question: "¿a?", answer: "b" }, { question: "¿c?", answer: "d" }]'
+  // Cadena n1 ← n2 ← … ← n9: cada nodo requiere el anterior
+  const chainNodes = (extra: Record<string, Record<string, string>> = {}) =>
+    Object.fromEntries(Array.from({ length: 9 }, (_, i) => {
+      const id = `n${i + 1}`
+      return [id, file(fm(id, { requires: i ? `[n${i}]` : '[]', review: REVIEW, ...extra[id] }))]
+    }))
+  const pathFile = (id: string, steps: string[], extra: Record<string, string> = {}, body = 'Para quien empieza.\n') =>
+    file({ id, title: `"${id}"`, audience: '[technical]', goal: '"Una meta"', steps: `[${steps.map((s) => `{ node: ${s} }`).join(', ')}]`, ...extra }, body)
+  const load = (paths: Record<string, string>, nodes = chainNodes()) => makeContent(nodes, TAXONOMY, {}, { paths })
+
+  it('carga rutas válidas con su introducción, ordenadas por profundidad de after', () => {
+    const { paths } = loadCatalog(load({
+      'z-base': pathFile('z-base', ['n1', 'n2', 'n3']),
+      'a-next': pathFile('a-next', ['n4', 'n5', 'n6'], { after: 'z-base' }),
+    }))
+    expect(paths.map((p) => p.id)).toEqual(['z-base', 'a-next'])
+    expect(paths[0].intro).toBe('Para quien empieza.')
+    expect(paths[0].steps[0]).toEqual({ node: 'n1' })
+  })
+  it('sin carpeta paths el catálogo carga con paths vacío', () => {
+    expect(loadCatalog(makeContent(chainNodes())).paths).toEqual([])
+  })
+  it('acepta prerrequisitos cubiertos por una cadena de after de dos niveles', () => {
+    expect(errorsOf(load({
+      p0: pathFile('p0', ['n1', 'n2', 'n3']),
+      p1: pathFile('p1', ['n4', 'n5', 'n6'], { after: 'p0' }),
+      p2: pathFile('p2', ['n7', 'n8', 'n9'], { after: 'p1' }),
+    }))).toEqual([])
+  })
+  it('reporta un paso antes de su prerrequisito', () => {
+    expect(errorsOf(load({ p: pathFile('p', ['n2', 'n1', 'n3']) }))).toContain('paths/p.mdx › steps: "n2" requiere "n1", que no aparece antes')
+  })
+  it('nombra la ruta previa cuando tampoco cubre el prerrequisito', () => {
+    const errors = errorsOf(load({ p0: pathFile('p0', ['n1', 'n2', 'n3']), p1: pathFile('p1', ['n5', 'n6', 'n7'], { after: 'p0' }) }))
+    expect(errors).toContain('paths/p1.mdx › steps: "n5" requiere "n4", que no aparece antes ni en la ruta "p0"')
+  })
+  it('reporta un nodo inexistente y un paso repetido', () => {
+    const errors = errorsOf(load({ p: pathFile('p', ['n1', 'nope', 'n1']) }))
+    expect(errors).toContain('paths/p.mdx › steps.1.node: "nope" no existe')
+    expect(errors).toContain('paths/p.mdx › steps.2.node: "n1" está repetido')
+  })
+  it('reporta una ruta previa inexistente y los ciclos de after', () => {
+    expect(errorsOf(load({ p: pathFile('p', ['n1', 'n2', 'n3'], { after: 'nope' }) }))).toContain('paths/p.mdx › after: la ruta "nope" no existe')
+    const errors = errorsOf(load({ x: pathFile('x', ['n1', 'n2', 'n3'], { after: 'y' }), y: pathFile('y', ['n1', 'n2', 'n3'], { after: 'x' }) }))
+    expect(errors).toContain('paths/x.mdx › ciclo en after: x → y → x')
+  })
+  it('exige al menos 2 preguntas de repaso en los nodos de una ruta', () => {
+    const nodes = { ...chainNodes(), n2: file(fm('n2', { requires: '[n1]' })) }
+    expect(errorsOf(load({ p: pathFile('p', ['n1', 'n2', 'n3']) }, nodes))).toContain('paths/p.mdx › steps.1.node: "n2" necesita al menos 2 preguntas de repaso')
+  })
+  it('valida el esquema: id, cantidad de pasos y cuerpo sin títulos ##', () => {
+    expect(errorsOf(load({ q: pathFile('p', ['n1', 'n2', 'n3']) })).join()).toMatch(/paths\/q\.mdx › id: "p" no coincide/)
+    expect(errorsOf(load({ p: pathFile('p', ['n1', 'n2']) })).join()).toMatch(/paths\/p\.mdx › steps/)
+    expect(errorsOf(load({ p: pathFile('p', ['n1', 'n2', 'n3'], {}, '## Título\nTexto\n') })))
+      .toContain('paths/p.mdx › cuerpo: la introducción no lleva títulos ## ("Título")')
   })
 })

@@ -10,6 +10,13 @@ level: intermediate
 requires: [attention, embeddings, tokenization]
 status: mainstream
 summary: "La arquitectura detrás de ChatGPT, Claude y casi toda la IA moderna: procesa todo el texto a la vez usando atención."
+review:
+  - question: "¿Qué cambió el Transformer respecto a las redes anteriores?"
+    answer: "Eliminó la recurrencia y se basa solo en atención. Así procesa todos los tokens en paralelo, aprovecha al máximo las GPU y permite entrenar con muchísimos más datos."
+  - question: "¿Qué pasa con cada token dentro de un Transformer?"
+    answer: "Se convierte en un embedding con información de posición, y una pila de bloques le aplica autoatención (cada token mira a los demás) y una red densa."
+  - question: "¿Qué diferencia hay entre usar el codificador, el decodificador o ambos?"
+    answer: "El codificador sirve para comprensión, como BERT; el decodificador para generación, como GPT; y ambos juntos para tareas como la traducción."
 verified: false
 added: 2026-10-17
 links:

@@ -10,6 +10,13 @@ level: intermediate
 requires: [rnn-lstm, embeddings]
 status: mainstream
 summary: "Permite que un modelo decida en qué partes de la entrada fijarse en cada momento, en lugar de resumirlo todo en un solo vector."
+review:
+  - question: "¿Qué problema resolvió la atención en las primeras redes de traducción?"
+    answer: "Esas redes comprimían toda la frase de origen en un único vector y perdían información con frases largas. Con atención, al generar cada palabra el modelo mira todas las de entrada y les asigna un peso según su relevancia."
+  - question: "¿Qué papel cumplen la consulta, la clave y el valor?"
+    answer: "La consulta se compara con todas las claves para obtener puntuaciones de relevancia; esas puntuaciones se normalizan con softmax y se convierten en pesos, y la salida es la suma ponderada de los valores."
+  - question: "¿Cómo explicarías la atención con un ejemplo cotidiano?"
+    answer: "En «el banco estaba lleno de gente porque pagaban la pensión», tu mente conecta «banco» con «pagaban» y entiende que no es un asiento. La atención le da a la IA esa capacidad de mirar el resto de la frase."
 verified: false
 added: 2026-10-17
 links:

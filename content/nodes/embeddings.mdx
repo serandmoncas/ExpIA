@@ -10,6 +10,13 @@ level: fundamentals
 requires: [neural-network]
 status: mainstream
 summary: "Listas de números que representan el significado de palabras, textos o imágenes, de modo que lo parecido queda cerca."
+review:
+  - question: "¿Qué propiedad de los embeddings permite construir una búsqueda semántica?"
+    answer: "Que textos con significado parecido quedan cerca en el espacio de vectores aunque usen palabras distintas; por eso «devolver un pedido» puede encontrar «política de reembolsos»."
+  - question: "¿Cuáles son los pasos para buscar documentos con embeddings?"
+    answer: "Elegir un modelo de embeddings, convertir cada documento en un vector y guardarlo, convertir también la consulta y buscar los vectores más cercanos, normalmente con similitud coseno."
+  - question: "¿Cómo explicarías un embedding a alguien no técnico?"
+    answer: "Como las coordenadas de una idea en un mapa donde lo parecido queda junto: «perro» cerca de «cachorro». Así la computadora mide el parecido por significado, no por letras."
 verified: false
 added: 2026-10-17
 links:

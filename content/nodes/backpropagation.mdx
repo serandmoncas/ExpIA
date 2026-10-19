@@ -10,6 +10,13 @@ level: intermediate
 requires: [neural-network]
 status: mainstream
 summary: "El método que permite a una red neuronal saber cuánto contribuyó cada peso al error y corregirlo. Sin él no habría deep learning."
+review:
+  - question: "¿Qué calcula backpropagation?"
+    answer: "El gradiente del error respecto a cada peso de una red con muchas capas. Con esos gradientes, un optimizador como el descenso de gradiente ajusta los pesos para que la red se equivoque menos."
+  - question: "¿Cuáles son los pasos de un ciclo de entrenamiento con backpropagation?"
+    answer: "Paso hacia adelante para obtener una predicción, cálculo de la pérdida, paso hacia atrás aplicando la regla de la cadena para obtener los gradientes, y actualización de los pesos por el optimizador."
+  - question: "¿Cómo explicarías backpropagation a alguien no técnico?"
+    answer: "Como recorrer una cadena de montaje que entregó un producto defectuoso desde el final hacia el principio, preguntando cuánta culpa tuvo cada estación y ajustando cada una en proporción a su responsabilidad."
 verified: false
 added: 2026-10-17
 related: [perceptron, cnn]

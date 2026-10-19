@@ -11,6 +11,13 @@ requires: [prompting, rag, tool-use]
 related: [prompting, rag, agent-skills]
 status: rising
 summary: "Diseñar toda la información que recibe el modelo en cada paso (instrucciones, datos, historial, herramientas) para que tenga justo lo que necesita."
+review:
+  - question: "¿Qué problemas aparecen si al modelo le falta o le sobra contexto?"
+    answer: "Si falta algo, el modelo improvisa; si sobra, se distrae y se vuelve más lento y más caro."
+  - question: "¿Qué decisiones abarca el context engineering?"
+    answer: "Qué información entra en la ventana de contexto, en qué orden y en qué formato, y qué se resume, se descarta o se guarda fuera para recuperarlo después."
+  - question: "¿Cómo se mantiene manejable el contexto de un agente que trabaja muchos pasos?"
+    answer: "Recuperando información bajo demanda en vez de cargarlo todo, compactando el historial (resumir pasos antiguos, quitar resultados que ya no sirven) y usando memoria externa para lo que debe persistir."
 verified: false
 added: 2026-10-17
 ---

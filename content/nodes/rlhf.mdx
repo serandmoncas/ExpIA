@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/1706.03741"
 summary: "Entrenar un modelo con preferencias humanas: personas comparan respuestas y el modelo aprende a dar las que se prefieren."
+review:
+  - question: "¿En qué se diferencia RLHF de entrenar con la respuesta correcta para cada ejemplo?"
+    answer: "En lugar de dar una respuesta correcta, personas comparan dos respuestas y eligen la mejor, y el modelo aprende de esas preferencias."
+  - question: "¿Cuáles son las tres etapas de RLHF?"
+    answer: "Ajuste supervisado con buenas respuestas, entrenamiento de un modelo de recompensa con pares comparados por humanos, y optimización del LLM con aprendizaje por refuerzo para maximizar esa puntuación."
+  - question: "¿Por qué se penaliza que el modelo se aleje demasiado del original durante la optimización?"
+    answer: "Para que, al perseguir la puntuación del modelo de recompensa, no se desvíe demasiado del modelo de partida."
 verified: false
 added: 2026-10-17
 ---

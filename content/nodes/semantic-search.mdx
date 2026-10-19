@@ -13,6 +13,13 @@ status: mainstream
 links:
   paper: "https://arxiv.org/abs/1908.10084"
 summary: "Buscar por significado y no por palabras exactas: encuentra resultados relevantes aunque usen términos distintos a los de tu consulta."
+review:
+  - question: "¿En qué falla la búsqueda por palabras clave que la semántica resuelve?"
+    answer: "Cuando la consulta y el documento usan términos distintos, como «no me llega la plata» y «retraso en el pago»: la búsqueda semántica compara el significado y encuentra el documento igual."
+  - question: "¿Por qué la consulta debe convertirse con el mismo modelo de embeddings que los documentos?"
+    answer: "Porque los vectores solo son comparables por similitud si los generó el mismo modelo."
+  - question: "¿Qué es la búsqueda híbrida?"
+    answer: "Combinar la búsqueda semántica con la búsqueda por palabras."
 verified: false
 added: 2026-10-17
 ---

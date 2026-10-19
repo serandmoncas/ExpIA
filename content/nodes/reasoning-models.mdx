@@ -11,6 +11,13 @@ requires: [llm, chain-of-thought]
 related: [chain-of-thought, agents, evals]
 status: rising
 summary: "LLM entrenados para pensar paso a paso antes de responder, lo que mejora mucho en matemáticas, código y problemas complejos."
+review:
+  - question: "¿Qué hace un modelo de razonamiento antes de dar la respuesta final?"
+    answer: "Genera internamente una cadena de pensamiento: plantea el problema, prueba caminos, detecta errores y corrige. Se entrena para ello con aprendizaje por refuerzo."
+  - question: "¿Cuándo no compensa usar un modelo de razonamiento?"
+    answer: "En preguntas sencillas: tarda más y consume más tokens, así que conviene reservarlo para tareas donde un error intermedio arruina el resultado."
+  - question: "¿Qué se puede ajustar al usar uno de estos modelos?"
+    answer: "El esfuerzo o presupuesto de razonamiento, si el proveedor lo permite, para equilibrar calidad, latencia y costo."
 verified: false
 added: 2026-10-17
 ---

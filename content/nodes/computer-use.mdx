@@ -11,6 +11,13 @@ requires: [agents, multimodal-models]
 related: [agents, tool-use]
 status: rising
 summary: "Agentes que usan una computadora como una persona: miran la pantalla, mueven el ratón y escriben para operar cualquier aplicación."
+review:
+  - question: "¿Cuándo tiene sentido usar computer use?"
+    answer: "Cuando el sistema no tiene API, como software de escritorio antiguo, portales web de proveedores o formularios de gobierno. Es más lento y menos fiable que una integración por API, así que se usa donde no hay alternativa."
+  - question: "¿Cómo funciona el bucle de un agente de computer use?"
+    answer: "El modelo pide acciones como capturar la pantalla, hacer clic o teclear; tu código las ejecuta en el entorno y le devuelve una nueva captura, hasta completar la tarea."
+  - question: "¿Qué precauciones conviene tomar?"
+    answer: "Usar un entorno aislado sin datos sensibles innecesarios, limitar los pasos y pedir confirmación humana antes de acciones sensibles como pagos, envíos o borrados."
 verified: false
 added: 2026-10-17
 ---

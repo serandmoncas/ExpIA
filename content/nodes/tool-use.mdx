@@ -11,6 +11,13 @@ requires: [llm, prompting]
 related: [agents, mcp, structured-outputs]
 status: mainstream
 summary: "Permite que el modelo pida ejecutar funciones de tu código, como consultar una base de datos o una API, y use el resultado para responder."
+review:
+  - question: "¿Qué se le describe al modelo para que pueda usar herramientas?"
+    answer: "Un conjunto de herramientas con nombre, descripción y un esquema JSON de parámetros; con eso el modelo decide cuándo llamarlas y con qué argumentos."
+  - question: "¿Quién ejecuta la herramienta: el modelo o tu código?"
+    answer: "Tu código. El modelo responde con una llamada a herramienta, tu código ejecuta la función real y le devuelve el resultado para que redacte la respuesta o pida otra herramienta."
+  - question: "¿Qué relación hay entre tool use, los agentes y MCP?"
+    answer: "Tool use es el mecanismo básico sobre el que se construyen los agentes y protocolos como MCP."
 verified: false
 added: 2026-10-17
 ---
