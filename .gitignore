@@ -49,3 +49,6 @@ playwright-report/
 
 # salida local del radar
 .radar/
+
+# base de datos local de E2E
+/.pglite-e2e
