@@ -78,6 +78,32 @@ test('abrir /unirse/<t>/canjear sin haber empezado desde la invitación no une a
   await expect(victim.getByTestId('student-group')).toHaveCount(0)
 })
 
+test('sin sesión, "Entrar para unirme" y volver de iniciar sesión une al grupo sin otro clic', async ({ browser }) => {
+  const guideEmail = mail('guia-regreso')
+  await authorizeGuide(browser, guideEmail)
+  const guide = await loginAs(browser, guideEmail, '/guia')
+  await guide.getByLabel('Nombre del grupo').fill('Regreso E2E')
+  await guide.getByRole('button', { name: 'Crear grupo' }).click()
+  await expect(guide.getByRole('heading', { name: 'Regreso E2E' })).toBeVisible()
+  await guide.getByRole('button', { name: 'Crear enlace' }).click()
+  const invitePath = new URL((await guide.getByTestId('new-invite').textContent())!.trim()).pathname
+
+  const student = await (await browser.newContext()).newPage()
+  await student.goto(invitePath)
+  await student.getByRole('button', { name: 'Entrar para unirme' }).click()
+  await expect(student).toHaveURL(/\/entrar\?next=/)
+  const next = new URL(student.url()).searchParams.get('next')!
+  expect(next).toBe(`${invitePath}/canjear`)
+
+  // Google y el enlace mágico regresan a callbackURL = next en este mismo navegador;
+  // el login de pruebas hace la misma redirección, con la cookie de invitación ya puesta
+  await student.goto(`/api/test/login?email=${encodeURIComponent(mail('alumno-regreso'))}&next=${encodeURIComponent(next)}`)
+  await expect(student).toHaveURL(/\/cuenta\?unido=/)
+  await expect(student.getByTestId('student-group').filter({ hasText: 'Regreso E2E' })).toBeVisible()
+  // La cookie se borra al unirse: volver a abrir canjear ya no actúa solo
+  expect((await student.context().cookies()).some((c) => c.name === 'expia_invite' && c.value)).toBe(false)
+})
+
 test('otro guía recibe 404 en un grupo ajeno', async ({ browser }) => {
   const owner = mail('dueno')
   const intruder = mail('intruso')
