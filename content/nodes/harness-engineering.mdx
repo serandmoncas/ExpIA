@@ -1,0 +1,43 @@
+---
+id: harness-engineering
+title: Harness engineering
+kind: concept
+category:
+  - agents
+  - dev-tools
+released: 2026-10
+audience:
+  - technical
+level: intermediate
+requires:
+  - agents
+  - tool-use
+related:
+  - context-engineering
+  - claude-code
+  - claude-agent-sdk
+  - evals
+  - agent-skills
+status: emerging
+summary: 'Diseñar la infraestructura que rodea al modelo en un agente: bucles, verificación, sandbox, memoria y herramientas, para que trabaje de forma fiable.'
+verified: false
+added: '2026-10-30'
+---
+
+## Para qué sirve
+
+El *harness* es todo lo que envuelve al modelo dentro de un agente: el bucle que decide cuándo llamar herramientas, los entornos aislados donde se ejecuta código, la memoria entre sesiones, la caché de contexto y los controles que verifican cada resultado.
+
+La calidad de un agente depende tanto de este andamiaje como del modelo. Por eso diseñarlo se está convirtiendo en una disciplina propia.
+
+## Cómo se usa
+
+En la práctica consiste en separar el razonamiento del modelo de la ejecución (el enfoque «cerebro y manos»), añadir bucles que revisen la salida y reintenten, persistir memoria y aplicar caché a instrucciones y herramientas para ahorrar costo.
+
+También incluye medir con evals cada cambio. Herramientas como Claude Code o el Claude Agent SDK son ejemplos de *harness* listos para usar o extender.
+
+## Para no técnicos
+
+Piensa en el modelo como un cerebro muy capaz pero sin cuerpo. El *harness* le da manos, una libreta para recordar y un supervisor que revisa su trabajo antes de darlo por bueno.
+
+Dos agentes con el mismo modelo pueden rendir muy distinto según lo bien construido que esté ese entorno.
