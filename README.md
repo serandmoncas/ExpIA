@@ -29,7 +29,7 @@ Cada referente es un archivo `content/people/<id>.mdx`. Copia uno existente (por
 4. Tendencias y resumen automático (agente que propone PRs)
 5. **Modo enseñanza**: rutas de aprendizaje con repaso y progreso (este repo). Con cuentas: guías, grupos por invitación y avance en el servidor
 
-Especificación: `docs/superpowers/specs/2026-10-17-catalogo-ia-design.md`
+Especificación: `docs/superpowers/specs/2026-10-17-catalogo-ia-design.md`. Estado y pendientes: `docs/backlog.md`
 
 ## Rutas de aprendizaje
 
