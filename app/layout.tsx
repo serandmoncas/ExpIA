@@ -4,6 +4,7 @@ import './globals.css'
 import { AudienceProvider } from '@/components/audience-provider'
 import { SiteHeader } from '@/components/site-header'
 import { LearnedProvider } from '@/components/learned-provider'
+import { ImportOffer } from '@/components/import-offer'
 import { getCatalog } from '@/lib/content/load'
 
 // globals.css (shadcn) espera --font-sans y --font-geist-mono
@@ -23,6 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AudienceProvider>
           <LearnedProvider knownIds={knownIds}>
             <SiteHeader />
+            <ImportOffer knownIds={knownIds} />
             <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
           </LearnedProvider>
         </AudienceProvider>
