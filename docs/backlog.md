@@ -28,6 +28,7 @@ Pendiente:
 - [ ] Cargar `GOOGLE_CLIENT_ID` y `GOOGLE_CLIENT_SECRET` (el cliente OAuth ya existe en Google Cloud, con redirección a `https://expia-self.vercel.app/api/auth/callback/google`)
 - [ ] Resend: API key y `EMAIL_FROM` de un dominio verificado
 - [ ] Separar la base de preview de la de producción (rama Neon por preview) o quitar `DATABASE_URL` de preview
+- [ ] Poner la rama al día con `main` (al 2026-11-11 va 6 commits atrás, solo radares)
 - [ ] Mergear el PR #5 y probar en producción: entrar, crear grupo como guía, invitar, unirse
 - [ ] Página `/privacidad` (qué se guarda, para qué, cómo pedir borrarlo) antes de abrir el registro
 
