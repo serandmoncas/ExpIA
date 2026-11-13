@@ -1,0 +1,42 @@
+---
+id: decision-models
+title: Modelos de decisión
+kind: concept
+category:
+  - llm
+  - llm-apps
+released: 2026-11
+audience:
+  - technical
+  - business
+level: intermediate
+requires:
+  - llm
+related:
+  - structured-outputs
+  - evals
+  - gemini
+  - multimodal-models
+status: emerging
+summary: 'Modelos especializados en decidir rápido y de forma calibrada: responder sí/no, elegir entre opciones o puntuar con una rúbrica.'
+verified: false
+added: '2026-11-13'
+---
+
+## Para qué sirve
+
+Los modelos de decisión resuelven un tipo de tarea muy frecuente en las aplicaciones con IA: tomar una decisión acotada. Por ejemplo, saber si un mensaje es spam, cuál de varias categorías corresponde a un ticket o qué puntuación merece una respuesta según una rúbrica.
+
+A diferencia de un LLM general, están optimizados para ser rápidos, baratos y **calibrados**. Su nivel de confianza refleja la probabilidad real de acertar, algo útil para automatizar con umbrales.
+
+## Cómo se usa
+
+Se consumen como una API con tres tipos de pregunta: sí/no, elección entre opciones y puntuación con rúbrica. Envías la entrada, que puede ser texto o también imágenes, junto con la pregunta, y recibes la decisión con su confianza.
+
+Son útiles en clasificadores, enrutadores de agentes, filtros de moderación y evaluaciones automáticas. En estos casos antes se usaba un LLM completo con salidas estructuradas.
+
+## Para no técnicos
+
+Imagina un empleado muy rápido que solo responde preguntas cerradas: «¿sí o no?», «¿cuál de estas opciones?» o «¿qué nota le pondrías?». Además, te dice con honestidad qué tan seguro está.
+
+No escribe ensayos, pero decide en un instante y sale barato. Por eso sirve para clasificar, filtrar y revisar miles de cosas al día.
