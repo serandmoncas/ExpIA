@@ -1,0 +1,38 @@
+---
+id: loop-transformer
+title: Loop Transformer
+kind: concept
+category:
+  - llm
+  - foundations
+released: 2026-11
+audience:
+  - technical
+level: advanced
+requires:
+  - transformer
+related:
+  - llm
+  - reasoning-models
+  - mixture-of-experts
+status: emerging
+summary: Variante del Transformer que reutiliza sus capas varias veces por pasada para razonar más con menos parámetros.
+verified: false
+added: '2026-11-27'
+---
+
+## Para qué sirve
+
+Un Transformer estándar ejecuta cada capa una sola vez por pasada. Un **loop transformer** repite un bloque de capas varias veces, así el modelo puede hacer más cómputo por token sin aumentar el número de parámetros.
+
+La idea es ganar profundidad de razonamiento, por ejemplo en código o matemáticas, manteniendo el modelo más compacto.
+
+## Cómo se usa
+
+Para quien usa el modelo no cambia nada: se consume por API como cualquier LLM, por ejemplo GLM-5.4 de Z.ai.
+
+Para quienes investigan o despliegan modelos, conviene tener en cuenta que el costo de inferencia depende del número de iteraciones del bucle. Puede compararse con otras técnicas de eficiencia como MoE.
+
+## Para no técnicos
+
+Imagina que, en lugar de contratar más personas para revisar un texto, le pides a la misma persona que lo relea varias veces y lo mejore en cada vuelta. Un loop transformer hace eso: reutiliza la misma parte del modelo varias veces para pensar más a fondo sin crecer de tamaño.
