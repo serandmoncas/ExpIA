@@ -1,0 +1,41 @@
+---
+id: llama-cpp
+title: llama.cpp
+kind: tool
+category:
+  - infra
+  - dev-tools
+released: 2023-03
+audience:
+  - technical
+level: advanced
+requires:
+  - quantization
+related:
+  - ollama
+  - vllm
+  - llama
+  - hugging-face
+status: rising
+summary: Motor de código abierto en C/C++ para ejecutar modelos de lenguaje en CPU y GPU de consumo. Es la base de gran parte de la IA local.
+verified: false
+added: '2026-11-13'
+---
+
+## Para qué sirve
+
+llama.cpp permite ejecutar modelos de lenguaje abiertos en hardware común, como portátiles, ordenadores de escritorio o incluso teléfonos, sin depender de la nube. Lo logra combinando código muy optimizado con modelos cuantizados en el formato GGUF.
+
+Muchas herramientas populares de IA local, como Ollama, se apoyan en él.
+
+## Cómo se usa
+
+Descargas un modelo en formato GGUF, por ejemplo desde Hugging Face. Luego lo ejecutas con la interfaz de línea de comandos o con su servidor, que expone una API compatible con OpenAI.
+
+Puedes elegir el nivel de cuantización para equilibrar calidad, memoria y velocidad. Con la versión 1.0 el proyecto ofrece una base más estable para construir encima.
+
+## Para no técnicos
+
+Es el «motor» que permite tener un asistente tipo ChatGPT funcionando dentro de tu propio ordenador, sin internet y sin enviar tus datos a nadie.
+
+Muchas aplicaciones fáciles de usar lo llevan por dentro, aunque no lo veas.
