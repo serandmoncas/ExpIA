@@ -1,0 +1,42 @@
+---
+id: ai-formal-verification
+title: Verificación formal con IA
+kind: technique
+category:
+  - evaluation
+  - agents
+released: 2026-11
+audience:
+  - technical
+  - business
+level: advanced
+requires:
+  - llm
+  - reasoning-models
+related:
+  - agents
+  - multi-agent
+  - evals
+status: emerging
+summary: Combinar LLM y agentes con verificadores formales como Lean para producir demostraciones y algoritmos cuya corrección queda comprobada por máquina.
+verified: false
+added: '2026-11-27'
+---
+
+## Para qué sirve
+
+Sirve para que los resultados generados por IA, como demostraciones matemáticas, algoritmos o código, no dependan de la confianza en el modelo. Un verificador formal comprueba cada paso de manera rigurosa.
+
+Resuelve el principal problema de los LLM en tareas críticas: pueden equivocarse con mucha seguridad. Con la verificación formal, un error simplemente no pasa la comprobación.
+
+## Cómo se usa
+
+Un modelo o un equipo de agentes propone una solución escrita en un lenguaje formal como Lean. El verificador intenta comprobarla, y los errores que encuentra vuelven al agente, que corrige y reintenta en bucle.
+
+Este patrón aparece en proyectos que formalizan demostraciones matemáticas y en la búsqueda de algoritmos más eficientes, donde el agente genera candidatos y el verificador acepta solo los correctos.
+
+## Para no técnicos
+
+Imagina un estudiante muy brillante pero a veces descuidado, acompañado de un profesor que revisa cada línea de sus deberes y nunca se equivoca. La IA hace de estudiante y propone soluciones; un programa verificador hace de profesor y solo aprueba lo que es correcto sin ninguna duda.
+
+Así se puede confiar en descubrimientos hechos por IA sin tener que creer ciegamente en ella.

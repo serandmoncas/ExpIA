@@ -3,167 +3,173 @@ week: '2026-11-27'
 from: '2026-11-20'
 sourcesChecked: 36
 items:
-  - title: Three LLM inflection points in twelve months
-    url: https://simonwillison.net/2026/Nov/24/llm-inflection-points/
-    source: simon-willison
-    publishedAt: '2026-11-24'
-    topics:
-      - llm
-      - agents
-      - claude-code
-    relevance: high
-    summary: Simon Willison identifica tres saltos de capacidad de los LLM y de los agentes de código en el último año. Es una lectura clave para entender por qué hoy se programa de otra forma con IA.
-  - title: How to build and maintain an agentic evaluation
-    url: https://huggingface.co/blog/agentic-evals
-    source: hugging-face
+  - title: 'GLM-5.4: Toward generalized coding with our first loop transformer'
+    url: https://z.ai/blog/glm-5.4
+    source: hackernews-ai
     publishedAt: '2026-11-23'
     topics:
-      - evals
-      - agents
+      - loop-transformer
+      - llm
+      - transformer
     relevance: high
-    summary: Guía de Hugging Face para construir y mantener evaluaciones de agentes. Sirve para medir sistemas que actúan en varios pasos y no solo responden una pregunta.
-  - title: 'Swarms, Flocks, Gangs: How to build, train, and evaluate multi-agent systems'
-    url: https://huggingface.co/blog/training-swarms
+    summary: 'Z.ai presenta GLM-5.4, su primer modelo basado en loop transformer: reutiliza capas para razonar más con menos parámetros. Es la primera adopción a gran escala de esta arquitectura en un modelo abierto competitivo.'
+  - title: 'La IA abierta está volviendo: GLM 5.4 e Inkling 2 Mini en local'
+    url: https://www.youtube.com/watch?v=BkqKWTLpk6g
+    source: midudev
+    publishedAt: '2026-11-27'
+    topics:
+      - llm
+      - mixture-of-experts
+      - loop-transformer
+    relevance: medium
+    summary: midudev compara GLM 5.4 con los modelos comerciales punteros y prueba Inkling 2 Mini, el MoE local de Thinking Machines. Sirve para ver en qué punto están hoy los modelos abiertos.
+  - title: Hill-climbing Inkling 2 Mini inference on one RTX PRO 6000
+    url: https://huggingface.co/blog/inkling-2-mini-inference-hillclimb
     source: hugging-face
-    publishedAt: '2026-11-26'
+    publishedAt: '2026-11-25'
+    topics:
+      - mixture-of-experts
+      - vllm
+      - quantization
+    relevance: medium
+    summary: 'Caso práctico de Hugging Face: cómo optimizar paso a paso la inferencia de Inkling 2 Mini en una sola GPU RTX PRO 6000. Útil para quien sirve modelos MoE en su propio hardware.'
+  - title: Inkling-2-Mini in 5.4 GB Memory
+    url: https://github.com/ShinMegamiBoson/lookatmyquant
+    source: hackernews-ai
+    publishedAt: '2026-11-21'
+    topics:
+      - quantization
+      - mixture-of-experts
+    relevance: medium
+    summary: Una cuantización agresiva logra que Inkling-2-Mini funcione con solo 5,4 GB de memoria. Ejemplo concreto de cómo la cuantización acerca los modelos MoE a equipos de consumo.
+  - title: Lean verification of the Riemann Hypothesis
+    url: https://leanprover-community.github.io/blog/posts/riemann-hypothesis/
+    source: hackernews-ai
+    publishedAt: '2026-11-21'
+    topics:
+      - reasoning-models
+      - llm
+    relevance: high
+    summary: La comunidad de Lean publica la verificación formal de una demostración de la hipótesis de Riemann producida con ayuda de IA. Marca un hito en cómo los LLM y los verificadores formales colaboran en matemáticas.
+  - title: Finding faster quantum algorithms with agents and formal verification
+    url: https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/
+    source: google-deepmind-blog
+    publishedAt: '2026-11-23'
     topics:
       - multi-agent
       - agents
-      - evals
+      - reasoning-models
     relevance: high
-    summary: Explica cómo construir, entrenar y evaluar sistemas multiagente. Es un recurso práctico para pasar de un solo agente a equipos de agentes que colaboran.
-  - title: '[AINews] Gemini 4 Neon marks GDM''s full return as a Frontier Lab'
-    url: https://latent.space/p/ainews-gemini-4-neon-marks-gdm-s-full-return-as-a-frontier-lab/
-    source: latent-space
+    summary: 'DeepMind combina equipos de agentes con verificación formal para mejorar algoritmos cuánticos de química y fusión. Es un patrón replicable: un agente genera la solución y un verificador la garantiza.'
+  - title: Claude AI’s Biggest Math Breakthrough Has A Problem.
+    url: https://www.youtube.com/watch?v=hwWlEuI359w
+    source: two-minute-papers
     publishedAt: '2026-11-25'
+    topics:
+      - claude
+      - reasoning-models
+      - evals
+    relevance: medium
+    summary: Two Minute Papers examina con espíritu crítico el gran avance matemático atribuido a Claude y explica sus problemas. Recordatorio útil de que hay que verificar las afirmaciones extraordinarias.
+  - title: GPT-6 models demonstrate intrinsic protein-design capabilities
+    url: https://openai.com/index/gpt-6-models-demonstrate-intrinsic-protein-design-capabilities
+    source: openai-news
+    publishedAt: '2026-11-24'
+    topics:
+      - gpt
+      - reasoning-models
+    relevance: medium
+    summary: OpenAI muestra que GPT-6 diseña proteínas razonando y escribiendo código, con unión confirmada en laboratorio en cinco objetivos. Un LLM generalista entra así en un terreno de modelos científicos especializados.
+  - title: Simple Scaling of Swarms viaCooperative Multi-agent RL
+    url: https://www.youtube.com/watch?v=SUP5rlVHI0Y
+    source: hugging-face
+    publishedAt: '2026-11-27'
+    topics:
+      - multi-agent
+      - agents
+      - reasoning-models
+    relevance: medium
+    summary: Hugging Face explica una extensión sencilla de GRPO para entrenar sistemas multiagente que aprenden a cooperar. Es un puente entre el aprendizaje por refuerzo y los enjambres de agentes.
+  - title: GPT 6.2 Astra Solves a Historical Mystery
+    url: https://simonwillison.net/2026/Nov/24/astra-historical-mystery/
+    source: simon-willison
+    publishedAt: '2026-11-24'
+    topics:
+      - gpt
+      - agents
+    relevance: medium
+    summary: 'Caso real: con un prompt mínimo, GPT-6.2 Astra identificó de forma autónoma al autor de un cuaderno anónimo de 1808. Muestra el potencial de los agentes de investigación en humanidades.'
+  - title: How iFood scales coding agents across 15,000 repositories
+    url: https://openai.com/business/customer-stories/ifood
+    source: openai-news
+    publishedAt: '2026-11-24'
+    topics:
+      - agents
+      - context-engineering
+    relevance: medium
+    summary: iFood cuenta cómo despliega agentes de programación en 15 000 repositorios. Un ejemplo de adopción a escala empresarial y de los retos operativos que implica.
+  - title: Introducing the Amazon Bedrock Trusted Access API, with Enterprise Frontier Safeguards and Enterprise Data Controls for Claude models
+    url: https://aws.amazon.com/blogs/machine-learning/introducing-the-amazon-bedrock-trusted-access-api-with-anthropics-enterprise-frontier-safeguards-and-enterprise-data-controls/
+    source: aws-ml-blog
+    publishedAt: '2026-11-24'
+    topics:
+      - claude
+      - guardrails
+      - anthropic-api
+    relevance: medium
+    summary: Bedrock lanza una API de acceso confiable con salvaguardas y controles de datos empresariales para Claude. Es relevante para quienes despliegan LLM bajo requisitos de cumplimiento normativo.
+  - title: Probando Gemini 4 Neon para controlar mi servidor
+    url: https://www.youtube.com/watch?v=LgUdabOpwaE
+    source: midudev
+    publishedAt: '2026-11-27'
     topics:
       - gemini
-      - llm
-      - evals
-    relevance: high
-    summary: Gemini 4 Neon supera a los modelos rivales en LiveBench y marca el regreso de Google DeepMind a la vanguardia de los modelos de frontera.
-  - title: The matrix multiplication exponent is nine fourths [pdf]
-    url: https://github.com/openai/math/blob/main/preprints/The-matrix-multiplication-exponent-is-nine-fourths-November-24-2026/paper.pdf
-    source: hackernews-ai
-    publishedAt: '2026-11-25'
-    topics:
-      - reasoning-models
-      - gpt
-    relevance: high
-    summary: OpenAI publica un preprint que afirma que el exponente de la multiplicación de matrices es 9/4. Es una muestra de modelos de razonamiento produciendo matemática nueva, con impacto directo en el cómputo.
-  - title: 'We''ve been asking: “What if AI solved the Riemann Hypothesis?”'
-    url: https://www.youtube.com/watch?v=zqzk43bSdDI
-    source: 3blue1brown
-    publishedAt: '2026-11-22'
-    topics:
-      - reasoning-models
-      - llm
-    relevance: high
-    summary: 3Blue1Brown reúne a matemáticos de primer nivel para comentar los anuncios recientes sobre la hipótesis de Riemann asistidos por IA. Ofrece contexto accesible sobre qué significa realmente.
-  - title: 'GLM-5.4: Toward Generalized Coding with Our First Loop Transformer'
-    url: https://simonwillison.net/2026/Nov/23/glm-54/
-    source: simon-willison
-    publishedAt: '2026-11-23'
-    topics:
-      - transformer
-      - llm
-    relevance: medium
-    summary: 'GLM-5.4 de Z.ai es el primer modelo de su laboratorio con arquitectura de transformer en bucle: reutiliza capas varias veces por pasada. Es una variante arquitectónica que vale la pena seguir.'
-  - title: ¿Por qué usar IA gratis puede salirte caro?
-    url: https://www.youtube.com/watch?v=nLCablil1Cc
-    source: midudev
-    publishedAt: '2026-11-26'
-    topics:
-      - llm
-      - openai-api
-    relevance: medium
-    summary: Tres proveedores de inferencia de OpenRouter expusieron prompts de usuarios pese a prometer cero retención. Recuerda revisar la privacidad antes de usar IA gratis o intermediarios.
-  - title: Google Will Make AI Agents Use Its MCP Servers. The Gmail One Can't Send Email
-    url: https://techstackups.com/articles/google-workspace-ai-agents-mcp/
-    source: hackernews-ai
-    publishedAt: '2026-11-26'
-    topics:
       - mcp
       - agents
     relevance: medium
-    summary: 'Google llevará a los agentes a usar sus servidores MCP para Workspace, pero con limitaciones: por ejemplo, el de Gmail no puede enviar correos. Muestra cómo las grandes plataformas adoptan MCP.'
-  - title: 'Agents that learn while they''re idle #deeplearningai #aiagents #oracle'
-    url: https://www.youtube.com/shorts/RrepvxPUGko
-    source: deeplearning-ai
-    publishedAt: '2026-11-24'
+    summary: midudev pone a prueba Gemini 4 Neon montando y administrando un VPS desde la terminal con Antigravity y un servidor MCP. Es una demo práctica de agentes operando infraestructura.
+  - title: DeepMind’s New AI Just Changed The AI Race
+    url: https://www.youtube.com/watch?v=u6UYsl-KEoc
+    source: two-minute-papers
+    publishedAt: '2026-11-27'
     topics:
-      - agent-skills
-      - agents
+      - gemini
+      - multimodal-models
     relevance: medium
-    summary: Explica cómo un agente puede repasar sus ejecuciones pasadas mientras está inactivo y convertirlas en skills reutilizables, para mejorar con el tiempo.
-  - title: 'From spectrum to structure: Identifying molecules with Mass Spec Skills for Google Antigravity'
-    url: https://deepmind.google/blog/interpreting-mass-spectra-with-google-antigravity/
-    source: google-deepmind-blog
-    publishedAt: '2026-11-24'
-    topics:
-      - agent-skills
-      - agents
-    relevance: medium
-    summary: DeepMind lanza Mass Spec Skills para que científicos interpreten espectros de masas con agentes en Google Antigravity. Es un ejemplo de skills especializadas en ciencia.
-  - title: How Clay Builds GTM Agents — Jeff Barg, Head of AI
-    url: https://www.youtube.com/watch?v=qjPcaZf_plo
-    source: latent-space
-    publishedAt: '2026-11-26'
-    topics:
-      - agents
-      - claude-code
-      - mcp
-    relevance: medium
-    summary: Clay cuenta que casi la mitad del trabajo de agentes en su producto ya ocurre en herramientas como Claude Code y no en su propio agente. Es una reflexión sobre qué implica esto para el SaaS.
-  - title: Como Dots, Grok Bot o Duet... Pero N8N lo hizo TODO GRATIS con Nod
-    url: https://www.youtube.com/watch?v=0kXaCkTIjbs
-    source: alejavi-rivera
-    publishedAt: '2026-11-26'
-    topics:
-      - n8n
-      - agents
-    relevance: medium
-    summary: n8n lanza Nod, un agente personal de código abierto que trabaja de forma proactiva 24/7. Es una opción gratuita para automatizar tareas personales.
-  - title: Perplexity and Intelligence
-    url: https://openai.com/index/perplexity-and-intelligence
-    source: openai-news
-    publishedAt: '2026-11-22'
-    topics:
-      - evals
-      - llm
-    relevance: medium
-    summary: OpenAI explica cómo la perplejidad mide el progreso de los modelos y propone usarla como base común para evaluar capacidades emergentes.
-  - title: Introducing the llama.cpp benchmark dashboard for AMD Ryzen and Radeon
-    url: https://huggingface.co/blog/ggml-org/llamacpp-amd-bench
-    source: hugging-face
-    publishedAt: '2026-11-26'
-    topics:
-      - quantization
-      - hugging-face
-    relevance: medium
-    summary: Nuevo panel de benchmarks de llama.cpp para hardware AMD Ryzen y Radeon. Es útil para elegir equipo y configuración al ejecutar LLM en local.
+    summary: Two Minute Papers repasa Gemini 4 Neon, el nuevo modelo de DeepMind, y su informe de seguridad. Un resumen accesible de por qué reordena la competencia entre los grandes modelos.
 proposals:
-  - type: new-node
+  - type: status
     target: loop-transformer
-    reason: Z.ai lanzó GLM-5.4, el primer modelo de código relevante con esta arquitectura, y la cobertura técnica la presenta como una novedad arquitectónica.
+    from: emerging
+    to: rising
+    reason: GLM-5.4, un modelo abierto competitivo con los modelos punteros, adopta la arquitectura loop transformer y recibe amplia cobertura. La técnica pasa de la investigación a un producto de uso real.
     evidence:
-      - https://simonwillison.net/2026/Nov/23/glm-54/
       - https://z.ai/blog/glm-5.4
-  - type: highlight
-    target: 3blue1brown
-    reason: Reúne a matemáticos destacados para explicar el alcance de los avances de la IA en la hipótesis de Riemann.
+      - https://www.youtube.com/watch?v=BkqKWTLpk6g
+  - type: new-node
+    target: ai-formal-verification
+    reason: Esta semana se acumulan verificaciones en Lean de resultados matemáticos mayores y el uso de agentes con verificación formal por parte de DeepMind, Anthropic y Google. Ninguno de esos casos encaja en los nodos actuales.
     evidence:
-      - https://www.youtube.com/watch?v=zqzk43bSdDI
+      - https://leanprover-community.github.io/blog/posts/riemann-hypothesis/
+      - https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/
+      - https://github.com/anthropics/formal-math/tree/main/vp-vnp
+      - https://github.com/lsernau/grh-lean
+      - https://latent.space/p/ainews-math-proofs-are-landing-faster-than-we-can-read-them/
+  - type: highlight
+    target: two-minute-papers
+    reason: Un análisis crítico y accesible de los límites de los avances matemáticos atribuidos a la IA.
+    evidence:
+      - https://www.youtube.com/watch?v=hwWlEuI359w
 generated:
   by: radar-agent
   model: claude-opus-5-5
-  at: '2026-11-27T12:10:42.870Z'
+  at: '2026-11-27T21:51:37.286Z'
 ---
 
 ## Resumen de la semana
 
-La semana estuvo dominada por la **IA aplicada a las matemáticas**. Hubo anuncios sobre demostraciones formales, un nuevo resultado sobre el exponente de la multiplicación de matrices publicado por OpenAI y debates alrededor de la hipótesis de Riemann. Los modelos de razonamiento ya no solo resuelven problemas de práctica: producen resultados que la comunidad científica tiene que verificar más rápido de lo que puede leerlos. En paralelo, Google DeepMind volvió a la primera línea con **Gemini 4 Neon**, y Z.ai presentó **GLM-5.4**, el primer modelo de código con arquitectura de *loop transformer*.
+La semana estuvo dominada por la **IA aplicada a las matemáticas y la ciencia**. Aparecieron verificaciones formales en Lean de resultados como la hipótesis de Riemann y VP ≠ VNP. DeepMind presentó equipos de agentes que descubren algoritmos cuánticos más rápidos y los verifican formalmente. OpenAI mostró que GPT-6 puede diseñar proteínas. Las voces críticas también tuvieron espacio: Two Minute Papers analiza los problemas del gran avance matemático atribuido a Claude.
 
-En el lado práctico, el foco está en los **agentes**. Hugging Face publicó guías sobre cómo entrenar y evaluar sistemas multiagente y cómo mantener evaluaciones agénticas. DeepLearning.AI y DeepMind muestran agentes que convierten su experiencia en *skills* reutilizables. Simon Willison resume tres puntos de inflexión de los agentes de código en el último año. Google anunció servidores MCP para Workspace con limitaciones llamativas.
+En modelos abiertos, **GLM-5.4** llega como el primer gran modelo basado en un *loop transformer* y se acerca a los modelos comerciales punteros en los benchmarks. Thinking Machines lanzó **Inkling 2 Mini**, un MoE pensado para correr en local. Ya hay guías para optimizar su inferencia en una sola GPU y versiones cuantizadas que caben en 5,4 GB.
 
-También hubo alertas sobre privacidad: algunos proveedores de inferencia de OpenRouter expusieron prompts pese a prometer cero retención. Es un buen recordatorio de revisar a quién se le envían los datos. Para quienes ejecutan modelos en su propio equipo, llegan un panel de benchmarks de llama.cpp para AMD y una guía de IA local para principiantes.
+En el terreno práctico destacan varios casos: iFood escala agentes de programación a 15 000 repositorios, Clay construye agentes de ventas y AWS lanza controles empresariales de seguridad y datos para Claude en Bedrock. Hugging Face, por su parte, propone una extensión simple de GRPO para entrenar sistemas multiagente cooperativos.
